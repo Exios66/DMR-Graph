@@ -157,8 +157,8 @@ const CY_STYLE = [
     "border-color":"data(zoneBorder)","border-opacity":0.5,"border-width":1,
     "shape":"round-rectangle","label":"data(label)","text-valign":"top","text-halign":"left",
     "text-margin-x":14,"text-margin-y":12,"font-size":20,"font-weight":600,"color":"#C9D6E8",
-    "text-outline-width":0,"text-opacity":0.9,"padding":28,"events":"no",
-    "compound-sizing-wrt-labels":"exclude","z-compound-depth":"bottom"
+    "text-wrap":"none","text-max-width":600,"text-outline-width":0,"text-opacity":0.9,
+    "padding":28,"events":"no","compound-sizing-wrt-labels":"exclude","z-compound-depth":"bottom"
   }},
   {selector:"node[status='retired']", style:{
     "opacity":0.5,"border-style":"dashed","border-width":2,"font-style":"italic"
@@ -375,6 +375,18 @@ function buildSidebar(){
 }
 
 /* ── controls ────────────────────────────────────────────────────────────── */
+function setCompound(on){
+  cy.batch(() => {
+    if (!on){
+      cy.nodes("[isZone]").forEach(z => z.children().forEach(c => c.move({parent:null})));
+      cy.nodes("[isZone]").style("display", "none");
+    } else {
+      cy.nodes("[isZone]").style("display", "element");
+      cy.nodes("node:childless").forEach(n => n.move({parent: "zone:" + n.data("zone")}));
+    }
+  });
+}
+
 function wireControls(){
   $("q").addEventListener("input", e => {state.q = e.target.value; apply();});
   $("btn-fit").addEventListener("click", () => cy.animate({fit:{padding:60}}, {duration:260}));
@@ -392,11 +404,14 @@ function wireControls(){
     state.force = !state.force;
     e.currentTarget.setAttribute("aria-pressed", String(state.force));
     if (state.force){
-      cy.layout({name:"cose", animate:true, animationDuration:600, randomize:true,
-        nodeRepulsion:26000, idealEdgeLength:120, nodeOverlap:18, padding:50,
-        compoundGravity:0.6, fit:true}).run();
+      setCompound(false);
+      cy.layout({name:"cose", animate:true, animationDuration:800, randomize:true,
+        nodeRepulsion:90000, idealEdgeLength:110, edgeElasticity:80, gravity:0.35,
+        nestingFactor:1, nodeOverlap:20, numIter:1500, initialTemp:400,
+        coolingFactor:0.96, minTemp:2, fit:true, padding:30}).run();
     } else {
-      cy.layout({name:"preset", fit:true, padding:60}).run();
+      setCompound(true);
+      cy.layout({name:"preset", fit:true, padding:26}).run();
     }
   });
   $("btn-png").addEventListener("click", () => {
@@ -436,6 +451,9 @@ fetch("graph.json").then(r => r.json()).then(g => {
   });
   buildSidebar();
   wireControls();
+  if (new URLSearchParams(location.search).get("layout") === "force"){
+    $("btn-layout").click();
+  }
   const m = location.hash.match(/node=([^&]+)/);
   if (m) select(decodeURIComponent(m[1]), true);
 }).catch(err => {

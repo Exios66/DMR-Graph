@@ -97,15 +97,22 @@ def publish_site(slug: str, dry_run: bool) -> None:
 
 
 def enable_pages(slug: str) -> None:
-    pages = gh(["api", f"repos/{slug}/pages"], check=False)
-    if pages.returncode == 0:
-        gh(["api", "-X", "PUT", f"repos/{slug}/pages",
-            "-f", "source[branch]=gh-pages", "-f", "source[path]=/"])
-        print("Pages: source updated to gh-pages /")
-    else:
-        gh(["api", "-X", "POST", f"repos/{slug}/pages",
-            "-f", "source[branch]=gh-pages", "-f", "source[path]=/"])
+    """Idempotent: set the source to gh-pages /, tolerating an already-enabled site."""
+    payload = ["-f", "source[branch]=gh-pages", "-f", "source[path]=/"]
+    current = gh(["api", f"repos/{slug}/pages"], check=False)
+    if current.returncode == 0:
+        put = gh(["api", "-X", "PUT", f"repos/{slug}/pages", *payload], check=False)
+        if put.returncode == 0:
+            print("Pages: source updated to gh-pages /")
+            return
+    post = gh(["api", "-X", "POST", f"repos/{slug}/pages", *payload], check=False)
+    if post.returncode == 0:
         print("Pages: enabled on gh-pages /")
+    elif "already enabled" in (post.stderr + post.stdout):
+        # GitHub enables Pages itself when the gh-pages branch first appears.
+        print("Pages: already enabled on gh-pages /")
+    else:
+        print(f"Pages: could not enable automatically — {post.stderr.strip() or post.stdout.strip()}")
 
 
 def report(slug: str) -> None:
