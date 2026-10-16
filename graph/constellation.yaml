@@ -1,0 +1,1249 @@
+# DMR-Graph — authored knowledge graph of the Mailroom constellation.
+#
+# Truth source: the PRUNED Digital-Mailroom hub (DMR-079). Node and edge facts
+# are read from the hub's origin/main (post-prune) and the v0.8.0 rollback tag,
+# and are cross-checked against the constellation's own canonical docs
+# (packages/llm-mailroom/docs/constellation/*, README.md, docs/wiki/*) plus the
+# READMEs of the standalone repos (Exios66/*, LLM-Mailroom-Services/*) and the
+# public Hugging Face API. Facts were verified by four independent research
+# passes on 2026-10-16; nothing here is inferred without a source.
+#
+# Only slugs are recorded (repo / hf_dataset / hf_model / hf_space); the build
+# script turns them into links, so no URL is typed twice.
+#
+# status: active | pending | retired   (retired = dashed, desaturated)
+
+meta:
+  title: DMR-Graph
+  subtitle: Knowledge graph of the Mailroom constellation
+  hub_version: v0.8.0
+  prune: DMR-079 consolidation
+  packages: 7
+  note: >-
+    Hub v0.8.0 is the pre-prune rollback point (all ten packages present);
+    DMR-079 then pruned llm-entity-extraction, llm-mailroom-graph and
+    agent-mailroom, leaving the seven core packages mapped here.
+  relations:
+    feeds: "data or control flows into the target (stage → stage, dataset → consumer)"
+    produces: "the source creates a derived artifact"
+    depends: "code or config dependency (version pin, vendored snapshot, import)"
+    traces: "runtime telemetry is emitted to an observability sink"
+    renders: "the surface displays data coming from the target"
+    serves: "the component owns or exposes the target surface / entrypoint"
+    governs: "policy, gate or board authority over the target"
+    syncs: "mirror, subtree, fork or upload reconciliation"
+    deploys: "publishes to a host"
+    supersedes: "replaces or retires the target"
+    prunes: "removed from the monorepo by DMR-079"
+    documents: "coverage edge of this graph"
+
+# Zones are layout columns (left → right) and colour modules.
+# Three complementary pairs + one neutral family:
+#   amber 36° ↔ indigo 245°   ·   teal 173° ↔ rose 350°   ·   steel 210° ↔ graphite
+zones:
+  - id: sources
+    label: Data & corpora
+    blurb: Raw corpora, corpus-feed packages and the pinned Hugging Face datasets.
+    fill: "#B87F26"
+    border: "#F0C274"
+  - id: eval
+    label: Evaluation & prompts
+    blurb: The one definition of "correct", per-node evals and calibration, the classifier, and the prompt loop.
+    fill: "#5A52C7"
+    border: "#A9A4F0"
+  - id: pipeline
+    label: Pipeline & runtime
+    blurb: llm-mailroom's 13-node graph, its auxiliary lanes, persistence, the reloaded pipeline and the sandbox.
+    fill: "#0F8C7E"
+    border: "#69D6C8"
+  - id: surfaces
+    label: Surfaces
+    blurb: What humans look at — console, Observatory, TUI, terminals, boards, graph sites.
+    fill: "#C2465A"
+    border: "#F39BA8"
+  - id: platform
+    label: Hub, governance & release
+    blurb: The monorepo, its board, its scripts and gates, the issue hub and the release milestones.
+    fill: "#3E6E9E"
+    border: "#93BCE0"
+  - id: external
+    label: External platforms
+    blurb: Providers, tracing sinks, GPU hosts and storage outside the repos.
+    fill: "#5A6473"
+    border: "#A9B3C2"
+
+layout:
+  x_step: 620
+  col_step: 268
+  y_step: 76
+  y0: 40
+
+nodes:
+  # ── data & corpora ──────────────────────────────────────────────────────────
+  - id: cmu-enron
+    label: CMU Enron corpus
+    zone: sources
+    kind: dataset
+    status: active
+    desc: "Maildir 20150507 tarball — 517,390 parseable emails across ~150 custodians."
+  - id: cms-desynpuf
+    label: CMS DE-SynPUF (Sample 1)
+    zone: sources
+    kind: dataset
+    status: active
+    desc: "2008–2010 Medicare claims — 11.15M claim events, 116,352 beneficiaries, ~$1.62B paid."
+  - id: enron-eda
+    label: Enron-Evaluation-Environment
+    zone: sources
+    kind: package
+    status: active
+    version: "0.1.0"
+    repo: Exios66/Enron-Evaluation-Environment
+    pages: true
+    desc: "Enron corpus EDA → pipeline-ready correspondence corpus (10 subclass keys; deduplicated by construction)."
+  - id: claims-eda
+    label: claims-data-eda
+    zone: sources
+    kind: package
+    status: active
+    version: "0.1.0"
+    repo: Exios66/claims-data-eda
+    pages: true
+    desc: "CMS DE-SynPUF EDA → plain-text EOB documents with ground truth aligned to InsuranceClaimExtraction."
+  - id: corpus-eda
+    label: mailroom-corpus-eda
+    zone: sources
+    kind: package
+    status: active
+    version: "0.1.0"
+    repo: Exios66/Mailroom-Corpus-EDA
+    pages: true
+    desc: "Canonical-dataset EDA (P0–P6) + the central Hugging Face upload helpers (hf_interface, dataset_export, docclass_uploader, intent_backfill)."
+  - id: mailroom-corpus
+    label: mailroom-corpus
+    zone: sources
+    kind: dataset
+    status: active
+    col: 1
+    version: "frozen v8 · rev eafe1ab4"
+    hf_dataset: Lucius-Morningstar/mailroom-corpus
+    desc: "Frozen v8 baseline (2,000 rows) and parent of the canonical corpus; the archived v7/v8 publisher's source."
+  - id: mailroom-dataset
+    label: mailroom-dataset
+    zone: sources
+    kind: dataset
+    status: active
+    col: 1
+    version: "schema v9 · consumers pin v9.1 (ed7576b6) · Hub tip v9.2"
+    hf_dataset: Lucius-Morningstar/mailroom-dataset
+    desc: "Core corpus: 3,302 documents, 5 classes, 55 class×subclass strata (2,979 train / 323 test). Consumers pin a revision, never a live tip."
+  - id: enron-correspondence-dedup
+    label: enron-correspondence-dedup
+    zone: sources
+    kind: dataset
+    status: active
+    col: 1
+    hf_dataset: Lucius-Morningstar/enron-correspondence-dedup
+    desc: "Deduplicated, subclass-labelled correspondence rows contributed to the canonical corpus."
+  - id: cms-desynpuf-insurance-claims
+    label: cms-desynpuf-insurance-claims
+    zone: sources
+    kind: dataset
+    status: active
+    col: 1
+    hf_dataset: Lucius-Morningstar/cms-desynpuf-insurance-claims
+    desc: "EOB-rendered insurance_claim documents contributed to the canonical corpus."
+  - id: cuad-contracts
+    label: mailroom-cuad-contracts
+    zone: sources
+    kind: dataset
+    status: active
+    col: 1
+    hf_dataset: Lucius-Morningstar/mailroom-cuad-contracts
+    desc: "CUAD page-image vision surface (50 rows + 546 PNGs); the text+clause mirror beside it is the corpus feeder."
+  - id: cuad-contracts-full
+    label: mailroom-cuad-contracts-full
+    zone: sources
+    kind: dataset
+    status: active
+    col: 1
+    hf_dataset: Lucius-Morningstar/mailroom-cuad-contracts-full
+    desc: "Byte-verified CUAD text+clause mirror (510 rows) — the real contract feeder (509 rows) and a registry ingest of llm-mailroom."
+  - id: legalbench-full
+    label: legalbench-full
+    zone: sources
+    kind: dataset
+    status: active
+    col: 1
+    hf_dataset: Lucius-Morningstar/legalbench-full
+    desc: "LegalBench mirror used by the extraction prompt experiments."
+  - id: docclass-pilot
+    label: docclass-pilot
+    zone: sources
+    kind: dataset
+    status: active
+    col: 1
+    hf_dataset: Lucius-Morningstar/docclass-pilot
+    desc: "48-stratum pilot slice of docclass-merged v5 (138 rows): pipeline pilot examples and the visualizer's pilot dataset."
+  - id: modernbert-training
+    label: mailroom-modernbert-training
+    zone: sources
+    kind: dataset
+    status: active
+    col: 1
+    version: "rev 5b72a345"
+    hf_dataset: Lucius-Morningstar/mailroom-modernbert-training
+    desc: "Leak-free, clerk-normalized training set for the ModernBERT ingest classifier."
+  - id: sorter-handoff
+    label: mailroom-sorter-handoff
+    zone: sources
+    kind: dataset
+    status: active
+    col: 1
+    hf_dataset: Lucius-Morningstar/mailroom-sorter-handoff
+    desc: "sorter_handoff gold labels — the staging payload for the intended sorter_handoff config (publishes no data files yet)."
+  - id: reloaded-fixtures
+    label: mailroom-reloaded-fixtures
+    zone: sources
+    kind: dataset
+    status: active
+    col: 1
+    hf_dataset: Lucius-Morningstar/mailroom-reloaded-fixtures
+    desc: "Fixture adaptation (v9.2 mirror, 3,302 rows) for the mailroom-reloaded pipeline."
+  # external corpora that the canonical dataset is built from (col 2)
+  - id: gnotheia
+    label: GNOTHEIA synthetic claims
+    zone: sources
+    kind: dataset
+    status: active
+    col: 2
+    hf_dataset: gratex/GNOTHEIA-synthetic-insurance-dataset
+    desc: "200 synthetic property-claim documents contributing to the insurance_claim class."
+  - id: bdr-claims
+    label: BDR motor claims
+    zone: sources
+    kind: dataset
+    status: active
+    col: 2
+    hf_dataset: bdr-ai-org/insurance-motor-claims-decision-v1
+    desc: "BDR auto-insurance claim corpus — 150 rows in v8, 300 auto rows in v9."
+  - id: insurbias
+    label: INSURBIAS
+    zone: sources
+    kind: dataset
+    status: active
+    col: 2
+    hf_dataset: feihuangfh/INSURBIAS
+    desc: "150 narrative auto-claim rows added to the corpus in v9."
+  - id: maud
+    label: MAUD v1
+    zone: sources
+    kind: dataset
+    status: active
+    col: 2
+    url: https://zenodo.org/records/7500064
+    desc: "152 merger_agreement rows (Zenodo 7500064) — the merger specialist's checklist source corpus."
+
+  # ── evaluation & prompts ────────────────────────────────────────────────────
+  - id: dojo
+    label: llm-dojo-scoring
+    zone: eval
+    kind: package
+    status: active
+    version: "0.22.0"
+    repo: Exios66/llm-dojo-scoring
+    desc: "The only place a metric is defined — field-type-aware scoring, error analysis, interpretation. llm-mailroom pins v0.22.0; reloaded v0.21.0 parity."
+  - id: eval-environment
+    label: eval-environment
+    zone: eval
+    kind: package
+    status: active
+    version: "mailroom-evals v0.5.0"
+    repo: LLM-Mailroom-Services/eval-environment
+    desc: "Per-node evals (31-task registry), pilot scenarios and calibration suites over the canonical dataset; holds the frozen v1 prompt lineage and the GEPA loop."
+  - id: mailroom-ml
+    label: mailroom-ml
+    zone: eval
+    kind: package
+    status: active
+    version: "0.1.0"
+    repo: LLM-Mailroom-Services/mailroom-ml
+    desc: "ModernBERT ingest fast-path classifier: training, per-head calibration, ONNX-on-CPU serving. A standalone contractor repo, not a governed member."
+  - id: modernbert-classifier
+    label: mailroom-modernbert-classifier
+    zone: eval
+    kind: model
+    status: active
+    hf_model: Lucius-Morningstar/mailroom-modernbert-classifier
+    desc: "The published ModernBERT bundle mailroom-ml serves: five document classes plus per-class subclass heads, calibrated, exported to ONNX."
+  - id: atticus
+    label: atticus-investigation
+    zone: eval
+    kind: package
+    status: active
+    repo: Exios66/atticus-investigation
+    desc: "Adjacent eval sibling: LegalBench classification prompt-engineering pipeline — same methodology, separate focus."
+  - id: entity-extraction
+    label: llm-entity-extraction
+    zone: eval
+    kind: package
+    status: retired
+    version: "0.8.0 (last hub release)"
+    repo: Exios66/llm-entity-extraction
+    url: https://exios66.github.io/llm-entity-extraction/
+    desc: "Prompt-experiment loop and source of the vendored sorter/contracts prompts. Pruned in DMR-079 — standalone only, no longer synced."
+  - id: entity-extraction-experiments
+    label: Entity-Extraction-Experiments
+    zone: eval
+    kind: package
+    status: retired
+    repo: LLM-Mailroom-Services/Entity-Extraction-Experiments
+    desc: "Organization copy of the prompt loop (v0.20.0 lineage). Pruned/standalone — kept only as history."
+  - id: evals-viewer
+    label: eval-environment viewer
+    zone: eval
+    kind: service
+    status: active
+    col: 1
+    url: https://eval-environment.vercel.app
+    desc: "Run viewer and environment dashboard — static, zero-dependency, live on Vercel."
+  - id: calibration-suite
+    label: calibration harness
+    zone: eval
+    kind: service
+    status: active
+    col: 1
+    desc: "Per-node reliability/ECE sweeps and threshold recommendations: intake, classify, judge, arbiter, retry, boss, archivist."
+  - id: mailroom-evals-v1
+    label: frozen v1 prompt lineage
+    zone: eval
+    kind: doc
+    status: active
+    col: 1
+    desc: "sha256-locked baseline (sorter_v1 + five specialist stems + rubrics) that every mutation is A/B'd against; reference copies live in mailroom-issues."
+  - id: gepa-loop
+    label: GEPA mutation loop
+    zone: eval
+    kind: aux
+    status: active
+    col: 1
+    desc: "Reflective prompt evolution run from eval-environment: select parent → reflect on traces (ASI) → propose mutation → strict-improvement gates."
+  - id: prompt-versions
+    label: prompt lineage
+    zone: eval
+    kind: doc
+    status: active
+    col: 1
+    desc: "Winners are vendored into llm-mailroom's langchain_agents/; production prompts are managed in Langfuse as mailroom-<agent> with the production label."
+  - id: experiment-log
+    label: experiment log
+    zone: eval
+    kind: doc
+    status: active
+    col: 1
+    desc: "Append-only run index (reports/experiment_log.jsonl + data/experiments/<run_id>/); the entity-extraction log is the archived lineage."
+
+  # ── pipeline & runtime ──────────────────────────────────────────────────────
+  - id: llm-mailroom
+    label: llm-mailroom (package “mailroom”)
+    zone: pipeline
+    kind: package
+    status: active
+    version: "0.8.0"
+    repo: Exios66/llm-mailroom
+    desc: "The 13-node LangGraph pipeline and FastAPI producer — the centre of the constellation."
+  - id: intake
+    label: intake
+    zone: pipeline
+    kind: stage
+    status: active
+    desc: "Ingest specialist — one fused TRIAGE + CLEAN + PREPARE pass over sliding windows."
+  - id: classify
+    label: classify
+    zone: pipeline
+    kind: stage
+    status: active
+    desc: "Sorter agent: one of five document classes plus subclass."
+  - id: retry_classify
+    label: retry_classify
+    zone: pipeline
+    kind: stage
+    status: active
+    desc: "Classification retry arm after a gate miss."
+  - id: review_classify
+    label: review_classify
+    zone: pipeline
+    kind: stage
+    status: active
+    desc: "Lane A second opinion (sorter reviewer) — stays live in production."
+  - id: extract
+    label: extract
+    zone: pipeline
+    kind: stage
+    status: active
+    desc: "Class specialist pulls the class checklist fields."
+  - id: retry_extract
+    label: retry_extract
+    zone: pipeline
+    kind: stage
+    status: active
+    desc: "Extraction retry arm after a gate miss."
+  - id: judge_verify
+    label: judge_verify
+    zone: pipeline
+    kind: stage
+    status: active
+    desc: "Judge-verify: an independent verdict on the extraction."
+  - id: arbiter
+    label: arbiter
+    zone: pipeline
+    kind: stage
+    status: active
+    desc: "Arbitrates conflicts between extraction verdicts."
+  - id: human_review
+    label: human_review
+    zone: pipeline
+    kind: stage
+    status: active
+    desc: "Review queue for low-confidence or disputed documents."
+  - id: boss_escalation
+    label: boss_escalation
+    zone: pipeline
+    kind: stage
+    status: active
+    desc: "Boss escalation — adjudicates the hard conflicts."
+  - id: compile_report
+    label: compile_report
+    zone: pipeline
+    kind: stage
+    status: active
+    desc: "Computational procedural reporter: deterministic matter record, no LLM call."
+  - id: catalog_write
+    label: catalog_write
+    zone: pipeline
+    kind: stage
+    status: active
+    desc: "Writes the matter catalog entry and window stats."
+  - id: archive
+    label: archive
+    zone: pipeline
+    kind: stage
+    status: active
+    desc: "Archives the document with a hash-chained audit entry."
+  - id: entry-route
+    label: START entry route
+    zone: pipeline
+    kind: aux
+    status: active
+    col: 1
+    desc: "START router: an approved review-resume re-invocation (resume_extraction + review_decision=approved + doc_type) skips straight to extract; everything else runs intake → classify."
+  - id: bert-intake
+    label: ModernBERT fast path
+    zone: pipeline
+    kind: service
+    status: active
+    col: 1
+    desc: "Advisory ingest prior: the ModernBERT classifier composes onto the sorter prompt via intake_prior= (no graph skip). MAILROOM_BERT_INTAKE default off, fail-open."
+  - id: gmail-lane
+    label: Gmail triage lane
+    zone: pipeline
+    kind: aux
+    status: active
+    col: 1
+    desc: "Auxiliary flow outside the graph: single-document email intake on a free model, with allowlist + DMARC guards and a durable outbox."
+  - id: relations-clerk
+    label: relations clerk
+    zone: pipeline
+    kind: aux
+    status: active
+    col: 1
+    desc: "Post-archive deterministic association scan dispatched at every terminal manifest, with optional LLM judgment (relations.llm, off in pilot)."
+  - id: relations-graph
+    label: relations graph views
+    zone: pipeline
+    kind: service
+    status: active
+    col: 1
+    desc: "Ledger projections from the scan: matter graph, global matter graph and document ego-graph (GraphJSON/GraphML, optional Plotly/PNG)."
+  - id: pager
+    label: operator pager
+    zone: pipeline
+    kind: service
+    status: active
+    col: 1
+    desc: "SMS pager: ten alert rules, quiet hours, catch-up digests; default off; mailroom.pager/v1 payload."
+  - id: provider-health
+    label: provider health
+    zone: pipeline
+    kind: service
+    status: active
+    col: 1
+    desc: "Passive per-provider LLM health (src/llm/provider_health.py, provider_health.json under fcntl flock) that feeds the pager."
+  - id: jev-gate
+    label: Jev route gate
+    zone: pipeline
+    kind: aux
+    status: pending
+    col: 1
+    desc: "Opt-in learned route gate (TypeSafe System One): overrides only the medium confidence band once its calibration exists; off by default."
+  - id: mailroom-reloaded
+    label: mailroom-reloaded (CrewAI Flows)
+    zone: pipeline
+    kind: package
+    status: active
+    col: 2
+    version: "0.4.2"
+    repo: Exios66/mailroom-reloaded
+    desc: "Compressed deployment-ready mailroom: ingest → bert_primary → sort → gate_classify → extract → gate_extract → report_catalog_archive (one node), with verify/boss/grade branches off the gates."
+  - id: local-mailroom-sandbox
+    label: local-mailroom-sandbox
+    zone: pipeline
+    kind: package
+    status: active
+    col: 2
+    version: "0.3.0"
+    repo: Exios66/local-mailroom-sandbox
+    desc: "Local-first sandbox: the full graph offline on Ollama / vLLM / llama.cpp / LM Studio, plus Modal GPU studies; tracked vendor/ snapshots."
+  - id: mailroom-sandbox
+    label: mailroom-sandbox (fork)
+    zone: pipeline
+    kind: package
+    status: active
+    col: 2
+    repo: LLM-Mailroom-Services/mailroom-sandbox
+    desc: "Organization fork of the sandbox (SAND-032 Modal + vLLM leg); development continues in the Exios66 original."
+  - id: reloaded-vllm
+    label: Modal vLLM app (mailroom-vllm)
+    zone: pipeline
+    kind: service
+    status: active
+    col: 2
+    desc: "OpenAI-compatible Qwen3-8B-AWQ on an L4 with Prometheus metrics — the reloaded pipeline's GPU serving app."
+  - id: reloaded-observability
+    label: reloaded observability stack
+    zone: pipeline
+    kind: service
+    status: active
+    col: 2
+    desc: "Docker-compose sidecars: Phoenix :6006, Prometheus :9090, Grafana :3000 (Pipeline / Serving & GPU / Quality dashboards)."
+  - id: api
+    label: FastAPI producer
+    zone: pipeline
+    kind: service
+    status: active
+    col: 2
+    desc: "The pipeline's HTTP surface (/v1): upload, run and review endpoints."
+  - id: watcher
+    label: inbox watcher
+    zone: pipeline
+    kind: service
+    status: active
+    col: 2
+    desc: "Claims each inbox file exactly once (worker-scoped lock); a stale claim older than WATCHER_STALE_CLAIM_MINUTES is re-queued and the graph re-runs from intake."
+  - id: watchdog
+    label: watchdog
+    zone: pipeline
+    kind: service
+    status: active
+    col: 2
+    desc: "Outside-the-watcher watchdog: heartbeat poll plus status e-mail (down/reminder); MAILROOM_WATCHDOG=0 kill switch. It also hosts the pager service."
+  - id: storage-bins
+    label: filesystem bins
+    zone: pipeline
+    kind: service
+    status: active
+    col: 2
+    desc: "inbox → processing → archive | review | failed, with JSON manifests per document."
+  - id: audit-log
+    label: hash-chained audit log
+    zone: pipeline
+    kind: service
+    status: active
+    col: 2
+    desc: "SQLite hash chain — later tampering is detectable."
+  - id: catalog
+    label: matter catalog
+    zone: pipeline
+    kind: service
+    status: active
+    col: 2
+    desc: "Matter records and window stats that the pager and boards read."
+  - id: provider-router
+    label: provider router
+    zone: pipeline
+    kind: service
+    status: active
+    col: 2
+    desc: "Routes each call per the agent's taxonomy provider — OpenRouter / Ollama / vLLM (local, Modal, or a LiteLLM gateway) / llamafile / generic — with per-provider cost models."
+  - id: taxonomy
+    label: config/taxonomy.yaml
+    zone: pipeline
+    kind: doc
+    status: active
+    col: 2
+    desc: "Canonical document classes, subclasses, per-agent providers and thresholds."
+  - id: tracing
+    label: Langfuse tracing wiring
+    zone: pipeline
+    kind: service
+    status: active
+    col: 2
+    desc: "One document-pipeline trace per document, mandatory tags, file-metadata-only input, span e-mail masking."
+
+  # ── surfaces ────────────────────────────────────────────────────────────────
+  - id: the-mailroom
+    label: The-Mailroom
+    zone: surfaces
+    kind: package
+    status: active
+    version: "0.5.1"
+    repo: Exios66/The-Mailroom
+    pages: true
+    desc: "Pixel-art visual engine + hosted Observatory. Langfuse traces are its only source of truth — nothing on screen is invented."
+  - id: pixel-console
+    label: pixel console
+    zone: surfaces
+    kind: service
+    status: active
+    desc: "CRT conveyor floor: every run as animated document envelopes (mailroom-web)."
+  - id: observatory
+    label: hosted Observatory
+    zone: surfaces
+    kind: service
+    status: active
+    hf_space: Lucius-Morningstar/mailroom-observatory
+    desc: "The public operations desk (mailroom-hosted / /live). Its Hugging Face Space is currently paused (503), not deleted."
+  - id: tui
+    label: TUI
+    zone: surfaces
+    kind: service
+    status: active
+    desc: "Typed-command REPL over the display API (mailroom-tui)."
+  - id: terminal-site
+    label: terminal site
+    zone: surfaces
+    kind: service
+    status: active
+    desc: "owlcot-style TTY site — live at /terminal/ (the Pages root redirects to it; pixel console at /pixel/). Board card DMR-013 is still open, but the publish landed 2026-09-28."
+  - id: dataset-viewer
+    label: dataset viewer
+    zone: surfaces
+    kind: service
+    status: active
+    desc: "“corpus …” commands: slim windowed dataset listing plus live per-row doc_text and ground truth."
+  - id: repo-browser
+    label: constellation repo browser
+    zone: surfaces
+    kind: service
+    status: active
+    desc: "“repos …” commands: every mirror package plus the hub copies."
+  - id: board-site
+    label: Dispatch Board (board-site)
+    zone: surfaces
+    kind: service
+    status: active
+    url: https://digital-mailroom-theta.vercel.app
+    desc: "Served Kanban dispatch board — the hub's deploy root, on Vercel, backed by kanban-labelled issues."
+  - id: producer-space
+    label: Producer Space
+    zone: surfaces
+    kind: service
+    status: pending
+    col: 1
+    desc: "Producer Space — not published (Hub 404). The producer runs from deploy/docker-compose.producer.yml; without it the Observatory's Inbox/REVIEW answer an honest 503."
+  - id: reloaded-ui
+    label: reloaded UI / TUI / replay
+    zone: surfaces
+    kind: service
+    status: active
+    col: 1
+    desc: "Read-mostly reloaded surface: catalog, audit chain, replay timelines and the ledger over /ui and /tui."
+  - id: graphify-graph
+    label: llm-mailroom-graph
+    zone: surfaces
+    kind: package
+    status: retired
+    col: 1
+    repo: Exios66/llm-mailroom-graph
+    pages: true
+    desc: "Graphify AST knowledge graph of llm-mailroom (1,905 symbols, 4,557 edges, 104 communities). Graph sites were pruned from the constellation in DMR-079."
+  - id: mailroom-dev-graph
+    label: mailroom-dev-graph
+    zone: surfaces
+    kind: package
+    status: retired
+    col: 1
+    repo: Exios66/mailroom-dev-graph
+    pages: true
+    desc: "Earlier-generation graphify site of the mailroom-dev monorepo (4,870 symbols, 16,161 edges, 325 communities)."
+  - id: dmr-graph
+    label: DMR-Graph (this site)
+    zone: surfaces
+    kind: package
+    status: active
+    col: 1
+    repo: Exios66/DMR-Graph
+    pages: true
+    desc: "This site: the pruned constellation's architecture knowledge graph — networkx model, Cytoscape.js view, GH Pages deployed locally with no Actions."
+  - id: agent-mailroom
+    label: agent-mailroom
+    zone: surfaces
+    kind: package
+    status: retired
+    col: 1
+    version: "0.3.0"
+    repo: Exios66/agent-mailroom
+    desc: "Self-contained mailroom: one graph run per document (the watcher claims each file exactly once), hive mailboxes, two LLM calls on the happy path. Preserved on branch feature/agent-mailroom."
+  - id: agent-floor
+    label: walking office floor
+    zone: surfaces
+    kind: service
+    status: retired
+    col: 1
+    desc: "LimeZu rooms, walking avatars, thought clouds, flying envelopes (agent-mailroom's pixel floor)."
+
+  # ── hub, governance & release ───────────────────────────────────────────────
+  - id: hub
+    label: Digital-Mailroom (hub)
+    zone: platform
+    kind: package
+    status: active
+    version: "v0.8.0 tag · post-DMR-079 main"
+    repo: LLM-Mailroom-Services/Digital-Mailroom
+    desc: "Central truth: uv monorepo, governance, wiki, dispatch board and the release chain. Seven packages after the DMR-079 prune."
+  - id: uv-workspace
+    label: uv workspace
+    zone: platform
+    kind: doc
+    status: active
+    desc: "One pyproject + uv.lock across packages: workspace sources in development, published git pins at release."
+  - id: constellation-docs
+    label: docs/constellation/
+    zone: platform
+    kind: doc
+    status: active
+    desc: "The canonical written map (repo index, architecture flows, data rules, governance) that this graph renders."
+  - id: v7-taxonomy
+    label: docs/v7-taxonomy.md
+    zone: platform
+    kind: doc
+    status: active
+    desc: "Canonical prose contract for the v7 five-class corpus vs the live taxonomy, plus the v8 subclass strata (HUB-028/HUB-041)."
+  - id: wiki
+    label: docs/wiki/
+    zone: platform
+    kind: doc
+    status: active
+    desc: "Version-controlled wiki (16 pages): Architecture, Releases, HF-Corpus, Subagents, Sandbox, Served-Board… The Architecture page still describes the removed after_intake skip — the code is the truth."
+  - id: specialists
+    label: specialist subagent roster
+    zone: platform
+    kind: doc
+    status: active
+    desc: ".opencode/agents (16 files) + .devin mirror: orchestrator-governor, prompt-engineer (GEPA provenance pin), archivist, data, testing, UI, systems, Modal/vLLM."
+  - id: board-tasks
+    label: governance/TASKS.md
+    zone: platform
+    kind: doc
+    status: active
+    desc: "Single-source board: lanes unassigned → assigned → in_progress → needs_attention → done, closing with Evidence naming the commits."
+  - id: hub-data
+    label: data/ + manifests
+    zone: platform
+    kind: doc
+    status: active
+    desc: "Corpus governance for the pinned revision."
+  - id: hub-reports
+    label: reports/
+    zone: platform
+    kind: doc
+    status: active
+    desc: "Index only — the EDA deliverables live under each package (e.g. packages/mailroom-corpus-eda/reports/), tracked in full per HUB-008."
+  - id: mailroom-issues
+    label: mailroom-issues
+    zone: platform
+    kind: package
+    status: active
+    repo: LLM-Mailroom-Services/mailroom-issues
+    pages: true
+    desc: "Constellation-wide issue store and label taxonomy (223 issues, 34 open) + frozen-v1 reference copies and the generated cross-repo reports. No code."
+  - id: cost-reports
+    label: cost & GPU reports
+    zone: platform
+    kind: doc
+    status: active
+    desc: "Master, Modal-vs-API cost comparison and Modal vLLM GPU reports with figures — generated by the sandbox dashboard export into mailroom-issues."
+  - id: changelog
+    label: CHANGELOG.md
+    zone: platform
+    kind: doc
+    status: active
+    desc: "Keep-a-Changelog source of truth for the hub chain; every release body is compiled from its stamped section."
+  - id: board-state
+    label: board_state.py
+    zone: platform
+    kind: script
+    status: active
+    col: 1
+    desc: "Board parser and gate: status | card | check | sync-issues | pull-issues | project-init."
+  - id: sync-packages
+    label: sync_packages.py
+    zone: platform
+    kind: script
+    status: active
+    col: 1
+    desc: "Subtree ↔ Exios66/* mirror sync against 7 remotes: status | pull | push | snapshot."
+  - id: taxonomy-parity
+    label: taxonomy_parity.py
+    zone: platform
+    kind: script
+    status: active
+    col: 1
+    desc: "Document-class + subclass parity gate across five surfaces, pinned to mailroom-dataset v9.1 (rev ed7576b6); voicemail → other."
+  - id: release-chain
+    label: release_chain.py
+    zone: platform
+    kind: script
+    status: active
+    col: 1
+    desc: "Changelog ↔ semver tag ↔ pyproject version governor: status | check | cut X.Y.Z --apply --tag."
+  - id: release-notes
+    label: release_notes.py
+    zone: platform
+    kind: script
+    status: active
+    col: 1
+    desc: "Renders .github/RELEASE_TEMPLATE.md with highlights, merged PRs and key commits — release bodies are never hand-typed."
+  - id: deploy-pages
+    label: deploy_gh_pages.py
+    zone: platform
+    kind: script
+    status: active
+    col: 1
+    desc: "Local GitHub Pages deploy (force-push gh-pages + enable via API) — no Actions. The pattern DMR-Graph reuses."
+  - id: audit-references
+    label: audit_references.py
+    zone: platform
+    kind: script
+    status: active
+    col: 1
+    desc: "Org-migration reference audit (DMR-006): exits 1 on any non-allowlisted stale pre-migration reference."
+  - id: sync-vendor
+    label: sync_vendor.py
+    zone: platform
+    kind: script
+    status: active
+    col: 1
+    desc: "Refreshes the sandbox's tracked vendor/ snapshots from the workspace packages (--check drift gate)."
+  - id: github-labels
+    label: github_labels.py
+    zone: platform
+    kind: script
+    status: active
+    col: 1
+    desc: "Sync/audit of the GitHub label set from .github/labels.json (the manifest is source of truth)."
+  - id: gen-charts
+    label: gen_interactive_charts.py
+    zone: platform
+    kind: script
+    status: active
+    col: 1
+    desc: "Plotly interactive HTML charts for the claims-data-eda and Enron EDA reports."
+  - id: wiki-sync
+    label: sync-wiki.sh
+    zone: platform
+    kind: script
+    status: active
+    col: 1
+    desc: "Mirrors the version-controlled wiki to the GitHub wiki (--check gate)."
+  - id: gh-templates
+    label: .github templates & labels
+    zone: platform
+    kind: doc
+    status: active
+    col: 1
+    desc: "Issue / PR / hub-card templates, the 33-label manifest and the release template."
+  - id: gh-workflows
+    label: .github/workflows
+    zone: platform
+    kind: service
+    status: active
+    col: 1
+    desc: "Four workflows: board-governance (blocking gates), release-governance (tag-push chain check), dependabot auto-merge, feeder-resync applier."
+  - id: tag-v080
+    label: Hub v0.8.0 — rollback point
+    zone: platform
+    kind: milestone
+    status: active
+    col: 2
+    desc: "Annotated tag 5a2900c5 (dbc79ca3) — the last release containing all ten packages, captured before the consolidation prune."
+  - id: prune-dmr079
+    label: DMR-079 consolidation prune
+    zone: platform
+    kind: milestone
+    status: active
+    col: 2
+    desc: "0ac7e4bc (PR #131, close-out e8558a68) — prunes llm-entity-extraction, llm-mailroom-graph and agent-mailroom; seven packages remain."
+  - id: dmr-080
+    label: open hub cards (DMR-080/081)
+    zone: platform
+    kind: milestone
+    status: pending
+    col: 2
+    desc: "DMR-080: the phantom required `ci` status context blocks every PR to main (workflow deleted, protection unchanged) — merges need --admin. DMR-081: dead archive-date UTC gate."
+  - id: earlier-monorepos
+    label: earlier monorepos
+    zone: platform
+    kind: milestone
+    status: retired
+    col: 2
+    desc: "mailroom-hub (first, 2026-08-30) and mailroom-dev (superseded 2026-09-26); the HUB-era mailroom-ops is documented as archived but no longer resolves on GitHub."
+
+  # ── external platforms ──────────────────────────────────────────────────────
+  - id: hf-hub
+    label: Hugging Face Hub
+    zone: external
+    kind: external
+    status: active
+    url: https://huggingface.co/Lucius-Morningstar
+    desc: "Datasets, models and Spaces under Lucius-Morningstar — the only published data plane."
+  - id: langfuse
+    label: Langfuse (US cloud)
+    zone: external
+    kind: external
+    status: active
+    desc: "Traces and managed prompts (mailroom-<agent>, production label) — the visualizer's source of truth."
+  - id: phoenix
+    label: Arize Phoenix
+    zone: external
+    kind: external
+    status: active
+    desc: "OTel-native tracing; The-Mailroom reads mailroom-reloaded spans through it. Eval runs never mix with production traces."
+  - id: braintrust
+    label: Braintrust
+    zone: external
+    kind: external
+    status: active
+    desc: "Hosted eval datasets, read-only; span logging disabled by default so runs never burn plan quota."
+  - id: modal
+    label: Modal (GPU)
+    zone: external
+    kind: external
+    status: active
+    desc: "GPU serving for vLLM tiers; cost basis A100 $2.10/h, L4 $0.80/h (DMR-078 / SAND-032 rate table)."
+  - id: openrouter
+    label: OpenRouter
+    zone: external
+    kind: external
+    status: active
+    desc: "Hosted models for the pipeline — and the free model behind the Gmail triage lane."
+  - id: docker
+    label: Docker / Docker Hub
+    zone: external
+    kind: external
+    status: active
+    desc: "Container deploy path: docker-compose profiles plus the Docker Hub release (make image-push); Railway is not used here."
+  - id: ollama
+    label: Ollama
+    zone: external
+    kind: external
+    status: active
+    col: 1
+    desc: "Default local provider (qwen3:8b, fallback qwen3:7b)."
+  - id: vllm
+    label: vLLM
+    zone: external
+    kind: external
+    status: active
+    col: 1
+    desc: "Local and Modal vLLM serving."
+  - id: llamacpp
+    label: llama.cpp
+    zone: external
+    kind: external
+    status: active
+    col: 1
+    desc: "GGUF sidecar serving."
+  - id: lmstudio
+    label: LM Studio
+    zone: external
+    kind: external
+    status: active
+    col: 1
+    desc: "Desktop local serving for sandbox runs."
+  - id: sqlite
+    label: SQLite
+    zone: external
+    kind: external
+    status: active
+    col: 1
+    desc: "Sandbox storage and the pipeline's persistence default."
+  - id: vercel
+    label: Vercel
+    zone: external
+    kind: external
+    status: active
+    col: 1
+    desc: "Hosts the Dispatch Board and the eval-environment viewer."
+  - id: github-pages
+    label: GitHub Pages
+    zone: external
+    kind: external
+    status: active
+    col: 1
+    desc: "Branch-deployed static sites — no Actions anywhere on the constellation's Pages path."
+  - id: gh-issues
+    label: kanban-labelled issues
+    zone: external
+    kind: external
+    status: active
+    col: 1
+    desc: "GitHub issues are the backing store of the served dispatch board; board_state.py mirrors lanes two ways."
+
+edges:
+  # data lineage
+  - [cmu-enron, enron-eda, feeds]
+  - [cms-desynpuf, claims-eda, feeds]
+  - [enron-eda, enron-correspondence-dedup, produces]
+  - [claims-eda, cms-desynpuf-insurance-claims, produces]
+  - [enron-correspondence-dedup, mailroom-dataset, feeds]
+  - [cms-desynpuf-insurance-claims, mailroom-dataset, feeds]
+  - [cuad-contracts-full, mailroom-dataset, feeds, "the 509-row byte-verified contract feeder"]
+  - [gnotheia, mailroom-dataset, feeds]
+  - [bdr-claims, mailroom-dataset, feeds]
+  - [insurbias, mailroom-dataset, feeds]
+  - [maud, mailroom-dataset, feeds]
+  - [mailroom-dataset, sorter-handoff, produces, "staging payload for the intended sorter_handoff config"]
+  - [mailroom-dataset, reloaded-fixtures, syncs, "v9.2 fixture mirror"]
+  - [mailroom-corpus, corpus-eda, feeds]
+  - [mailroom-dataset, corpus-eda, feeds]
+  - [corpus-eda, mailroom-dataset, syncs, "profiles every phase and owns the upload helpers"]
+  - [corpus-eda, hub-reports, produces]
+  - [corpus-eda, hf-hub, syncs, "uploads the EDA deliverables and dataset revisions"]
+  - [mailroom-dataset, llm-mailroom, feeds, "pinned revision; ground_truth joins the blind config on filename"]
+  - [mailroom-dataset, eval-environment, feeds, "pinned at rev ed7576b6"]
+  - [mailroom-dataset, mailroom-ml, feeds, "canonical eval corpus (ed7576b6)"]
+  - [mailroom-dataset, mailroom-reloaded, feeds, "eval harness default revision ed7576b6"]
+  - [mailroom-dataset, local-mailroom-sandbox, feeds]
+  - [mailroom-dataset, dataset-viewer, feeds]
+  - [modernbert-training, mailroom-ml, feeds, "prepared training set @5b72a345"]
+  - [reloaded-fixtures, mailroom-reloaded, feeds]
+  - [entity-extraction, legalbench-full, produces, "task-pack mirror built by build_legalbench_full_pack.py"]
+  - [legalbench-full, atticus, feeds, "its own prompt-engineering focus"]
+  - [enron-correspondence-dedup, corpus-eda, feeds, "~650-row draw via docclass_uploader"]
+  - [enron-correspondence-dedup, mailroom-corpus, feeds, "110-row v8 sample"]
+  - [claims-eda, corpus-eda, feeds, "re-renders insurance_claim rows into the corpus"]
+  - [enron-correspondence-dedup, llm-mailroom, feeds, "hf_corpora family registry"]
+  - [cms-desynpuf-insurance-claims, llm-mailroom, feeds, "hf_corpora family registry"]
+  - [cuad-contracts-full, llm-mailroom, feeds, "hf_corpora family registry"]
+  - [docclass-pilot, llm-mailroom, feeds, "pilot examples via run_hf_pilot.py"]
+  - [docclass-pilot, the-mailroom, feeds, "sync_pilot_dataset.py"]
+  - [maud, llm-mailroom, feeds, "merger_agreement checklist source"]
+  - [mailroom-dataset, hf-hub, deploys]
+  - [mailroom-corpus, hf-hub, deploys]
+  - [enron-correspondence-dedup, hf-hub, deploys]
+  - [cms-desynpuf-insurance-claims, hf-hub, deploys]
+  - [cuad-contracts, hf-hub, deploys]
+  - [legalbench-full, hf-hub, deploys]
+  - [docclass-pilot, hf-hub, deploys]
+  - [modernbert-training, hf-hub, deploys]
+  - [sorter-handoff, hf-hub, deploys]
+  - [reloaded-fixtures, hf-hub, deploys]
+
+  # scoring, evals, prompts, classifier
+  - [dojo, llm-mailroom, depends, "git pin @v0.22.0, auto-bumped"]
+  - [dojo, eval-environment, depends, "resolved through the pipeline pin"]
+  - [dojo, local-mailroom-sandbox, depends, "tracked vendor/ snapshot"]
+  - [mailroom-dataset, dojo, feeds, "ground-truth scoring grid"]
+  - [eval-environment, llm-mailroom, depends, "editable path source to a sibling checkout"]
+  - [mailroom-ml, llm-mailroom, depends, "optional, lazily imported at intake"]
+  - [mailroom-ml, modernbert-classifier, produces, "ONNX export + parity check"]
+  - [modernbert-classifier, bert-intake, feeds, "ONNX bundle loaded from ML_MODEL_DIR / ML_MODEL_REPO"]
+  - [modernbert-classifier, mailroom-reloaded, serves, "bert_primary lane"]
+  - [modernbert-classifier, hf-hub, deploys]
+  - [braintrust, entity-extraction, feeds, "eval datasets, read-only"]
+  - [entity-extraction, prompt-versions, produces]
+  - [entity-extraction, experiment-log, produces, "archived lineage"]
+  - [entity-extraction, phoenix, traces]
+  - [entity-extraction, github-pages, deploys, "the experiment-log site"]
+  - [gepa-loop, prompt-versions, produces]
+  - [eval-environment, mailroom-evals-v1, produces]
+  - [mailroom-evals-v1, gepa-loop, feeds]
+  - [mailroom-evals-v1, llm-mailroom, feeds, "baseline the vendored prompts derive from"]
+  - [eval-environment, gepa-loop, serves]
+  - [eval-environment, calibration-suite, serves]
+  - [calibration-suite, experiment-log, produces]
+  - [eval-environment, experiment-log, produces]
+  - [experiment-log, evals-viewer, feeds]
+  - [eval-environment, evals-viewer, serves]
+  - [evals-viewer, eval-environment, renders, "vercel.json serves the static snapshot"]
+  - [eval-environment, phoenix, traces, "or Braintrust — never Langfuse, so eval runs stay separate"]
+  - [evals-viewer, vercel, deploys]
+  - [mailroom-issues, mailroom-evals-v1, syncs, "sha256-locked reference copies"]
+  - [mailroom-issues, hub, governs, "cross-repo epics, RFCs and the label taxonomy"]
+  - [mailroom-issues, cost-reports, serves]
+
+  # the 13-node graph
+  - [llm-mailroom, intake, serves, "entrypoint"]
+  - [entry-route, intake, feeds, "normal path: intake → classify"]
+  - [entry-route, extract, feeds, "an approved review-resume re-runs extraction directly"]
+  - [bert-intake, classify, feeds, "fast_path prior rides into the sorter prompt (intake_prior=)"]
+  - [intake, classify, feeds]
+  - [classify, retry_classify, feeds]
+  - [retry_classify, review_classify, feeds]
+  - [review_classify, extract, feeds]
+  - [extract, retry_extract, feeds]
+  - [retry_extract, judge_verify, feeds]
+  - [judge_verify, arbiter, feeds]
+  - [arbiter, human_review, feeds]
+  - [arbiter, boss_escalation, feeds]
+  - [human_review, compile_report, feeds]
+  - [boss_escalation, compile_report, feeds]
+  - [compile_report, catalog_write, feeds]
+  - [catalog_write, archive, feeds]
+  - [archive, relations-clerk, feeds, "dispatched at every terminal manifest"]
+  - [relations-clerk, relations-graph, produces]
+  - [gmail-lane, intake, feeds, "multi-document emails (route: pipeline) hand their attachments to the full graph; single-document mail is triaged and archived by the lane itself"]
+  - [watcher, watchdog, serves]
+  - [watcher, pager, feeds, "heartbeat age drives the watcher_down rule"]
+  - [pager, mailroom-reloaded, syncs, "pager_core.py is kept byte-identical apart from its docstring"]
+  - [llm-mailroom, api, serves]
+  - [llm-mailroom, watcher, serves]
+  - [llm-mailroom, storage-bins, serves]
+  - [llm-mailroom, audit-log, serves]
+  - [llm-mailroom, catalog, serves]
+  - [llm-mailroom, pager, serves]
+  - [llm-mailroom, provider-router, serves]
+  - [llm-mailroom, taxonomy, depends, "config contract"]
+  - [llm-mailroom, tracing, serves]
+  - [llm-mailroom, langfuse, traces, "one document-pipeline trace per document"]
+  - [tracing, langfuse, feeds, "LANGFUSE SDK v4 floor; spans masked"]
+  - [watcher, storage-bins, feeds]
+  - [provider-router, provider-health, feeds]
+  - [provider-health, pager, feeds]
+  - [provider-router, modal, depends]
+  - [provider-router, openrouter, depends]
+  - [provider-router, vllm, depends]
+  - [provider-router, llamacpp, depends]
+  - [provider-router, lmstudio, depends]
+  - [provider-router, ollama, depends]
+  - [producer-space, api, serves, "hosts the producer when published — currently unpublished"]
+  - [observatory, api, feeds, "Inbox + REVIEW proxy to MAILROOM_PIPELINE_URL"]
+  - [mailroom-reloaded, phoenix, traces, "mailroom.document / mailroom.node.<node> spans"]
+  - [mailroom-reloaded, mailroom-ml, depends, "bert extra: mailroom-ml[serve]"]
+  - [mailroom-reloaded, dojo, depends, "parity extra @ v0.21.0"]
+  - [mailroom-reloaded, jev-gate, depends, "MAILROOM_JEV_PROVIDER, default off"]
+  - [mailroom-reloaded, reloaded-vllm, deploys]
+  - [mailroom-reloaded, reloaded-observability, serves]
+  - [mailroom-reloaded, reloaded-ui, serves]
+  - [mailroom-reloaded, docker, deploys, "compose profiles + Docker Hub release"]
+  - [mailroom-reloaded, reloaded-fixtures, depends]
+  - [reloaded-vllm, modal, depends]
+  - [reloaded-observability, phoenix, depends]
+  - [local-mailroom-sandbox, llm-mailroom, depends, "tracked vendor/ snapshot"]
+  - [local-mailroom-sandbox, langfuse, traces]
+  - [local-mailroom-sandbox, sqlite, depends]
+  - [local-mailroom-sandbox, ollama, depends]
+  - [local-mailroom-sandbox, vllm, depends]
+  - [local-mailroom-sandbox, llamacpp, depends]
+  - [local-mailroom-sandbox, lmstudio, depends]
+  - [local-mailroom-sandbox, modal, depends, "GPU studies"]
+  - [local-mailroom-sandbox, cost-reports, produces]
+  - [mailroom-sandbox, local-mailroom-sandbox, syncs, "organization fork"]
+  - [sync-vendor, local-mailroom-sandbox, syncs]
+
+  # surfaces
+  - [the-mailroom, langfuse, renders, "sole source of truth"]
+  - [the-mailroom, pixel-console, serves]
+  - [the-mailroom, observatory, serves]
+  - [the-mailroom, tui, serves]
+  - [the-mailroom, terminal-site, serves]
+  - [the-mailroom, dataset-viewer, serves]
+  - [the-mailroom, repo-browser, serves]
+  - [the-mailroom, github-pages, deploys]
+  - [pixel-console, api, feeds, "Inbox + REVIEW proxy to the producer API"]
+  - [observatory, phoenix, renders]
+  - [observatory, hf-hub, deploys]
+  - [dataset-viewer, mailroom-dataset, depends]
+  - [repo-browser, hub, depends]
+  - [board-site, hub, depends, "lives in board-site/, the hub's deploy root"]
+  - [board-site, vercel, deploys]
+  - [board-site, gh-issues, depends, "reads and writes kanban-labelled issues"]
+  - [agent-mailroom, llm-mailroom, depends, "0.7.1 pin"]
+  - [agent-mailroom, dojo, depends, "v0.19.1 pin"]
+  - [agent-mailroom, agent-floor, serves]
+  - [agent-mailroom, mailroom-dataset, feeds, "pulls rows onto the same inbox"]
+  - [graphify-graph, llm-mailroom, documents, "retired view — AST-level, not architecture-level"]
+  - [mailroom-dev-graph, earlier-monorepos, documents]
+  - [dmr-graph, constellation-docs, renders, "the canonical map this site visualises"]
+  - [dmr-graph, hub, documents]
+  - [dmr-graph, llm-mailroom, documents]
+  - [dmr-graph, dojo, documents]
+  - [dmr-graph, the-mailroom, documents]
+  - [dmr-graph, local-mailroom-sandbox, documents]
+  - [dmr-graph, mailroom-reloaded, documents]
+  - [dmr-graph, mailroom-issues, documents]
+  - [dmr-graph, corpus-eda, documents]
+  - [dmr-graph, enron-eda, documents]
+  - [dmr-graph, claims-eda, documents]
+  - [dmr-graph, eval-environment, documents]
+  - [dmr-graph, mailroom-ml, documents]
+  - [dmr-graph, graphify-graph, supersedes]
+  - [dmr-graph, github-pages, deploys]
+
+  # hub, governance, release history
+  - [sync-packages, hub, serves]
+  - [hub, uv-workspace, serves]
+  - [hub, board-tasks, serves]
+  - [hub, wiki, serves]
+  - [hub, specialists, serves]
+  - [hub, constellation-docs, serves]
+  - [hub, hub-data, serves]
+  - [hub, hub-reports, serves]
+  - [hub, gh-templates, serves]
+  - [hub, gh-workflows, serves]
+  - [hub, board-site, serves]
+  - [hub, changelog, serves]
+  - [hub, llm-mailroom, syncs, "git subtree mirror"]
+  - [hub, dojo, syncs, "git subtree mirror"]
+  - [hub, the-mailroom, syncs, "git subtree mirror"]
+  - [hub, local-mailroom-sandbox, syncs, "git subtree mirror"]
+  - [hub, corpus-eda, syncs, "git subtree mirror"]
+  - [hub, enron-eda, syncs, "git subtree mirror"]
+  - [hub, claims-eda, syncs, "git subtree mirror"]
+  - [hub, tag-v080, serves]
+  - [hub, prune-dmr079, serves]
+  - [hub, dmr-080, serves]
+  - [hub, earlier-monorepos, supersedes]
+  - [board-state, board-tasks, depends]
+  - [board-state, board-site, syncs, "pull-issues / sync-issues mirror the lanes"]
+  - [board-state, gh-issues, syncs]
+  - [specialists, board-tasks, governs, "claim → in_progress → close with Evidence"]
+  - [taxonomy, taxonomy-parity, governs]
+  - [taxonomy-parity, v7-taxonomy, depends]
+  - [wiki, hub, documents]
+  - [wiki-sync, wiki, serves]
+  - [constellation-docs, llm-mailroom, serves]
+  - [release-chain, tag-v080, governs, "a version tag must never exist without its changelog section"]
+  - [release-chain, hub, governs, "changelog ↔ tags ↔ pyproject version chain"]
+  - [release-chain, changelog, governs]
+  - [release-notes, tag-v080, serves]
+  - [release-notes, changelog, depends]
+  - [gh-workflows, board-state, governs, "blocking board invariants"]
+  - [gh-workflows, github-labels, governs, "label-manifest drift audit"]
+  - [gh-workflows, taxonomy-parity, governs]
+  - [gh-workflows, release-chain, governs, "tag-push chain check"]
+  - [gh-workflows, audit-references, governs]
+  - [deploy-pages, github-pages, deploys]
+  - [deploy-pages, corpus-eda, deploys]
+  - [deploy-pages, enron-eda, deploys]
+  - [deploy-pages, claims-eda, deploys]
+  - [audit-references, hub, serves]
+  - [github-labels, gh-templates, serves]
+  - [gen-charts, claims-eda, serves]
+  - [gen-charts, enron-eda, serves]
+  - [prune-dmr079, tag-v080, depends, "the prune is recorded against the rollback point"]
+  - [prune-dmr079, entity-extraction, prunes]
+  - [prune-dmr079, entity-extraction-experiments, prunes, "organization copy — standalone only"]
+  - [prune-dmr079, graphify-graph, prunes]
+  - [prune-dmr079, agent-mailroom, prunes]

@@ -1,0 +1,12 @@
+[project]
+name = "dmr-graph"
+version = "0.1.0"
+description = "Knowledge graph of the Mailroom constellation (v0.8.0, post-DMR-079 prune) — networkx model + Cytoscape.js site, deployed to GitHub Pages without Actions."
+requires-python = ">=3.11"
+dependencies = [
+    "networkx>=3.2",
+    "pyyaml>=6.0",
+]
+
+[tool.uv]
+package = false

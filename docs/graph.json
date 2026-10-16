@@ -1,0 +1,5990 @@
+{
+ "meta": {
+  "title": "DMR-Graph",
+  "subtitle": "Knowledge graph of the Mailroom constellation",
+  "hub_version": "v0.8.0",
+  "prune": "DMR-079 consolidation",
+  "packages": 7,
+  "note": "Hub v0.8.0 is the pre-prune rollback point (all ten packages present); DMR-079 then pruned llm-entity-extraction, llm-mailroom-graph and agent-mailroom, leaving the seven core packages mapped here.",
+  "relations": {
+   "feeds": "data or control flows into the target (stage → stage, dataset → consumer)",
+   "produces": "the source creates a derived artifact",
+   "depends": "code or config dependency (version pin, vendored snapshot, import)",
+   "traces": "runtime telemetry is emitted to an observability sink",
+   "renders": "the surface displays data coming from the target",
+   "serves": "the component owns or exposes the target surface / entrypoint",
+   "governs": "policy, gate or board authority over the target",
+   "syncs": "mirror, subtree, fork or upload reconciliation",
+   "deploys": "publishes to a host",
+   "supersedes": "replaces or retires the target",
+   "prunes": "removed from the monorepo by DMR-079",
+   "documents": "coverage edge of this graph"
+  },
+  "generated": "2026-10-16",
+  "builder": "scripts/build_graph.py",
+  "source": "graph/constellation.yaml",
+  "counts": {
+   "nodes": 128,
+   "edges": 237,
+   "relations": 12
+  }
+ },
+ "zones": [
+  {
+   "id": "sources",
+   "label": "Data & corpora",
+   "blurb": "Raw corpora, corpus-feed packages and the pinned Hugging Face datasets.",
+   "fill": "#B87F26",
+   "border": "#F0C274",
+   "count": 20
+  },
+  {
+   "id": "eval",
+   "label": "Evaluation & prompts",
+   "blurb": "The one definition of \"correct\", per-node evals and calibration, the classifier, and the prompt loop.",
+   "fill": "#5A52C7",
+   "border": "#A9A4F0",
+   "count": 13
+  },
+  {
+   "id": "pipeline",
+   "label": "Pipeline & runtime",
+   "blurb": "llm-mailroom's 13-node graph, its auxiliary lanes, persistence, the reloaded pipeline and the sandbox.",
+   "fill": "#0F8C7E",
+   "border": "#69D6C8",
+   "count": 36
+  },
+  {
+   "id": "surfaces",
+   "label": "Surfaces",
+   "blurb": "What humans look at — console, Observatory, TUI, terminals, boards, graph sites.",
+   "fill": "#C2465A",
+   "border": "#F39BA8",
+   "count": 15
+  },
+  {
+   "id": "platform",
+   "label": "Hub, governance & release",
+   "blurb": "The monorepo, its board, its scripts and gates, the issue hub and the release milestones.",
+   "fill": "#3E6E9E",
+   "border": "#93BCE0",
+   "count": 29
+  },
+  {
+   "id": "external",
+   "label": "External platforms",
+   "blurb": "Providers, tracing sinks, GPU hosts and storage outside the repos.",
+   "fill": "#5A6473",
+   "border": "#A9B3C2",
+   "count": 15
+  }
+ ],
+ "kinds": {
+  "package": {
+   "shape": "round-rectangle",
+   "width": 168,
+   "height": 46
+  },
+  "dataset": {
+   "shape": "barrel",
+   "width": 158,
+   "height": 44
+  },
+  "model": {
+   "shape": "round-diamond",
+   "width": 158,
+   "height": 52
+  },
+  "stage": {
+   "shape": "ellipse",
+   "width": 132,
+   "height": 44
+  },
+  "aux": {
+   "shape": "rhomboid",
+   "width": 142,
+   "height": 44
+  },
+  "service": {
+   "shape": "hexagon",
+   "width": 142,
+   "height": 44
+  },
+  "script": {
+   "shape": "tag",
+   "width": 150,
+   "height": 42
+  },
+  "doc": {
+   "shape": "rectangle",
+   "width": 162,
+   "height": 44
+  },
+  "milestone": {
+   "shape": "diamond",
+   "width": 172,
+   "height": 52
+  },
+  "external": {
+   "shape": "diamond",
+   "width": 150,
+   "height": 48
+  }
+ },
+ "relations": {
+  "feeds": {
+   "color": "#D9A03C",
+   "line": "solid",
+   "meaning": "data or control flows into the target (stage → stage, dataset → consumer)"
+  },
+  "produces": {
+   "color": "#D9A03C",
+   "line": "dashed",
+   "meaning": "the source creates a derived artifact"
+  },
+  "depends": {
+   "color": "#7FA6C9",
+   "line": "solid",
+   "meaning": "code or config dependency (version pin, vendored snapshot, import)"
+  },
+  "traces": {
+   "color": "#8E86E8",
+   "line": "dashed",
+   "meaning": "runtime telemetry is emitted to an observability sink"
+  },
+  "renders": {
+   "color": "#E5808F",
+   "line": "dashed",
+   "meaning": "the surface displays data coming from the target"
+  },
+  "serves": {
+   "color": "#4FC3B4",
+   "line": "dotted",
+   "meaning": "the component owns or exposes the target surface / entrypoint"
+  },
+  "governs": {
+   "color": "#B9C3CE",
+   "line": "dotted",
+   "meaning": "policy, gate or board authority over the target"
+  },
+  "syncs": {
+   "color": "#B9C3CE",
+   "line": "dashed",
+   "meaning": "mirror, subtree, fork or upload reconciliation"
+  },
+  "deploys": {
+   "color": "#4FC3B4",
+   "line": "dashed",
+   "meaning": "publishes to a host"
+  },
+  "supersedes": {
+   "color": "#7B8494",
+   "line": "dashed",
+   "meaning": "replaces or retires the target"
+  },
+  "prunes": {
+   "color": "#C25A6A",
+   "line": "dashed",
+   "meaning": "removed from the monorepo by DMR-079"
+  },
+  "documents": {
+   "color": "#E5808F",
+   "line": "dotted",
+   "meaning": "coverage edge of this graph"
+  }
+ },
+ "layout": {
+  "x_step": 620,
+  "col_step": 268,
+  "y_step": 76,
+  "y0": 40
+ },
+ "analytics": {
+  "god_nodes": [
+   {
+    "id": "hub",
+    "label": "Digital-Mailroom (hub)",
+    "zone": "platform",
+    "degree": 30
+   },
+   {
+    "id": "llm-mailroom",
+    "label": "llm-mailroom (package “mailroom”)",
+    "zone": "pipeline",
+    "degree": 27
+   },
+   {
+    "id": "mailroom-dataset",
+    "label": "mailroom-dataset",
+    "zone": "sources",
+    "degree": 21
+   },
+   {
+    "id": "dmr-graph",
+    "label": "DMR-Graph (this site)",
+    "zone": "surfaces",
+    "degree": 15
+   },
+   {
+    "id": "local-mailroom-sandbox",
+    "label": "local-mailroom-sandbox",
+    "zone": "pipeline",
+    "degree": 15
+   },
+   {
+    "id": "mailroom-reloaded",
+    "label": "mailroom-reloaded (CrewAI Flows)",
+    "zone": "pipeline",
+    "degree": 14
+   },
+   {
+    "id": "hf-hub",
+    "label": "Hugging Face Hub",
+    "zone": "external",
+    "degree": 13
+   },
+   {
+    "id": "eval-environment",
+    "label": "eval-environment",
+    "zone": "eval",
+    "degree": 11
+   }
+  ],
+  "bridges": [
+   {
+    "from": "hub",
+    "to": "wiki",
+    "weight": 33
+   },
+   {
+    "from": "hub",
+    "to": "earlier-monorepos",
+    "weight": 32
+   },
+   {
+    "from": "hub",
+    "to": "uv-workspace",
+    "weight": 31
+   },
+   {
+    "from": "hub",
+    "to": "hub-data",
+    "weight": 31
+   },
+   {
+    "from": "hub",
+    "to": "dmr-080",
+    "weight": 31
+   },
+   {
+    "from": "hub",
+    "to": "sync-packages",
+    "weight": 31
+   },
+   {
+    "from": "llm-mailroom",
+    "to": "audit-log",
+    "weight": 28
+   },
+   {
+    "from": "llm-mailroom",
+    "to": "catalog",
+    "weight": 28
+   }
+  ],
+  "components": 1,
+  "largest_component": 128,
+  "zone_counts": {
+   "sources": 20,
+   "eval": 13,
+   "pipeline": 36,
+   "surfaces": 15,
+   "platform": 29,
+   "external": 15
+  },
+  "status_counts": {
+   "active": 118,
+   "pending": 3,
+   "retired": 7
+  },
+  "relation_counts": {
+   "feeds": 61,
+   "produces": 14,
+   "syncs": 16,
+   "deploys": 23,
+   "depends": 35,
+   "serves": 47,
+   "traces": 5,
+   "renders": 4,
+   "governs": 11,
+   "documents": 15,
+   "supersedes": 2,
+   "prunes": 4
+  }
+ },
+ "elements": {
+  "nodes": [
+   {
+    "data": {
+     "id": "cmu-enron",
+     "label": "CMU Enron corpus",
+     "zone": "sources",
+     "kind": "dataset",
+     "status": "active",
+     "desc": "Maildir 20150507 tarball — 517,390 parseable emails across ~150 custodians.",
+     "version": "",
+     "shape": "barrel",
+     "width": 158,
+     "height": 44,
+     "fill": "#B87F26",
+     "border": "#F0C274",
+     "zoneLabel": "Data & corpora",
+     "links": []
+    },
+    "position": {
+     "x": 0,
+     "y": 40
+    }
+   },
+   {
+    "data": {
+     "id": "cms-desynpuf",
+     "label": "CMS DE-SynPUF (Sample 1)",
+     "zone": "sources",
+     "kind": "dataset",
+     "status": "active",
+     "desc": "2008–2010 Medicare claims — 11.15M claim events, 116,352 beneficiaries, ~$1.62B paid.",
+     "version": "",
+     "shape": "barrel",
+     "width": 158,
+     "height": 44,
+     "fill": "#B87F26",
+     "border": "#F0C274",
+     "zoneLabel": "Data & corpora",
+     "links": []
+    },
+    "position": {
+     "x": 0,
+     "y": 116
+    }
+   },
+   {
+    "data": {
+     "id": "enron-eda",
+     "label": "Enron-Evaluation-Environment",
+     "zone": "sources",
+     "kind": "package",
+     "status": "active",
+     "desc": "Enron corpus EDA → pipeline-ready correspondence corpus (10 subclass keys; deduplicated by construction).",
+     "version": "0.1.0",
+     "shape": "round-rectangle",
+     "width": 168,
+     "height": 46,
+     "fill": "#B87F26",
+     "border": "#F0C274",
+     "zoneLabel": "Data & corpora",
+     "links": [
+      {
+       "label": "repository",
+       "url": "https://github.com/Exios66/Enron-Evaluation-Environment"
+      },
+      {
+       "label": "GitHub Pages",
+       "url": "https://exios66.github.io/Enron-Evaluation-Environment/"
+      }
+     ]
+    },
+    "position": {
+     "x": 0,
+     "y": 192
+    }
+   },
+   {
+    "data": {
+     "id": "claims-eda",
+     "label": "claims-data-eda",
+     "zone": "sources",
+     "kind": "package",
+     "status": "active",
+     "desc": "CMS DE-SynPUF EDA → plain-text EOB documents with ground truth aligned to InsuranceClaimExtraction.",
+     "version": "0.1.0",
+     "shape": "round-rectangle",
+     "width": 168,
+     "height": 46,
+     "fill": "#B87F26",
+     "border": "#F0C274",
+     "zoneLabel": "Data & corpora",
+     "links": [
+      {
+       "label": "repository",
+       "url": "https://github.com/Exios66/claims-data-eda"
+      },
+      {
+       "label": "GitHub Pages",
+       "url": "https://exios66.github.io/claims-data-eda/"
+      }
+     ]
+    },
+    "position": {
+     "x": 0,
+     "y": 268
+    }
+   },
+   {
+    "data": {
+     "id": "corpus-eda",
+     "label": "mailroom-corpus-eda",
+     "zone": "sources",
+     "kind": "package",
+     "status": "active",
+     "desc": "Canonical-dataset EDA (P0–P6) + the central Hugging Face upload helpers (hf_interface, dataset_export, docclass_uploader, intent_backfill).",
+     "version": "0.1.0",
+     "shape": "round-rectangle",
+     "width": 168,
+     "height": 46,
+     "fill": "#B87F26",
+     "border": "#F0C274",
+     "zoneLabel": "Data & corpora",
+     "links": [
+      {
+       "label": "repository",
+       "url": "https://github.com/Exios66/Mailroom-Corpus-EDA"
+      },
+      {
+       "label": "GitHub Pages",
+       "url": "https://exios66.github.io/Mailroom-Corpus-EDA/"
+      }
+     ]
+    },
+    "position": {
+     "x": 0,
+     "y": 344
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-corpus",
+     "label": "mailroom-corpus",
+     "zone": "sources",
+     "kind": "dataset",
+     "status": "active",
+     "desc": "Frozen v8 baseline (2,000 rows) and parent of the canonical corpus; the archived v7/v8 publisher's source.",
+     "version": "frozen v8 · rev eafe1ab4",
+     "shape": "barrel",
+     "width": 158,
+     "height": 44,
+     "fill": "#B87F26",
+     "border": "#F0C274",
+     "zoneLabel": "Data & corpora",
+     "links": [
+      {
+       "label": "Hugging Face dataset",
+       "url": "https://huggingface.co/datasets/Lucius-Morningstar/mailroom-corpus"
+      }
+     ]
+    },
+    "position": {
+     "x": 268,
+     "y": 40
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-dataset",
+     "label": "mailroom-dataset",
+     "zone": "sources",
+     "kind": "dataset",
+     "status": "active",
+     "desc": "Core corpus: 3,302 documents, 5 classes, 55 class×subclass strata (2,979 train / 323 test). Consumers pin a revision, never a live tip.",
+     "version": "schema v9 · consumers pin v9.1 (ed7576b6) · Hub tip v9.2",
+     "shape": "barrel",
+     "width": 158,
+     "height": 44,
+     "fill": "#B87F26",
+     "border": "#F0C274",
+     "zoneLabel": "Data & corpora",
+     "links": [
+      {
+       "label": "Hugging Face dataset",
+       "url": "https://huggingface.co/datasets/Lucius-Morningstar/mailroom-dataset"
+      }
+     ]
+    },
+    "position": {
+     "x": 268,
+     "y": 116
+    }
+   },
+   {
+    "data": {
+     "id": "enron-correspondence-dedup",
+     "label": "enron-correspondence-dedup",
+     "zone": "sources",
+     "kind": "dataset",
+     "status": "active",
+     "desc": "Deduplicated, subclass-labelled correspondence rows contributed to the canonical corpus.",
+     "version": "",
+     "shape": "barrel",
+     "width": 158,
+     "height": 44,
+     "fill": "#B87F26",
+     "border": "#F0C274",
+     "zoneLabel": "Data & corpora",
+     "links": [
+      {
+       "label": "Hugging Face dataset",
+       "url": "https://huggingface.co/datasets/Lucius-Morningstar/enron-correspondence-dedup"
+      }
+     ]
+    },
+    "position": {
+     "x": 268,
+     "y": 192
+    }
+   },
+   {
+    "data": {
+     "id": "cms-desynpuf-insurance-claims",
+     "label": "cms-desynpuf-insurance-claims",
+     "zone": "sources",
+     "kind": "dataset",
+     "status": "active",
+     "desc": "EOB-rendered insurance_claim documents contributed to the canonical corpus.",
+     "version": "",
+     "shape": "barrel",
+     "width": 158,
+     "height": 44,
+     "fill": "#B87F26",
+     "border": "#F0C274",
+     "zoneLabel": "Data & corpora",
+     "links": [
+      {
+       "label": "Hugging Face dataset",
+       "url": "https://huggingface.co/datasets/Lucius-Morningstar/cms-desynpuf-insurance-claims"
+      }
+     ]
+    },
+    "position": {
+     "x": 268,
+     "y": 268
+    }
+   },
+   {
+    "data": {
+     "id": "cuad-contracts",
+     "label": "mailroom-cuad-contracts",
+     "zone": "sources",
+     "kind": "dataset",
+     "status": "active",
+     "desc": "CUAD page-image vision surface (50 rows + 546 PNGs); the text+clause mirror beside it is the corpus feeder.",
+     "version": "",
+     "shape": "barrel",
+     "width": 158,
+     "height": 44,
+     "fill": "#B87F26",
+     "border": "#F0C274",
+     "zoneLabel": "Data & corpora",
+     "links": [
+      {
+       "label": "Hugging Face dataset",
+       "url": "https://huggingface.co/datasets/Lucius-Morningstar/mailroom-cuad-contracts"
+      }
+     ]
+    },
+    "position": {
+     "x": 268,
+     "y": 344
+    }
+   },
+   {
+    "data": {
+     "id": "cuad-contracts-full",
+     "label": "mailroom-cuad-contracts-full",
+     "zone": "sources",
+     "kind": "dataset",
+     "status": "active",
+     "desc": "Byte-verified CUAD text+clause mirror (510 rows) — the real contract feeder (509 rows) and a registry ingest of llm-mailroom.",
+     "version": "",
+     "shape": "barrel",
+     "width": 158,
+     "height": 44,
+     "fill": "#B87F26",
+     "border": "#F0C274",
+     "zoneLabel": "Data & corpora",
+     "links": [
+      {
+       "label": "Hugging Face dataset",
+       "url": "https://huggingface.co/datasets/Lucius-Morningstar/mailroom-cuad-contracts-full"
+      }
+     ]
+    },
+    "position": {
+     "x": 268,
+     "y": 420
+    }
+   },
+   {
+    "data": {
+     "id": "legalbench-full",
+     "label": "legalbench-full",
+     "zone": "sources",
+     "kind": "dataset",
+     "status": "active",
+     "desc": "LegalBench mirror used by the extraction prompt experiments.",
+     "version": "",
+     "shape": "barrel",
+     "width": 158,
+     "height": 44,
+     "fill": "#B87F26",
+     "border": "#F0C274",
+     "zoneLabel": "Data & corpora",
+     "links": [
+      {
+       "label": "Hugging Face dataset",
+       "url": "https://huggingface.co/datasets/Lucius-Morningstar/legalbench-full"
+      }
+     ]
+    },
+    "position": {
+     "x": 268,
+     "y": 496
+    }
+   },
+   {
+    "data": {
+     "id": "docclass-pilot",
+     "label": "docclass-pilot",
+     "zone": "sources",
+     "kind": "dataset",
+     "status": "active",
+     "desc": "48-stratum pilot slice of docclass-merged v5 (138 rows): pipeline pilot examples and the visualizer's pilot dataset.",
+     "version": "",
+     "shape": "barrel",
+     "width": 158,
+     "height": 44,
+     "fill": "#B87F26",
+     "border": "#F0C274",
+     "zoneLabel": "Data & corpora",
+     "links": [
+      {
+       "label": "Hugging Face dataset",
+       "url": "https://huggingface.co/datasets/Lucius-Morningstar/docclass-pilot"
+      }
+     ]
+    },
+    "position": {
+     "x": 268,
+     "y": 572
+    }
+   },
+   {
+    "data": {
+     "id": "modernbert-training",
+     "label": "mailroom-modernbert-training",
+     "zone": "sources",
+     "kind": "dataset",
+     "status": "active",
+     "desc": "Leak-free, clerk-normalized training set for the ModernBERT ingest classifier.",
+     "version": "rev 5b72a345",
+     "shape": "barrel",
+     "width": 158,
+     "height": 44,
+     "fill": "#B87F26",
+     "border": "#F0C274",
+     "zoneLabel": "Data & corpora",
+     "links": [
+      {
+       "label": "Hugging Face dataset",
+       "url": "https://huggingface.co/datasets/Lucius-Morningstar/mailroom-modernbert-training"
+      }
+     ]
+    },
+    "position": {
+     "x": 268,
+     "y": 648
+    }
+   },
+   {
+    "data": {
+     "id": "sorter-handoff",
+     "label": "mailroom-sorter-handoff",
+     "zone": "sources",
+     "kind": "dataset",
+     "status": "active",
+     "desc": "sorter_handoff gold labels — the staging payload for the intended sorter_handoff config (publishes no data files yet).",
+     "version": "",
+     "shape": "barrel",
+     "width": 158,
+     "height": 44,
+     "fill": "#B87F26",
+     "border": "#F0C274",
+     "zoneLabel": "Data & corpora",
+     "links": [
+      {
+       "label": "Hugging Face dataset",
+       "url": "https://huggingface.co/datasets/Lucius-Morningstar/mailroom-sorter-handoff"
+      }
+     ]
+    },
+    "position": {
+     "x": 268,
+     "y": 724
+    }
+   },
+   {
+    "data": {
+     "id": "reloaded-fixtures",
+     "label": "mailroom-reloaded-fixtures",
+     "zone": "sources",
+     "kind": "dataset",
+     "status": "active",
+     "desc": "Fixture adaptation (v9.2 mirror, 3,302 rows) for the mailroom-reloaded pipeline.",
+     "version": "",
+     "shape": "barrel",
+     "width": 158,
+     "height": 44,
+     "fill": "#B87F26",
+     "border": "#F0C274",
+     "zoneLabel": "Data & corpora",
+     "links": [
+      {
+       "label": "Hugging Face dataset",
+       "url": "https://huggingface.co/datasets/Lucius-Morningstar/mailroom-reloaded-fixtures"
+      }
+     ]
+    },
+    "position": {
+     "x": 268,
+     "y": 800
+    }
+   },
+   {
+    "data": {
+     "id": "gnotheia",
+     "label": "GNOTHEIA synthetic claims",
+     "zone": "sources",
+     "kind": "dataset",
+     "status": "active",
+     "desc": "200 synthetic property-claim documents contributing to the insurance_claim class.",
+     "version": "",
+     "shape": "barrel",
+     "width": 158,
+     "height": 44,
+     "fill": "#B87F26",
+     "border": "#F0C274",
+     "zoneLabel": "Data & corpora",
+     "links": [
+      {
+       "label": "Hugging Face dataset",
+       "url": "https://huggingface.co/datasets/gratex/GNOTHEIA-synthetic-insurance-dataset"
+      }
+     ]
+    },
+    "position": {
+     "x": 536,
+     "y": 40
+    }
+   },
+   {
+    "data": {
+     "id": "bdr-claims",
+     "label": "BDR motor claims",
+     "zone": "sources",
+     "kind": "dataset",
+     "status": "active",
+     "desc": "BDR auto-insurance claim corpus — 150 rows in v8, 300 auto rows in v9.",
+     "version": "",
+     "shape": "barrel",
+     "width": 158,
+     "height": 44,
+     "fill": "#B87F26",
+     "border": "#F0C274",
+     "zoneLabel": "Data & corpora",
+     "links": [
+      {
+       "label": "Hugging Face dataset",
+       "url": "https://huggingface.co/datasets/bdr-ai-org/insurance-motor-claims-decision-v1"
+      }
+     ]
+    },
+    "position": {
+     "x": 536,
+     "y": 116
+    }
+   },
+   {
+    "data": {
+     "id": "insurbias",
+     "label": "INSURBIAS",
+     "zone": "sources",
+     "kind": "dataset",
+     "status": "active",
+     "desc": "150 narrative auto-claim rows added to the corpus in v9.",
+     "version": "",
+     "shape": "barrel",
+     "width": 158,
+     "height": 44,
+     "fill": "#B87F26",
+     "border": "#F0C274",
+     "zoneLabel": "Data & corpora",
+     "links": [
+      {
+       "label": "Hugging Face dataset",
+       "url": "https://huggingface.co/datasets/feihuangfh/INSURBIAS"
+      }
+     ]
+    },
+    "position": {
+     "x": 536,
+     "y": 192
+    }
+   },
+   {
+    "data": {
+     "id": "maud",
+     "label": "MAUD v1",
+     "zone": "sources",
+     "kind": "dataset",
+     "status": "active",
+     "desc": "152 merger_agreement rows (Zenodo 7500064) — the merger specialist's checklist source corpus.",
+     "version": "",
+     "shape": "barrel",
+     "width": 158,
+     "height": 44,
+     "fill": "#B87F26",
+     "border": "#F0C274",
+     "zoneLabel": "Data & corpora",
+     "links": [
+      {
+       "label": "live site",
+       "url": "https://zenodo.org/records/7500064"
+      }
+     ]
+    },
+    "position": {
+     "x": 536,
+     "y": 268
+    }
+   },
+   {
+    "data": {
+     "id": "dojo",
+     "label": "llm-dojo-scoring",
+     "zone": "eval",
+     "kind": "package",
+     "status": "active",
+     "desc": "The only place a metric is defined — field-type-aware scoring, error analysis, interpretation. llm-mailroom pins v0.22.0; reloaded v0.21.0 parity.",
+     "version": "0.22.0",
+     "shape": "round-rectangle",
+     "width": 168,
+     "height": 46,
+     "fill": "#5A52C7",
+     "border": "#A9A4F0",
+     "zoneLabel": "Evaluation & prompts",
+     "links": [
+      {
+       "label": "repository",
+       "url": "https://github.com/Exios66/llm-dojo-scoring"
+      }
+     ]
+    },
+    "position": {
+     "x": 620,
+     "y": 40
+    }
+   },
+   {
+    "data": {
+     "id": "eval-environment",
+     "label": "eval-environment",
+     "zone": "eval",
+     "kind": "package",
+     "status": "active",
+     "desc": "Per-node evals (31-task registry), pilot scenarios and calibration suites over the canonical dataset; holds the frozen v1 prompt lineage and the GEPA loop.",
+     "version": "mailroom-evals v0.5.0",
+     "shape": "round-rectangle",
+     "width": 168,
+     "height": 46,
+     "fill": "#5A52C7",
+     "border": "#A9A4F0",
+     "zoneLabel": "Evaluation & prompts",
+     "links": [
+      {
+       "label": "repository",
+       "url": "https://github.com/LLM-Mailroom-Services/eval-environment"
+      }
+     ]
+    },
+    "position": {
+     "x": 620,
+     "y": 116
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-ml",
+     "label": "mailroom-ml",
+     "zone": "eval",
+     "kind": "package",
+     "status": "active",
+     "desc": "ModernBERT ingest fast-path classifier: training, per-head calibration, ONNX-on-CPU serving. A standalone contractor repo, not a governed member.",
+     "version": "0.1.0",
+     "shape": "round-rectangle",
+     "width": 168,
+     "height": 46,
+     "fill": "#5A52C7",
+     "border": "#A9A4F0",
+     "zoneLabel": "Evaluation & prompts",
+     "links": [
+      {
+       "label": "repository",
+       "url": "https://github.com/LLM-Mailroom-Services/mailroom-ml"
+      }
+     ]
+    },
+    "position": {
+     "x": 620,
+     "y": 192
+    }
+   },
+   {
+    "data": {
+     "id": "modernbert-classifier",
+     "label": "mailroom-modernbert-classifier",
+     "zone": "eval",
+     "kind": "model",
+     "status": "active",
+     "desc": "The published ModernBERT bundle mailroom-ml serves: five document classes plus per-class subclass heads, calibrated, exported to ONNX.",
+     "version": "",
+     "shape": "round-diamond",
+     "width": 158,
+     "height": 52,
+     "fill": "#5A52C7",
+     "border": "#A9A4F0",
+     "zoneLabel": "Evaluation & prompts",
+     "links": [
+      {
+       "label": "Hugging Face model",
+       "url": "https://huggingface.co/Lucius-Morningstar/mailroom-modernbert-classifier"
+      }
+     ]
+    },
+    "position": {
+     "x": 620,
+     "y": 268
+    }
+   },
+   {
+    "data": {
+     "id": "atticus",
+     "label": "atticus-investigation",
+     "zone": "eval",
+     "kind": "package",
+     "status": "active",
+     "desc": "Adjacent eval sibling: LegalBench classification prompt-engineering pipeline — same methodology, separate focus.",
+     "version": "",
+     "shape": "round-rectangle",
+     "width": 168,
+     "height": 46,
+     "fill": "#5A52C7",
+     "border": "#A9A4F0",
+     "zoneLabel": "Evaluation & prompts",
+     "links": [
+      {
+       "label": "repository",
+       "url": "https://github.com/Exios66/atticus-investigation"
+      }
+     ]
+    },
+    "position": {
+     "x": 620,
+     "y": 344
+    }
+   },
+   {
+    "data": {
+     "id": "entity-extraction",
+     "label": "llm-entity-extraction",
+     "zone": "eval",
+     "kind": "package",
+     "status": "retired",
+     "desc": "Prompt-experiment loop and source of the vendored sorter/contracts prompts. Pruned in DMR-079 — standalone only, no longer synced.",
+     "version": "0.8.0 (last hub release)",
+     "shape": "round-rectangle",
+     "width": 168,
+     "height": 46,
+     "fill": "#5A52C7",
+     "border": "#A9A4F0",
+     "zoneLabel": "Evaluation & prompts",
+     "links": [
+      {
+       "label": "repository",
+       "url": "https://github.com/Exios66/llm-entity-extraction"
+      },
+      {
+       "label": "live site",
+       "url": "https://exios66.github.io/llm-entity-extraction/"
+      }
+     ]
+    },
+    "position": {
+     "x": 620,
+     "y": 420
+    }
+   },
+   {
+    "data": {
+     "id": "entity-extraction-experiments",
+     "label": "Entity-Extraction-Experiments",
+     "zone": "eval",
+     "kind": "package",
+     "status": "retired",
+     "desc": "Organization copy of the prompt loop (v0.20.0 lineage). Pruned/standalone — kept only as history.",
+     "version": "",
+     "shape": "round-rectangle",
+     "width": 168,
+     "height": 46,
+     "fill": "#5A52C7",
+     "border": "#A9A4F0",
+     "zoneLabel": "Evaluation & prompts",
+     "links": [
+      {
+       "label": "repository",
+       "url": "https://github.com/LLM-Mailroom-Services/Entity-Extraction-Experiments"
+      }
+     ]
+    },
+    "position": {
+     "x": 620,
+     "y": 496
+    }
+   },
+   {
+    "data": {
+     "id": "evals-viewer",
+     "label": "eval-environment viewer",
+     "zone": "eval",
+     "kind": "service",
+     "status": "active",
+     "desc": "Run viewer and environment dashboard — static, zero-dependency, live on Vercel.",
+     "version": "",
+     "shape": "hexagon",
+     "width": 142,
+     "height": 44,
+     "fill": "#5A52C7",
+     "border": "#A9A4F0",
+     "zoneLabel": "Evaluation & prompts",
+     "links": [
+      {
+       "label": "live site",
+       "url": "https://eval-environment.vercel.app"
+      }
+     ]
+    },
+    "position": {
+     "x": 888,
+     "y": 40
+    }
+   },
+   {
+    "data": {
+     "id": "calibration-suite",
+     "label": "calibration harness",
+     "zone": "eval",
+     "kind": "service",
+     "status": "active",
+     "desc": "Per-node reliability/ECE sweeps and threshold recommendations: intake, classify, judge, arbiter, retry, boss, archivist.",
+     "version": "",
+     "shape": "hexagon",
+     "width": 142,
+     "height": 44,
+     "fill": "#5A52C7",
+     "border": "#A9A4F0",
+     "zoneLabel": "Evaluation & prompts",
+     "links": []
+    },
+    "position": {
+     "x": 888,
+     "y": 116
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-evals-v1",
+     "label": "frozen v1 prompt lineage",
+     "zone": "eval",
+     "kind": "doc",
+     "status": "active",
+     "desc": "sha256-locked baseline (sorter_v1 + five specialist stems + rubrics) that every mutation is A/B'd against; reference copies live in mailroom-issues.",
+     "version": "",
+     "shape": "rectangle",
+     "width": 162,
+     "height": 44,
+     "fill": "#5A52C7",
+     "border": "#A9A4F0",
+     "zoneLabel": "Evaluation & prompts",
+     "links": []
+    },
+    "position": {
+     "x": 888,
+     "y": 192
+    }
+   },
+   {
+    "data": {
+     "id": "gepa-loop",
+     "label": "GEPA mutation loop",
+     "zone": "eval",
+     "kind": "aux",
+     "status": "active",
+     "desc": "Reflective prompt evolution run from eval-environment: select parent → reflect on traces (ASI) → propose mutation → strict-improvement gates.",
+     "version": "",
+     "shape": "rhomboid",
+     "width": 142,
+     "height": 44,
+     "fill": "#5A52C7",
+     "border": "#A9A4F0",
+     "zoneLabel": "Evaluation & prompts",
+     "links": []
+    },
+    "position": {
+     "x": 888,
+     "y": 268
+    }
+   },
+   {
+    "data": {
+     "id": "prompt-versions",
+     "label": "prompt lineage",
+     "zone": "eval",
+     "kind": "doc",
+     "status": "active",
+     "desc": "Winners are vendored into llm-mailroom's langchain_agents/; production prompts are managed in Langfuse as mailroom-<agent> with the production label.",
+     "version": "",
+     "shape": "rectangle",
+     "width": 162,
+     "height": 44,
+     "fill": "#5A52C7",
+     "border": "#A9A4F0",
+     "zoneLabel": "Evaluation & prompts",
+     "links": []
+    },
+    "position": {
+     "x": 888,
+     "y": 344
+    }
+   },
+   {
+    "data": {
+     "id": "experiment-log",
+     "label": "experiment log",
+     "zone": "eval",
+     "kind": "doc",
+     "status": "active",
+     "desc": "Append-only run index (reports/experiment_log.jsonl + data/experiments/<run_id>/); the entity-extraction log is the archived lineage.",
+     "version": "",
+     "shape": "rectangle",
+     "width": 162,
+     "height": 44,
+     "fill": "#5A52C7",
+     "border": "#A9A4F0",
+     "zoneLabel": "Evaluation & prompts",
+     "links": []
+    },
+    "position": {
+     "x": 888,
+     "y": 420
+    }
+   },
+   {
+    "data": {
+     "id": "llm-mailroom",
+     "label": "llm-mailroom (package “mailroom”)",
+     "zone": "pipeline",
+     "kind": "package",
+     "status": "active",
+     "desc": "The 13-node LangGraph pipeline and FastAPI producer — the centre of the constellation.",
+     "version": "0.8.0",
+     "shape": "round-rectangle",
+     "width": 168,
+     "height": 46,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": [
+      {
+       "label": "repository",
+       "url": "https://github.com/Exios66/llm-mailroom"
+      }
+     ]
+    },
+    "position": {
+     "x": 1240,
+     "y": 40
+    }
+   },
+   {
+    "data": {
+     "id": "intake",
+     "label": "intake",
+     "zone": "pipeline",
+     "kind": "stage",
+     "status": "active",
+     "desc": "Ingest specialist — one fused TRIAGE + CLEAN + PREPARE pass over sliding windows.",
+     "version": "",
+     "shape": "ellipse",
+     "width": 132,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1240,
+     "y": 116
+    }
+   },
+   {
+    "data": {
+     "id": "classify",
+     "label": "classify",
+     "zone": "pipeline",
+     "kind": "stage",
+     "status": "active",
+     "desc": "Sorter agent: one of five document classes plus subclass.",
+     "version": "",
+     "shape": "ellipse",
+     "width": 132,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1240,
+     "y": 192
+    }
+   },
+   {
+    "data": {
+     "id": "retry_classify",
+     "label": "retry_classify",
+     "zone": "pipeline",
+     "kind": "stage",
+     "status": "active",
+     "desc": "Classification retry arm after a gate miss.",
+     "version": "",
+     "shape": "ellipse",
+     "width": 132,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1240,
+     "y": 268
+    }
+   },
+   {
+    "data": {
+     "id": "review_classify",
+     "label": "review_classify",
+     "zone": "pipeline",
+     "kind": "stage",
+     "status": "active",
+     "desc": "Lane A second opinion (sorter reviewer) — stays live in production.",
+     "version": "",
+     "shape": "ellipse",
+     "width": 132,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1240,
+     "y": 344
+    }
+   },
+   {
+    "data": {
+     "id": "extract",
+     "label": "extract",
+     "zone": "pipeline",
+     "kind": "stage",
+     "status": "active",
+     "desc": "Class specialist pulls the class checklist fields.",
+     "version": "",
+     "shape": "ellipse",
+     "width": 132,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1240,
+     "y": 420
+    }
+   },
+   {
+    "data": {
+     "id": "retry_extract",
+     "label": "retry_extract",
+     "zone": "pipeline",
+     "kind": "stage",
+     "status": "active",
+     "desc": "Extraction retry arm after a gate miss.",
+     "version": "",
+     "shape": "ellipse",
+     "width": 132,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1240,
+     "y": 496
+    }
+   },
+   {
+    "data": {
+     "id": "judge_verify",
+     "label": "judge_verify",
+     "zone": "pipeline",
+     "kind": "stage",
+     "status": "active",
+     "desc": "Judge-verify: an independent verdict on the extraction.",
+     "version": "",
+     "shape": "ellipse",
+     "width": 132,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1240,
+     "y": 572
+    }
+   },
+   {
+    "data": {
+     "id": "arbiter",
+     "label": "arbiter",
+     "zone": "pipeline",
+     "kind": "stage",
+     "status": "active",
+     "desc": "Arbitrates conflicts between extraction verdicts.",
+     "version": "",
+     "shape": "ellipse",
+     "width": 132,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1240,
+     "y": 648
+    }
+   },
+   {
+    "data": {
+     "id": "human_review",
+     "label": "human_review",
+     "zone": "pipeline",
+     "kind": "stage",
+     "status": "active",
+     "desc": "Review queue for low-confidence or disputed documents.",
+     "version": "",
+     "shape": "ellipse",
+     "width": 132,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1240,
+     "y": 724
+    }
+   },
+   {
+    "data": {
+     "id": "boss_escalation",
+     "label": "boss_escalation",
+     "zone": "pipeline",
+     "kind": "stage",
+     "status": "active",
+     "desc": "Boss escalation — adjudicates the hard conflicts.",
+     "version": "",
+     "shape": "ellipse",
+     "width": 132,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1240,
+     "y": 800
+    }
+   },
+   {
+    "data": {
+     "id": "compile_report",
+     "label": "compile_report",
+     "zone": "pipeline",
+     "kind": "stage",
+     "status": "active",
+     "desc": "Computational procedural reporter: deterministic matter record, no LLM call.",
+     "version": "",
+     "shape": "ellipse",
+     "width": 132,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1240,
+     "y": 876
+    }
+   },
+   {
+    "data": {
+     "id": "catalog_write",
+     "label": "catalog_write",
+     "zone": "pipeline",
+     "kind": "stage",
+     "status": "active",
+     "desc": "Writes the matter catalog entry and window stats.",
+     "version": "",
+     "shape": "ellipse",
+     "width": 132,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1240,
+     "y": 952
+    }
+   },
+   {
+    "data": {
+     "id": "archive",
+     "label": "archive",
+     "zone": "pipeline",
+     "kind": "stage",
+     "status": "active",
+     "desc": "Archives the document with a hash-chained audit entry.",
+     "version": "",
+     "shape": "ellipse",
+     "width": 132,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1240,
+     "y": 1028
+    }
+   },
+   {
+    "data": {
+     "id": "entry-route",
+     "label": "START entry route",
+     "zone": "pipeline",
+     "kind": "aux",
+     "status": "active",
+     "desc": "START router: an approved review-resume re-invocation (resume_extraction + review_decision=approved + doc_type) skips straight to extract; everything else runs intake → classify.",
+     "version": "",
+     "shape": "rhomboid",
+     "width": 142,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1508,
+     "y": 40
+    }
+   },
+   {
+    "data": {
+     "id": "bert-intake",
+     "label": "ModernBERT fast path",
+     "zone": "pipeline",
+     "kind": "service",
+     "status": "active",
+     "desc": "Advisory ingest prior: the ModernBERT classifier composes onto the sorter prompt via intake_prior= (no graph skip). MAILROOM_BERT_INTAKE default off, fail-open.",
+     "version": "",
+     "shape": "hexagon",
+     "width": 142,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1508,
+     "y": 116
+    }
+   },
+   {
+    "data": {
+     "id": "gmail-lane",
+     "label": "Gmail triage lane",
+     "zone": "pipeline",
+     "kind": "aux",
+     "status": "active",
+     "desc": "Auxiliary flow outside the graph: single-document email intake on a free model, with allowlist + DMARC guards and a durable outbox.",
+     "version": "",
+     "shape": "rhomboid",
+     "width": 142,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1508,
+     "y": 192
+    }
+   },
+   {
+    "data": {
+     "id": "relations-clerk",
+     "label": "relations clerk",
+     "zone": "pipeline",
+     "kind": "aux",
+     "status": "active",
+     "desc": "Post-archive deterministic association scan dispatched at every terminal manifest, with optional LLM judgment (relations.llm, off in pilot).",
+     "version": "",
+     "shape": "rhomboid",
+     "width": 142,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1508,
+     "y": 268
+    }
+   },
+   {
+    "data": {
+     "id": "relations-graph",
+     "label": "relations graph views",
+     "zone": "pipeline",
+     "kind": "service",
+     "status": "active",
+     "desc": "Ledger projections from the scan: matter graph, global matter graph and document ego-graph (GraphJSON/GraphML, optional Plotly/PNG).",
+     "version": "",
+     "shape": "hexagon",
+     "width": 142,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1508,
+     "y": 344
+    }
+   },
+   {
+    "data": {
+     "id": "pager",
+     "label": "operator pager",
+     "zone": "pipeline",
+     "kind": "service",
+     "status": "active",
+     "desc": "SMS pager: ten alert rules, quiet hours, catch-up digests; default off; mailroom.pager/v1 payload.",
+     "version": "",
+     "shape": "hexagon",
+     "width": 142,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1508,
+     "y": 420
+    }
+   },
+   {
+    "data": {
+     "id": "provider-health",
+     "label": "provider health",
+     "zone": "pipeline",
+     "kind": "service",
+     "status": "active",
+     "desc": "Passive per-provider LLM health (src/llm/provider_health.py, provider_health.json under fcntl flock) that feeds the pager.",
+     "version": "",
+     "shape": "hexagon",
+     "width": 142,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1508,
+     "y": 496
+    }
+   },
+   {
+    "data": {
+     "id": "jev-gate",
+     "label": "Jev route gate",
+     "zone": "pipeline",
+     "kind": "aux",
+     "status": "pending",
+     "desc": "Opt-in learned route gate (TypeSafe System One): overrides only the medium confidence band once its calibration exists; off by default.",
+     "version": "",
+     "shape": "rhomboid",
+     "width": 142,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1508,
+     "y": 572
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-reloaded",
+     "label": "mailroom-reloaded (CrewAI Flows)",
+     "zone": "pipeline",
+     "kind": "package",
+     "status": "active",
+     "desc": "Compressed deployment-ready mailroom: ingest → bert_primary → sort → gate_classify → extract → gate_extract → report_catalog_archive (one node), with verify/boss/grade branches off the gates.",
+     "version": "0.4.2",
+     "shape": "round-rectangle",
+     "width": 168,
+     "height": 46,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": [
+      {
+       "label": "repository",
+       "url": "https://github.com/Exios66/mailroom-reloaded"
+      }
+     ]
+    },
+    "position": {
+     "x": 1776,
+     "y": 40
+    }
+   },
+   {
+    "data": {
+     "id": "local-mailroom-sandbox",
+     "label": "local-mailroom-sandbox",
+     "zone": "pipeline",
+     "kind": "package",
+     "status": "active",
+     "desc": "Local-first sandbox: the full graph offline on Ollama / vLLM / llama.cpp / LM Studio, plus Modal GPU studies; tracked vendor/ snapshots.",
+     "version": "0.3.0",
+     "shape": "round-rectangle",
+     "width": 168,
+     "height": 46,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": [
+      {
+       "label": "repository",
+       "url": "https://github.com/Exios66/local-mailroom-sandbox"
+      }
+     ]
+    },
+    "position": {
+     "x": 1776,
+     "y": 116
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-sandbox",
+     "label": "mailroom-sandbox (fork)",
+     "zone": "pipeline",
+     "kind": "package",
+     "status": "active",
+     "desc": "Organization fork of the sandbox (SAND-032 Modal + vLLM leg); development continues in the Exios66 original.",
+     "version": "",
+     "shape": "round-rectangle",
+     "width": 168,
+     "height": 46,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": [
+      {
+       "label": "repository",
+       "url": "https://github.com/LLM-Mailroom-Services/mailroom-sandbox"
+      }
+     ]
+    },
+    "position": {
+     "x": 1776,
+     "y": 192
+    }
+   },
+   {
+    "data": {
+     "id": "reloaded-vllm",
+     "label": "Modal vLLM app (mailroom-vllm)",
+     "zone": "pipeline",
+     "kind": "service",
+     "status": "active",
+     "desc": "OpenAI-compatible Qwen3-8B-AWQ on an L4 with Prometheus metrics — the reloaded pipeline's GPU serving app.",
+     "version": "",
+     "shape": "hexagon",
+     "width": 142,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1776,
+     "y": 268
+    }
+   },
+   {
+    "data": {
+     "id": "reloaded-observability",
+     "label": "reloaded observability stack",
+     "zone": "pipeline",
+     "kind": "service",
+     "status": "active",
+     "desc": "Docker-compose sidecars: Phoenix :6006, Prometheus :9090, Grafana :3000 (Pipeline / Serving & GPU / Quality dashboards).",
+     "version": "",
+     "shape": "hexagon",
+     "width": 142,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1776,
+     "y": 344
+    }
+   },
+   {
+    "data": {
+     "id": "api",
+     "label": "FastAPI producer",
+     "zone": "pipeline",
+     "kind": "service",
+     "status": "active",
+     "desc": "The pipeline's HTTP surface (/v1): upload, run and review endpoints.",
+     "version": "",
+     "shape": "hexagon",
+     "width": 142,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1776,
+     "y": 420
+    }
+   },
+   {
+    "data": {
+     "id": "watcher",
+     "label": "inbox watcher",
+     "zone": "pipeline",
+     "kind": "service",
+     "status": "active",
+     "desc": "Claims each inbox file exactly once (worker-scoped lock); a stale claim older than WATCHER_STALE_CLAIM_MINUTES is re-queued and the graph re-runs from intake.",
+     "version": "",
+     "shape": "hexagon",
+     "width": 142,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1776,
+     "y": 496
+    }
+   },
+   {
+    "data": {
+     "id": "watchdog",
+     "label": "watchdog",
+     "zone": "pipeline",
+     "kind": "service",
+     "status": "active",
+     "desc": "Outside-the-watcher watchdog: heartbeat poll plus status e-mail (down/reminder); MAILROOM_WATCHDOG=0 kill switch. It also hosts the pager service.",
+     "version": "",
+     "shape": "hexagon",
+     "width": 142,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1776,
+     "y": 572
+    }
+   },
+   {
+    "data": {
+     "id": "storage-bins",
+     "label": "filesystem bins",
+     "zone": "pipeline",
+     "kind": "service",
+     "status": "active",
+     "desc": "inbox → processing → archive | review | failed, with JSON manifests per document.",
+     "version": "",
+     "shape": "hexagon",
+     "width": 142,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1776,
+     "y": 648
+    }
+   },
+   {
+    "data": {
+     "id": "audit-log",
+     "label": "hash-chained audit log",
+     "zone": "pipeline",
+     "kind": "service",
+     "status": "active",
+     "desc": "SQLite hash chain — later tampering is detectable.",
+     "version": "",
+     "shape": "hexagon",
+     "width": 142,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1776,
+     "y": 724
+    }
+   },
+   {
+    "data": {
+     "id": "catalog",
+     "label": "matter catalog",
+     "zone": "pipeline",
+     "kind": "service",
+     "status": "active",
+     "desc": "Matter records and window stats that the pager and boards read.",
+     "version": "",
+     "shape": "hexagon",
+     "width": 142,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1776,
+     "y": 800
+    }
+   },
+   {
+    "data": {
+     "id": "provider-router",
+     "label": "provider router",
+     "zone": "pipeline",
+     "kind": "service",
+     "status": "active",
+     "desc": "Routes each call per the agent's taxonomy provider — OpenRouter / Ollama / vLLM (local, Modal, or a LiteLLM gateway) / llamafile / generic — with per-provider cost models.",
+     "version": "",
+     "shape": "hexagon",
+     "width": 142,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1776,
+     "y": 876
+    }
+   },
+   {
+    "data": {
+     "id": "taxonomy",
+     "label": "config/taxonomy.yaml",
+     "zone": "pipeline",
+     "kind": "doc",
+     "status": "active",
+     "desc": "Canonical document classes, subclasses, per-agent providers and thresholds.",
+     "version": "",
+     "shape": "rectangle",
+     "width": 162,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1776,
+     "y": 952
+    }
+   },
+   {
+    "data": {
+     "id": "tracing",
+     "label": "Langfuse tracing wiring",
+     "zone": "pipeline",
+     "kind": "service",
+     "status": "active",
+     "desc": "One document-pipeline trace per document, mandatory tags, file-metadata-only input, span e-mail masking.",
+     "version": "",
+     "shape": "hexagon",
+     "width": 142,
+     "height": 44,
+     "fill": "#0F8C7E",
+     "border": "#69D6C8",
+     "zoneLabel": "Pipeline & runtime",
+     "links": []
+    },
+    "position": {
+     "x": 1776,
+     "y": 1028
+    }
+   },
+   {
+    "data": {
+     "id": "the-mailroom",
+     "label": "The-Mailroom",
+     "zone": "surfaces",
+     "kind": "package",
+     "status": "active",
+     "desc": "Pixel-art visual engine + hosted Observatory. Langfuse traces are its only source of truth — nothing on screen is invented.",
+     "version": "0.5.1",
+     "shape": "round-rectangle",
+     "width": 168,
+     "height": 46,
+     "fill": "#C2465A",
+     "border": "#F39BA8",
+     "zoneLabel": "Surfaces",
+     "links": [
+      {
+       "label": "repository",
+       "url": "https://github.com/Exios66/The-Mailroom"
+      },
+      {
+       "label": "GitHub Pages",
+       "url": "https://exios66.github.io/The-Mailroom/"
+      }
+     ]
+    },
+    "position": {
+     "x": 1860,
+     "y": 40
+    }
+   },
+   {
+    "data": {
+     "id": "pixel-console",
+     "label": "pixel console",
+     "zone": "surfaces",
+     "kind": "service",
+     "status": "active",
+     "desc": "CRT conveyor floor: every run as animated document envelopes (mailroom-web).",
+     "version": "",
+     "shape": "hexagon",
+     "width": 142,
+     "height": 44,
+     "fill": "#C2465A",
+     "border": "#F39BA8",
+     "zoneLabel": "Surfaces",
+     "links": []
+    },
+    "position": {
+     "x": 1860,
+     "y": 116
+    }
+   },
+   {
+    "data": {
+     "id": "observatory",
+     "label": "hosted Observatory",
+     "zone": "surfaces",
+     "kind": "service",
+     "status": "active",
+     "desc": "The public operations desk (mailroom-hosted / /live). Its Hugging Face Space is currently paused (503), not deleted.",
+     "version": "",
+     "shape": "hexagon",
+     "width": 142,
+     "height": 44,
+     "fill": "#C2465A",
+     "border": "#F39BA8",
+     "zoneLabel": "Surfaces",
+     "links": [
+      {
+       "label": "Hugging Face Space",
+       "url": "https://huggingface.co/spaces/Lucius-Morningstar/mailroom-observatory"
+      }
+     ]
+    },
+    "position": {
+     "x": 1860,
+     "y": 192
+    }
+   },
+   {
+    "data": {
+     "id": "tui",
+     "label": "TUI",
+     "zone": "surfaces",
+     "kind": "service",
+     "status": "active",
+     "desc": "Typed-command REPL over the display API (mailroom-tui).",
+     "version": "",
+     "shape": "hexagon",
+     "width": 142,
+     "height": 44,
+     "fill": "#C2465A",
+     "border": "#F39BA8",
+     "zoneLabel": "Surfaces",
+     "links": []
+    },
+    "position": {
+     "x": 1860,
+     "y": 268
+    }
+   },
+   {
+    "data": {
+     "id": "terminal-site",
+     "label": "terminal site",
+     "zone": "surfaces",
+     "kind": "service",
+     "status": "active",
+     "desc": "owlcot-style TTY site — live at /terminal/ (the Pages root redirects to it; pixel console at /pixel/). Board card DMR-013 is still open, but the publish landed 2026-09-28.",
+     "version": "",
+     "shape": "hexagon",
+     "width": 142,
+     "height": 44,
+     "fill": "#C2465A",
+     "border": "#F39BA8",
+     "zoneLabel": "Surfaces",
+     "links": []
+    },
+    "position": {
+     "x": 1860,
+     "y": 344
+    }
+   },
+   {
+    "data": {
+     "id": "dataset-viewer",
+     "label": "dataset viewer",
+     "zone": "surfaces",
+     "kind": "service",
+     "status": "active",
+     "desc": "“corpus …” commands: slim windowed dataset listing plus live per-row doc_text and ground truth.",
+     "version": "",
+     "shape": "hexagon",
+     "width": 142,
+     "height": 44,
+     "fill": "#C2465A",
+     "border": "#F39BA8",
+     "zoneLabel": "Surfaces",
+     "links": []
+    },
+    "position": {
+     "x": 1860,
+     "y": 420
+    }
+   },
+   {
+    "data": {
+     "id": "repo-browser",
+     "label": "constellation repo browser",
+     "zone": "surfaces",
+     "kind": "service",
+     "status": "active",
+     "desc": "“repos …” commands: every mirror package plus the hub copies.",
+     "version": "",
+     "shape": "hexagon",
+     "width": 142,
+     "height": 44,
+     "fill": "#C2465A",
+     "border": "#F39BA8",
+     "zoneLabel": "Surfaces",
+     "links": []
+    },
+    "position": {
+     "x": 1860,
+     "y": 496
+    }
+   },
+   {
+    "data": {
+     "id": "board-site",
+     "label": "Dispatch Board (board-site)",
+     "zone": "surfaces",
+     "kind": "service",
+     "status": "active",
+     "desc": "Served Kanban dispatch board — the hub's deploy root, on Vercel, backed by kanban-labelled issues.",
+     "version": "",
+     "shape": "hexagon",
+     "width": 142,
+     "height": 44,
+     "fill": "#C2465A",
+     "border": "#F39BA8",
+     "zoneLabel": "Surfaces",
+     "links": [
+      {
+       "label": "live site",
+       "url": "https://digital-mailroom-theta.vercel.app"
+      }
+     ]
+    },
+    "position": {
+     "x": 1860,
+     "y": 572
+    }
+   },
+   {
+    "data": {
+     "id": "producer-space",
+     "label": "Producer Space",
+     "zone": "surfaces",
+     "kind": "service",
+     "status": "pending",
+     "desc": "Producer Space — not published (Hub 404). The producer runs from deploy/docker-compose.producer.yml; without it the Observatory's Inbox/REVIEW answer an honest 503.",
+     "version": "",
+     "shape": "hexagon",
+     "width": 142,
+     "height": 44,
+     "fill": "#C2465A",
+     "border": "#F39BA8",
+     "zoneLabel": "Surfaces",
+     "links": []
+    },
+    "position": {
+     "x": 2128,
+     "y": 40
+    }
+   },
+   {
+    "data": {
+     "id": "reloaded-ui",
+     "label": "reloaded UI / TUI / replay",
+     "zone": "surfaces",
+     "kind": "service",
+     "status": "active",
+     "desc": "Read-mostly reloaded surface: catalog, audit chain, replay timelines and the ledger over /ui and /tui.",
+     "version": "",
+     "shape": "hexagon",
+     "width": 142,
+     "height": 44,
+     "fill": "#C2465A",
+     "border": "#F39BA8",
+     "zoneLabel": "Surfaces",
+     "links": []
+    },
+    "position": {
+     "x": 2128,
+     "y": 116
+    }
+   },
+   {
+    "data": {
+     "id": "graphify-graph",
+     "label": "llm-mailroom-graph",
+     "zone": "surfaces",
+     "kind": "package",
+     "status": "retired",
+     "desc": "Graphify AST knowledge graph of llm-mailroom (1,905 symbols, 4,557 edges, 104 communities). Graph sites were pruned from the constellation in DMR-079.",
+     "version": "",
+     "shape": "round-rectangle",
+     "width": 168,
+     "height": 46,
+     "fill": "#C2465A",
+     "border": "#F39BA8",
+     "zoneLabel": "Surfaces",
+     "links": [
+      {
+       "label": "repository",
+       "url": "https://github.com/Exios66/llm-mailroom-graph"
+      },
+      {
+       "label": "GitHub Pages",
+       "url": "https://exios66.github.io/llm-mailroom-graph/"
+      }
+     ]
+    },
+    "position": {
+     "x": 2128,
+     "y": 192
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-dev-graph",
+     "label": "mailroom-dev-graph",
+     "zone": "surfaces",
+     "kind": "package",
+     "status": "retired",
+     "desc": "Earlier-generation graphify site of the mailroom-dev monorepo (4,870 symbols, 16,161 edges, 325 communities).",
+     "version": "",
+     "shape": "round-rectangle",
+     "width": 168,
+     "height": 46,
+     "fill": "#C2465A",
+     "border": "#F39BA8",
+     "zoneLabel": "Surfaces",
+     "links": [
+      {
+       "label": "repository",
+       "url": "https://github.com/Exios66/mailroom-dev-graph"
+      },
+      {
+       "label": "GitHub Pages",
+       "url": "https://exios66.github.io/mailroom-dev-graph/"
+      }
+     ]
+    },
+    "position": {
+     "x": 2128,
+     "y": 268
+    }
+   },
+   {
+    "data": {
+     "id": "dmr-graph",
+     "label": "DMR-Graph (this site)",
+     "zone": "surfaces",
+     "kind": "package",
+     "status": "active",
+     "desc": "This site: the pruned constellation's architecture knowledge graph — networkx model, Cytoscape.js view, GH Pages deployed locally with no Actions.",
+     "version": "",
+     "shape": "round-rectangle",
+     "width": 168,
+     "height": 46,
+     "fill": "#C2465A",
+     "border": "#F39BA8",
+     "zoneLabel": "Surfaces",
+     "links": [
+      {
+       "label": "repository",
+       "url": "https://github.com/Exios66/DMR-Graph"
+      },
+      {
+       "label": "GitHub Pages",
+       "url": "https://exios66.github.io/DMR-Graph/"
+      }
+     ]
+    },
+    "position": {
+     "x": 2128,
+     "y": 344
+    }
+   },
+   {
+    "data": {
+     "id": "agent-mailroom",
+     "label": "agent-mailroom",
+     "zone": "surfaces",
+     "kind": "package",
+     "status": "retired",
+     "desc": "Self-contained mailroom: one graph run per document (the watcher claims each file exactly once), hive mailboxes, two LLM calls on the happy path. Preserved on branch feature/agent-mailroom.",
+     "version": "0.3.0",
+     "shape": "round-rectangle",
+     "width": 168,
+     "height": 46,
+     "fill": "#C2465A",
+     "border": "#F39BA8",
+     "zoneLabel": "Surfaces",
+     "links": [
+      {
+       "label": "repository",
+       "url": "https://github.com/Exios66/agent-mailroom"
+      }
+     ]
+    },
+    "position": {
+     "x": 2128,
+     "y": 420
+    }
+   },
+   {
+    "data": {
+     "id": "agent-floor",
+     "label": "walking office floor",
+     "zone": "surfaces",
+     "kind": "service",
+     "status": "retired",
+     "desc": "LimeZu rooms, walking avatars, thought clouds, flying envelopes (agent-mailroom's pixel floor).",
+     "version": "",
+     "shape": "hexagon",
+     "width": 142,
+     "height": 44,
+     "fill": "#C2465A",
+     "border": "#F39BA8",
+     "zoneLabel": "Surfaces",
+     "links": []
+    },
+    "position": {
+     "x": 2128,
+     "y": 496
+    }
+   },
+   {
+    "data": {
+     "id": "hub",
+     "label": "Digital-Mailroom (hub)",
+     "zone": "platform",
+     "kind": "package",
+     "status": "active",
+     "desc": "Central truth: uv monorepo, governance, wiki, dispatch board and the release chain. Seven packages after the DMR-079 prune.",
+     "version": "v0.8.0 tag · post-DMR-079 main",
+     "shape": "round-rectangle",
+     "width": 168,
+     "height": 46,
+     "fill": "#3E6E9E",
+     "border": "#93BCE0",
+     "zoneLabel": "Hub, governance & release",
+     "links": [
+      {
+       "label": "repository",
+       "url": "https://github.com/LLM-Mailroom-Services/Digital-Mailroom"
+      }
+     ]
+    },
+    "position": {
+     "x": 2480,
+     "y": 40
+    }
+   },
+   {
+    "data": {
+     "id": "uv-workspace",
+     "label": "uv workspace",
+     "zone": "platform",
+     "kind": "doc",
+     "status": "active",
+     "desc": "One pyproject + uv.lock across packages: workspace sources in development, published git pins at release.",
+     "version": "",
+     "shape": "rectangle",
+     "width": 162,
+     "height": 44,
+     "fill": "#3E6E9E",
+     "border": "#93BCE0",
+     "zoneLabel": "Hub, governance & release",
+     "links": []
+    },
+    "position": {
+     "x": 2480,
+     "y": 116
+    }
+   },
+   {
+    "data": {
+     "id": "constellation-docs",
+     "label": "docs/constellation/",
+     "zone": "platform",
+     "kind": "doc",
+     "status": "active",
+     "desc": "The canonical written map (repo index, architecture flows, data rules, governance) that this graph renders.",
+     "version": "",
+     "shape": "rectangle",
+     "width": 162,
+     "height": 44,
+     "fill": "#3E6E9E",
+     "border": "#93BCE0",
+     "zoneLabel": "Hub, governance & release",
+     "links": []
+    },
+    "position": {
+     "x": 2480,
+     "y": 192
+    }
+   },
+   {
+    "data": {
+     "id": "v7-taxonomy",
+     "label": "docs/v7-taxonomy.md",
+     "zone": "platform",
+     "kind": "doc",
+     "status": "active",
+     "desc": "Canonical prose contract for the v7 five-class corpus vs the live taxonomy, plus the v8 subclass strata (HUB-028/HUB-041).",
+     "version": "",
+     "shape": "rectangle",
+     "width": 162,
+     "height": 44,
+     "fill": "#3E6E9E",
+     "border": "#93BCE0",
+     "zoneLabel": "Hub, governance & release",
+     "links": []
+    },
+    "position": {
+     "x": 2480,
+     "y": 268
+    }
+   },
+   {
+    "data": {
+     "id": "wiki",
+     "label": "docs/wiki/",
+     "zone": "platform",
+     "kind": "doc",
+     "status": "active",
+     "desc": "Version-controlled wiki (16 pages): Architecture, Releases, HF-Corpus, Subagents, Sandbox, Served-Board… The Architecture page still describes the removed after_intake skip — the code is the truth.",
+     "version": "",
+     "shape": "rectangle",
+     "width": 162,
+     "height": 44,
+     "fill": "#3E6E9E",
+     "border": "#93BCE0",
+     "zoneLabel": "Hub, governance & release",
+     "links": []
+    },
+    "position": {
+     "x": 2480,
+     "y": 344
+    }
+   },
+   {
+    "data": {
+     "id": "specialists",
+     "label": "specialist subagent roster",
+     "zone": "platform",
+     "kind": "doc",
+     "status": "active",
+     "desc": ".opencode/agents (16 files) + .devin mirror: orchestrator-governor, prompt-engineer (GEPA provenance pin), archivist, data, testing, UI, systems, Modal/vLLM.",
+     "version": "",
+     "shape": "rectangle",
+     "width": 162,
+     "height": 44,
+     "fill": "#3E6E9E",
+     "border": "#93BCE0",
+     "zoneLabel": "Hub, governance & release",
+     "links": []
+    },
+    "position": {
+     "x": 2480,
+     "y": 420
+    }
+   },
+   {
+    "data": {
+     "id": "board-tasks",
+     "label": "governance/TASKS.md",
+     "zone": "platform",
+     "kind": "doc",
+     "status": "active",
+     "desc": "Single-source board: lanes unassigned → assigned → in_progress → needs_attention → done, closing with Evidence naming the commits.",
+     "version": "",
+     "shape": "rectangle",
+     "width": 162,
+     "height": 44,
+     "fill": "#3E6E9E",
+     "border": "#93BCE0",
+     "zoneLabel": "Hub, governance & release",
+     "links": []
+    },
+    "position": {
+     "x": 2480,
+     "y": 496
+    }
+   },
+   {
+    "data": {
+     "id": "hub-data",
+     "label": "data/ + manifests",
+     "zone": "platform",
+     "kind": "doc",
+     "status": "active",
+     "desc": "Corpus governance for the pinned revision.",
+     "version": "",
+     "shape": "rectangle",
+     "width": 162,
+     "height": 44,
+     "fill": "#3E6E9E",
+     "border": "#93BCE0",
+     "zoneLabel": "Hub, governance & release",
+     "links": []
+    },
+    "position": {
+     "x": 2480,
+     "y": 572
+    }
+   },
+   {
+    "data": {
+     "id": "hub-reports",
+     "label": "reports/",
+     "zone": "platform",
+     "kind": "doc",
+     "status": "active",
+     "desc": "Index only — the EDA deliverables live under each package (e.g. packages/mailroom-corpus-eda/reports/), tracked in full per HUB-008.",
+     "version": "",
+     "shape": "rectangle",
+     "width": 162,
+     "height": 44,
+     "fill": "#3E6E9E",
+     "border": "#93BCE0",
+     "zoneLabel": "Hub, governance & release",
+     "links": []
+    },
+    "position": {
+     "x": 2480,
+     "y": 648
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-issues",
+     "label": "mailroom-issues",
+     "zone": "platform",
+     "kind": "package",
+     "status": "active",
+     "desc": "Constellation-wide issue store and label taxonomy (223 issues, 34 open) + frozen-v1 reference copies and the generated cross-repo reports. No code.",
+     "version": "",
+     "shape": "round-rectangle",
+     "width": 168,
+     "height": 46,
+     "fill": "#3E6E9E",
+     "border": "#93BCE0",
+     "zoneLabel": "Hub, governance & release",
+     "links": [
+      {
+       "label": "repository",
+       "url": "https://github.com/LLM-Mailroom-Services/mailroom-issues"
+      },
+      {
+       "label": "GitHub Pages",
+       "url": "https://llm-mailroom-services.github.io/mailroom-issues/"
+      }
+     ]
+    },
+    "position": {
+     "x": 2480,
+     "y": 724
+    }
+   },
+   {
+    "data": {
+     "id": "cost-reports",
+     "label": "cost & GPU reports",
+     "zone": "platform",
+     "kind": "doc",
+     "status": "active",
+     "desc": "Master, Modal-vs-API cost comparison and Modal vLLM GPU reports with figures — generated by the sandbox dashboard export into mailroom-issues.",
+     "version": "",
+     "shape": "rectangle",
+     "width": 162,
+     "height": 44,
+     "fill": "#3E6E9E",
+     "border": "#93BCE0",
+     "zoneLabel": "Hub, governance & release",
+     "links": []
+    },
+    "position": {
+     "x": 2480,
+     "y": 800
+    }
+   },
+   {
+    "data": {
+     "id": "changelog",
+     "label": "CHANGELOG.md",
+     "zone": "platform",
+     "kind": "doc",
+     "status": "active",
+     "desc": "Keep-a-Changelog source of truth for the hub chain; every release body is compiled from its stamped section.",
+     "version": "",
+     "shape": "rectangle",
+     "width": 162,
+     "height": 44,
+     "fill": "#3E6E9E",
+     "border": "#93BCE0",
+     "zoneLabel": "Hub, governance & release",
+     "links": []
+    },
+    "position": {
+     "x": 2480,
+     "y": 876
+    }
+   },
+   {
+    "data": {
+     "id": "board-state",
+     "label": "board_state.py",
+     "zone": "platform",
+     "kind": "script",
+     "status": "active",
+     "desc": "Board parser and gate: status | card | check | sync-issues | pull-issues | project-init.",
+     "version": "",
+     "shape": "tag",
+     "width": 150,
+     "height": 42,
+     "fill": "#3E6E9E",
+     "border": "#93BCE0",
+     "zoneLabel": "Hub, governance & release",
+     "links": []
+    },
+    "position": {
+     "x": 2748,
+     "y": 40
+    }
+   },
+   {
+    "data": {
+     "id": "sync-packages",
+     "label": "sync_packages.py",
+     "zone": "platform",
+     "kind": "script",
+     "status": "active",
+     "desc": "Subtree ↔ Exios66/* mirror sync against 7 remotes: status | pull | push | snapshot.",
+     "version": "",
+     "shape": "tag",
+     "width": 150,
+     "height": 42,
+     "fill": "#3E6E9E",
+     "border": "#93BCE0",
+     "zoneLabel": "Hub, governance & release",
+     "links": []
+    },
+    "position": {
+     "x": 2748,
+     "y": 116
+    }
+   },
+   {
+    "data": {
+     "id": "taxonomy-parity",
+     "label": "taxonomy_parity.py",
+     "zone": "platform",
+     "kind": "script",
+     "status": "active",
+     "desc": "Document-class + subclass parity gate across five surfaces, pinned to mailroom-dataset v9.1 (rev ed7576b6); voicemail → other.",
+     "version": "",
+     "shape": "tag",
+     "width": 150,
+     "height": 42,
+     "fill": "#3E6E9E",
+     "border": "#93BCE0",
+     "zoneLabel": "Hub, governance & release",
+     "links": []
+    },
+    "position": {
+     "x": 2748,
+     "y": 192
+    }
+   },
+   {
+    "data": {
+     "id": "release-chain",
+     "label": "release_chain.py",
+     "zone": "platform",
+     "kind": "script",
+     "status": "active",
+     "desc": "Changelog ↔ semver tag ↔ pyproject version governor: status | check | cut X.Y.Z --apply --tag.",
+     "version": "",
+     "shape": "tag",
+     "width": 150,
+     "height": 42,
+     "fill": "#3E6E9E",
+     "border": "#93BCE0",
+     "zoneLabel": "Hub, governance & release",
+     "links": []
+    },
+    "position": {
+     "x": 2748,
+     "y": 268
+    }
+   },
+   {
+    "data": {
+     "id": "release-notes",
+     "label": "release_notes.py",
+     "zone": "platform",
+     "kind": "script",
+     "status": "active",
+     "desc": "Renders .github/RELEASE_TEMPLATE.md with highlights, merged PRs and key commits — release bodies are never hand-typed.",
+     "version": "",
+     "shape": "tag",
+     "width": 150,
+     "height": 42,
+     "fill": "#3E6E9E",
+     "border": "#93BCE0",
+     "zoneLabel": "Hub, governance & release",
+     "links": []
+    },
+    "position": {
+     "x": 2748,
+     "y": 344
+    }
+   },
+   {
+    "data": {
+     "id": "deploy-pages",
+     "label": "deploy_gh_pages.py",
+     "zone": "platform",
+     "kind": "script",
+     "status": "active",
+     "desc": "Local GitHub Pages deploy (force-push gh-pages + enable via API) — no Actions. The pattern DMR-Graph reuses.",
+     "version": "",
+     "shape": "tag",
+     "width": 150,
+     "height": 42,
+     "fill": "#3E6E9E",
+     "border": "#93BCE0",
+     "zoneLabel": "Hub, governance & release",
+     "links": []
+    },
+    "position": {
+     "x": 2748,
+     "y": 420
+    }
+   },
+   {
+    "data": {
+     "id": "audit-references",
+     "label": "audit_references.py",
+     "zone": "platform",
+     "kind": "script",
+     "status": "active",
+     "desc": "Org-migration reference audit (DMR-006): exits 1 on any non-allowlisted stale pre-migration reference.",
+     "version": "",
+     "shape": "tag",
+     "width": 150,
+     "height": 42,
+     "fill": "#3E6E9E",
+     "border": "#93BCE0",
+     "zoneLabel": "Hub, governance & release",
+     "links": []
+    },
+    "position": {
+     "x": 2748,
+     "y": 496
+    }
+   },
+   {
+    "data": {
+     "id": "sync-vendor",
+     "label": "sync_vendor.py",
+     "zone": "platform",
+     "kind": "script",
+     "status": "active",
+     "desc": "Refreshes the sandbox's tracked vendor/ snapshots from the workspace packages (--check drift gate).",
+     "version": "",
+     "shape": "tag",
+     "width": 150,
+     "height": 42,
+     "fill": "#3E6E9E",
+     "border": "#93BCE0",
+     "zoneLabel": "Hub, governance & release",
+     "links": []
+    },
+    "position": {
+     "x": 2748,
+     "y": 572
+    }
+   },
+   {
+    "data": {
+     "id": "github-labels",
+     "label": "github_labels.py",
+     "zone": "platform",
+     "kind": "script",
+     "status": "active",
+     "desc": "Sync/audit of the GitHub label set from .github/labels.json (the manifest is source of truth).",
+     "version": "",
+     "shape": "tag",
+     "width": 150,
+     "height": 42,
+     "fill": "#3E6E9E",
+     "border": "#93BCE0",
+     "zoneLabel": "Hub, governance & release",
+     "links": []
+    },
+    "position": {
+     "x": 2748,
+     "y": 648
+    }
+   },
+   {
+    "data": {
+     "id": "gen-charts",
+     "label": "gen_interactive_charts.py",
+     "zone": "platform",
+     "kind": "script",
+     "status": "active",
+     "desc": "Plotly interactive HTML charts for the claims-data-eda and Enron EDA reports.",
+     "version": "",
+     "shape": "tag",
+     "width": 150,
+     "height": 42,
+     "fill": "#3E6E9E",
+     "border": "#93BCE0",
+     "zoneLabel": "Hub, governance & release",
+     "links": []
+    },
+    "position": {
+     "x": 2748,
+     "y": 724
+    }
+   },
+   {
+    "data": {
+     "id": "wiki-sync",
+     "label": "sync-wiki.sh",
+     "zone": "platform",
+     "kind": "script",
+     "status": "active",
+     "desc": "Mirrors the version-controlled wiki to the GitHub wiki (--check gate).",
+     "version": "",
+     "shape": "tag",
+     "width": 150,
+     "height": 42,
+     "fill": "#3E6E9E",
+     "border": "#93BCE0",
+     "zoneLabel": "Hub, governance & release",
+     "links": []
+    },
+    "position": {
+     "x": 2748,
+     "y": 800
+    }
+   },
+   {
+    "data": {
+     "id": "gh-templates",
+     "label": ".github templates & labels",
+     "zone": "platform",
+     "kind": "doc",
+     "status": "active",
+     "desc": "Issue / PR / hub-card templates, the 33-label manifest and the release template.",
+     "version": "",
+     "shape": "rectangle",
+     "width": 162,
+     "height": 44,
+     "fill": "#3E6E9E",
+     "border": "#93BCE0",
+     "zoneLabel": "Hub, governance & release",
+     "links": []
+    },
+    "position": {
+     "x": 2748,
+     "y": 876
+    }
+   },
+   {
+    "data": {
+     "id": "gh-workflows",
+     "label": ".github/workflows",
+     "zone": "platform",
+     "kind": "service",
+     "status": "active",
+     "desc": "Four workflows: board-governance (blocking gates), release-governance (tag-push chain check), dependabot auto-merge, feeder-resync applier.",
+     "version": "",
+     "shape": "hexagon",
+     "width": 142,
+     "height": 44,
+     "fill": "#3E6E9E",
+     "border": "#93BCE0",
+     "zoneLabel": "Hub, governance & release",
+     "links": []
+    },
+    "position": {
+     "x": 2748,
+     "y": 952
+    }
+   },
+   {
+    "data": {
+     "id": "tag-v080",
+     "label": "Hub v0.8.0 — rollback point",
+     "zone": "platform",
+     "kind": "milestone",
+     "status": "active",
+     "desc": "Annotated tag 5a2900c5 (dbc79ca3) — the last release containing all ten packages, captured before the consolidation prune.",
+     "version": "",
+     "shape": "diamond",
+     "width": 172,
+     "height": 52,
+     "fill": "#3E6E9E",
+     "border": "#93BCE0",
+     "zoneLabel": "Hub, governance & release",
+     "links": []
+    },
+    "position": {
+     "x": 3016,
+     "y": 40
+    }
+   },
+   {
+    "data": {
+     "id": "prune-dmr079",
+     "label": "DMR-079 consolidation prune",
+     "zone": "platform",
+     "kind": "milestone",
+     "status": "active",
+     "desc": "0ac7e4bc (PR #131, close-out e8558a68) — prunes llm-entity-extraction, llm-mailroom-graph and agent-mailroom; seven packages remain.",
+     "version": "",
+     "shape": "diamond",
+     "width": 172,
+     "height": 52,
+     "fill": "#3E6E9E",
+     "border": "#93BCE0",
+     "zoneLabel": "Hub, governance & release",
+     "links": []
+    },
+    "position": {
+     "x": 3016,
+     "y": 116
+    }
+   },
+   {
+    "data": {
+     "id": "dmr-080",
+     "label": "open hub cards (DMR-080/081)",
+     "zone": "platform",
+     "kind": "milestone",
+     "status": "pending",
+     "desc": "DMR-080: the phantom required `ci` status context blocks every PR to main (workflow deleted, protection unchanged) — merges need --admin. DMR-081: dead archive-date UTC gate.",
+     "version": "",
+     "shape": "diamond",
+     "width": 172,
+     "height": 52,
+     "fill": "#3E6E9E",
+     "border": "#93BCE0",
+     "zoneLabel": "Hub, governance & release",
+     "links": []
+    },
+    "position": {
+     "x": 3016,
+     "y": 192
+    }
+   },
+   {
+    "data": {
+     "id": "earlier-monorepos",
+     "label": "earlier monorepos",
+     "zone": "platform",
+     "kind": "milestone",
+     "status": "retired",
+     "desc": "mailroom-hub (first, 2026-08-30) and mailroom-dev (superseded 2026-09-26); the HUB-era mailroom-ops is documented as archived but no longer resolves on GitHub.",
+     "version": "",
+     "shape": "diamond",
+     "width": 172,
+     "height": 52,
+     "fill": "#3E6E9E",
+     "border": "#93BCE0",
+     "zoneLabel": "Hub, governance & release",
+     "links": []
+    },
+    "position": {
+     "x": 3016,
+     "y": 268
+    }
+   },
+   {
+    "data": {
+     "id": "hf-hub",
+     "label": "Hugging Face Hub",
+     "zone": "external",
+     "kind": "external",
+     "status": "active",
+     "desc": "Datasets, models and Spaces under Lucius-Morningstar — the only published data plane.",
+     "version": "",
+     "shape": "diamond",
+     "width": 150,
+     "height": 48,
+     "fill": "#5A6473",
+     "border": "#A9B3C2",
+     "zoneLabel": "External platforms",
+     "links": [
+      {
+       "label": "live site",
+       "url": "https://huggingface.co/Lucius-Morningstar"
+      }
+     ]
+    },
+    "position": {
+     "x": 3100,
+     "y": 40
+    }
+   },
+   {
+    "data": {
+     "id": "langfuse",
+     "label": "Langfuse (US cloud)",
+     "zone": "external",
+     "kind": "external",
+     "status": "active",
+     "desc": "Traces and managed prompts (mailroom-<agent>, production label) — the visualizer's source of truth.",
+     "version": "",
+     "shape": "diamond",
+     "width": 150,
+     "height": 48,
+     "fill": "#5A6473",
+     "border": "#A9B3C2",
+     "zoneLabel": "External platforms",
+     "links": []
+    },
+    "position": {
+     "x": 3100,
+     "y": 116
+    }
+   },
+   {
+    "data": {
+     "id": "phoenix",
+     "label": "Arize Phoenix",
+     "zone": "external",
+     "kind": "external",
+     "status": "active",
+     "desc": "OTel-native tracing; The-Mailroom reads mailroom-reloaded spans through it. Eval runs never mix with production traces.",
+     "version": "",
+     "shape": "diamond",
+     "width": 150,
+     "height": 48,
+     "fill": "#5A6473",
+     "border": "#A9B3C2",
+     "zoneLabel": "External platforms",
+     "links": []
+    },
+    "position": {
+     "x": 3100,
+     "y": 192
+    }
+   },
+   {
+    "data": {
+     "id": "braintrust",
+     "label": "Braintrust",
+     "zone": "external",
+     "kind": "external",
+     "status": "active",
+     "desc": "Hosted eval datasets, read-only; span logging disabled by default so runs never burn plan quota.",
+     "version": "",
+     "shape": "diamond",
+     "width": 150,
+     "height": 48,
+     "fill": "#5A6473",
+     "border": "#A9B3C2",
+     "zoneLabel": "External platforms",
+     "links": []
+    },
+    "position": {
+     "x": 3100,
+     "y": 268
+    }
+   },
+   {
+    "data": {
+     "id": "modal",
+     "label": "Modal (GPU)",
+     "zone": "external",
+     "kind": "external",
+     "status": "active",
+     "desc": "GPU serving for vLLM tiers; cost basis A100 $2.10/h, L4 $0.80/h (DMR-078 / SAND-032 rate table).",
+     "version": "",
+     "shape": "diamond",
+     "width": 150,
+     "height": 48,
+     "fill": "#5A6473",
+     "border": "#A9B3C2",
+     "zoneLabel": "External platforms",
+     "links": []
+    },
+    "position": {
+     "x": 3100,
+     "y": 344
+    }
+   },
+   {
+    "data": {
+     "id": "openrouter",
+     "label": "OpenRouter",
+     "zone": "external",
+     "kind": "external",
+     "status": "active",
+     "desc": "Hosted models for the pipeline — and the free model behind the Gmail triage lane.",
+     "version": "",
+     "shape": "diamond",
+     "width": 150,
+     "height": 48,
+     "fill": "#5A6473",
+     "border": "#A9B3C2",
+     "zoneLabel": "External platforms",
+     "links": []
+    },
+    "position": {
+     "x": 3100,
+     "y": 420
+    }
+   },
+   {
+    "data": {
+     "id": "docker",
+     "label": "Docker / Docker Hub",
+     "zone": "external",
+     "kind": "external",
+     "status": "active",
+     "desc": "Container deploy path: docker-compose profiles plus the Docker Hub release (make image-push); Railway is not used here.",
+     "version": "",
+     "shape": "diamond",
+     "width": 150,
+     "height": 48,
+     "fill": "#5A6473",
+     "border": "#A9B3C2",
+     "zoneLabel": "External platforms",
+     "links": []
+    },
+    "position": {
+     "x": 3100,
+     "y": 496
+    }
+   },
+   {
+    "data": {
+     "id": "ollama",
+     "label": "Ollama",
+     "zone": "external",
+     "kind": "external",
+     "status": "active",
+     "desc": "Default local provider (qwen3:8b, fallback qwen3:7b).",
+     "version": "",
+     "shape": "diamond",
+     "width": 150,
+     "height": 48,
+     "fill": "#5A6473",
+     "border": "#A9B3C2",
+     "zoneLabel": "External platforms",
+     "links": []
+    },
+    "position": {
+     "x": 3368,
+     "y": 40
+    }
+   },
+   {
+    "data": {
+     "id": "vllm",
+     "label": "vLLM",
+     "zone": "external",
+     "kind": "external",
+     "status": "active",
+     "desc": "Local and Modal vLLM serving.",
+     "version": "",
+     "shape": "diamond",
+     "width": 150,
+     "height": 48,
+     "fill": "#5A6473",
+     "border": "#A9B3C2",
+     "zoneLabel": "External platforms",
+     "links": []
+    },
+    "position": {
+     "x": 3368,
+     "y": 116
+    }
+   },
+   {
+    "data": {
+     "id": "llamacpp",
+     "label": "llama.cpp",
+     "zone": "external",
+     "kind": "external",
+     "status": "active",
+     "desc": "GGUF sidecar serving.",
+     "version": "",
+     "shape": "diamond",
+     "width": 150,
+     "height": 48,
+     "fill": "#5A6473",
+     "border": "#A9B3C2",
+     "zoneLabel": "External platforms",
+     "links": []
+    },
+    "position": {
+     "x": 3368,
+     "y": 192
+    }
+   },
+   {
+    "data": {
+     "id": "lmstudio",
+     "label": "LM Studio",
+     "zone": "external",
+     "kind": "external",
+     "status": "active",
+     "desc": "Desktop local serving for sandbox runs.",
+     "version": "",
+     "shape": "diamond",
+     "width": 150,
+     "height": 48,
+     "fill": "#5A6473",
+     "border": "#A9B3C2",
+     "zoneLabel": "External platforms",
+     "links": []
+    },
+    "position": {
+     "x": 3368,
+     "y": 268
+    }
+   },
+   {
+    "data": {
+     "id": "sqlite",
+     "label": "SQLite",
+     "zone": "external",
+     "kind": "external",
+     "status": "active",
+     "desc": "Sandbox storage and the pipeline's persistence default.",
+     "version": "",
+     "shape": "diamond",
+     "width": 150,
+     "height": 48,
+     "fill": "#5A6473",
+     "border": "#A9B3C2",
+     "zoneLabel": "External platforms",
+     "links": []
+    },
+    "position": {
+     "x": 3368,
+     "y": 344
+    }
+   },
+   {
+    "data": {
+     "id": "vercel",
+     "label": "Vercel",
+     "zone": "external",
+     "kind": "external",
+     "status": "active",
+     "desc": "Hosts the Dispatch Board and the eval-environment viewer.",
+     "version": "",
+     "shape": "diamond",
+     "width": 150,
+     "height": 48,
+     "fill": "#5A6473",
+     "border": "#A9B3C2",
+     "zoneLabel": "External platforms",
+     "links": []
+    },
+    "position": {
+     "x": 3368,
+     "y": 420
+    }
+   },
+   {
+    "data": {
+     "id": "github-pages",
+     "label": "GitHub Pages",
+     "zone": "external",
+     "kind": "external",
+     "status": "active",
+     "desc": "Branch-deployed static sites — no Actions anywhere on the constellation's Pages path.",
+     "version": "",
+     "shape": "diamond",
+     "width": 150,
+     "height": 48,
+     "fill": "#5A6473",
+     "border": "#A9B3C2",
+     "zoneLabel": "External platforms",
+     "links": []
+    },
+    "position": {
+     "x": 3368,
+     "y": 496
+    }
+   },
+   {
+    "data": {
+     "id": "gh-issues",
+     "label": "kanban-labelled issues",
+     "zone": "external",
+     "kind": "external",
+     "status": "active",
+     "desc": "GitHub issues are the backing store of the served dispatch board; board_state.py mirrors lanes two ways.",
+     "version": "",
+     "shape": "diamond",
+     "width": 150,
+     "height": 48,
+     "fill": "#5A6473",
+     "border": "#A9B3C2",
+     "zoneLabel": "External platforms",
+     "links": []
+    },
+    "position": {
+     "x": 3368,
+     "y": 572
+    }
+   }
+  ],
+  "edges": [
+   {
+    "data": {
+     "id": "cmu-enron__enron-eda__feeds",
+     "source": "cmu-enron",
+     "target": "enron-eda",
+     "rel": "feeds",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "cms-desynpuf__claims-eda__feeds",
+     "source": "cms-desynpuf",
+     "target": "claims-eda",
+     "rel": "feeds",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "enron-eda__enron-correspondence-dedup__produces",
+     "source": "enron-eda",
+     "target": "enron-correspondence-dedup",
+     "rel": "produces",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "claims-eda__cms-desynpuf-insurance-claims__produces",
+     "source": "claims-eda",
+     "target": "cms-desynpuf-insurance-claims",
+     "rel": "produces",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "enron-correspondence-dedup__mailroom-dataset__feeds",
+     "source": "enron-correspondence-dedup",
+     "target": "mailroom-dataset",
+     "rel": "feeds",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "cms-desynpuf-insurance-claims__mailroom-dataset__feeds",
+     "source": "cms-desynpuf-insurance-claims",
+     "target": "mailroom-dataset",
+     "rel": "feeds",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "cuad-contracts-full__mailroom-dataset__feeds",
+     "source": "cuad-contracts-full",
+     "target": "mailroom-dataset",
+     "rel": "feeds",
+     "note": "the 509-row byte-verified contract feeder",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "gnotheia__mailroom-dataset__feeds",
+     "source": "gnotheia",
+     "target": "mailroom-dataset",
+     "rel": "feeds",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "bdr-claims__mailroom-dataset__feeds",
+     "source": "bdr-claims",
+     "target": "mailroom-dataset",
+     "rel": "feeds",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "insurbias__mailroom-dataset__feeds",
+     "source": "insurbias",
+     "target": "mailroom-dataset",
+     "rel": "feeds",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "maud__mailroom-dataset__feeds",
+     "source": "maud",
+     "target": "mailroom-dataset",
+     "rel": "feeds",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-dataset__sorter-handoff__produces",
+     "source": "mailroom-dataset",
+     "target": "sorter-handoff",
+     "rel": "produces",
+     "note": "staging payload for the intended sorter_handoff config",
+     "color": "#D9A03C",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-dataset__reloaded-fixtures__syncs",
+     "source": "mailroom-dataset",
+     "target": "reloaded-fixtures",
+     "rel": "syncs",
+     "note": "v9.2 fixture mirror",
+     "color": "#B9C3CE",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-corpus__corpus-eda__feeds",
+     "source": "mailroom-corpus",
+     "target": "corpus-eda",
+     "rel": "feeds",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-dataset__corpus-eda__feeds",
+     "source": "mailroom-dataset",
+     "target": "corpus-eda",
+     "rel": "feeds",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "corpus-eda__mailroom-dataset__syncs",
+     "source": "corpus-eda",
+     "target": "mailroom-dataset",
+     "rel": "syncs",
+     "note": "profiles every phase and owns the upload helpers",
+     "color": "#B9C3CE",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "corpus-eda__hub-reports__produces",
+     "source": "corpus-eda",
+     "target": "hub-reports",
+     "rel": "produces",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "corpus-eda__hf-hub__syncs",
+     "source": "corpus-eda",
+     "target": "hf-hub",
+     "rel": "syncs",
+     "note": "uploads the EDA deliverables and dataset revisions",
+     "color": "#B9C3CE",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-dataset__llm-mailroom__feeds",
+     "source": "mailroom-dataset",
+     "target": "llm-mailroom",
+     "rel": "feeds",
+     "note": "pinned revision; ground_truth joins the blind config on filename",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-dataset__eval-environment__feeds",
+     "source": "mailroom-dataset",
+     "target": "eval-environment",
+     "rel": "feeds",
+     "note": "pinned at rev ed7576b6",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-dataset__mailroom-ml__feeds",
+     "source": "mailroom-dataset",
+     "target": "mailroom-ml",
+     "rel": "feeds",
+     "note": "canonical eval corpus (ed7576b6)",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-dataset__mailroom-reloaded__feeds",
+     "source": "mailroom-dataset",
+     "target": "mailroom-reloaded",
+     "rel": "feeds",
+     "note": "eval harness default revision ed7576b6",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-dataset__local-mailroom-sandbox__feeds",
+     "source": "mailroom-dataset",
+     "target": "local-mailroom-sandbox",
+     "rel": "feeds",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-dataset__dataset-viewer__feeds",
+     "source": "mailroom-dataset",
+     "target": "dataset-viewer",
+     "rel": "feeds",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "modernbert-training__mailroom-ml__feeds",
+     "source": "modernbert-training",
+     "target": "mailroom-ml",
+     "rel": "feeds",
+     "note": "prepared training set @5b72a345",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "reloaded-fixtures__mailroom-reloaded__feeds",
+     "source": "reloaded-fixtures",
+     "target": "mailroom-reloaded",
+     "rel": "feeds",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "entity-extraction__legalbench-full__produces",
+     "source": "entity-extraction",
+     "target": "legalbench-full",
+     "rel": "produces",
+     "note": "task-pack mirror built by build_legalbench_full_pack.py",
+     "color": "#D9A03C",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "legalbench-full__atticus__feeds",
+     "source": "legalbench-full",
+     "target": "atticus",
+     "rel": "feeds",
+     "note": "its own prompt-engineering focus",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "enron-correspondence-dedup__corpus-eda__feeds",
+     "source": "enron-correspondence-dedup",
+     "target": "corpus-eda",
+     "rel": "feeds",
+     "note": "~650-row draw via docclass_uploader",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "enron-correspondence-dedup__mailroom-corpus__feeds",
+     "source": "enron-correspondence-dedup",
+     "target": "mailroom-corpus",
+     "rel": "feeds",
+     "note": "110-row v8 sample",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "claims-eda__corpus-eda__feeds",
+     "source": "claims-eda",
+     "target": "corpus-eda",
+     "rel": "feeds",
+     "note": "re-renders insurance_claim rows into the corpus",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "enron-correspondence-dedup__llm-mailroom__feeds",
+     "source": "enron-correspondence-dedup",
+     "target": "llm-mailroom",
+     "rel": "feeds",
+     "note": "hf_corpora family registry",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "cms-desynpuf-insurance-claims__llm-mailroom__feeds",
+     "source": "cms-desynpuf-insurance-claims",
+     "target": "llm-mailroom",
+     "rel": "feeds",
+     "note": "hf_corpora family registry",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "cuad-contracts-full__llm-mailroom__feeds",
+     "source": "cuad-contracts-full",
+     "target": "llm-mailroom",
+     "rel": "feeds",
+     "note": "hf_corpora family registry",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "docclass-pilot__llm-mailroom__feeds",
+     "source": "docclass-pilot",
+     "target": "llm-mailroom",
+     "rel": "feeds",
+     "note": "pilot examples via run_hf_pilot.py",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "docclass-pilot__the-mailroom__feeds",
+     "source": "docclass-pilot",
+     "target": "the-mailroom",
+     "rel": "feeds",
+     "note": "sync_pilot_dataset.py",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "maud__llm-mailroom__feeds",
+     "source": "maud",
+     "target": "llm-mailroom",
+     "rel": "feeds",
+     "note": "merger_agreement checklist source",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-dataset__hf-hub__deploys",
+     "source": "mailroom-dataset",
+     "target": "hf-hub",
+     "rel": "deploys",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-corpus__hf-hub__deploys",
+     "source": "mailroom-corpus",
+     "target": "hf-hub",
+     "rel": "deploys",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "enron-correspondence-dedup__hf-hub__deploys",
+     "source": "enron-correspondence-dedup",
+     "target": "hf-hub",
+     "rel": "deploys",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "cms-desynpuf-insurance-claims__hf-hub__deploys",
+     "source": "cms-desynpuf-insurance-claims",
+     "target": "hf-hub",
+     "rel": "deploys",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "cuad-contracts__hf-hub__deploys",
+     "source": "cuad-contracts",
+     "target": "hf-hub",
+     "rel": "deploys",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "legalbench-full__hf-hub__deploys",
+     "source": "legalbench-full",
+     "target": "hf-hub",
+     "rel": "deploys",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "docclass-pilot__hf-hub__deploys",
+     "source": "docclass-pilot",
+     "target": "hf-hub",
+     "rel": "deploys",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "modernbert-training__hf-hub__deploys",
+     "source": "modernbert-training",
+     "target": "hf-hub",
+     "rel": "deploys",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "sorter-handoff__hf-hub__deploys",
+     "source": "sorter-handoff",
+     "target": "hf-hub",
+     "rel": "deploys",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "reloaded-fixtures__hf-hub__deploys",
+     "source": "reloaded-fixtures",
+     "target": "hf-hub",
+     "rel": "deploys",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "dojo__llm-mailroom__depends",
+     "source": "dojo",
+     "target": "llm-mailroom",
+     "rel": "depends",
+     "note": "git pin @v0.22.0, auto-bumped",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "dojo__eval-environment__depends",
+     "source": "dojo",
+     "target": "eval-environment",
+     "rel": "depends",
+     "note": "resolved through the pipeline pin",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "dojo__local-mailroom-sandbox__depends",
+     "source": "dojo",
+     "target": "local-mailroom-sandbox",
+     "rel": "depends",
+     "note": "tracked vendor/ snapshot",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-dataset__dojo__feeds",
+     "source": "mailroom-dataset",
+     "target": "dojo",
+     "rel": "feeds",
+     "note": "ground-truth scoring grid",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "eval-environment__llm-mailroom__depends",
+     "source": "eval-environment",
+     "target": "llm-mailroom",
+     "rel": "depends",
+     "note": "editable path source to a sibling checkout",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-ml__llm-mailroom__depends",
+     "source": "mailroom-ml",
+     "target": "llm-mailroom",
+     "rel": "depends",
+     "note": "optional, lazily imported at intake",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-ml__modernbert-classifier__produces",
+     "source": "mailroom-ml",
+     "target": "modernbert-classifier",
+     "rel": "produces",
+     "note": "ONNX export + parity check",
+     "color": "#D9A03C",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "modernbert-classifier__bert-intake__feeds",
+     "source": "modernbert-classifier",
+     "target": "bert-intake",
+     "rel": "feeds",
+     "note": "ONNX bundle loaded from ML_MODEL_DIR / ML_MODEL_REPO",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "modernbert-classifier__mailroom-reloaded__serves",
+     "source": "modernbert-classifier",
+     "target": "mailroom-reloaded",
+     "rel": "serves",
+     "note": "bert_primary lane",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "modernbert-classifier__hf-hub__deploys",
+     "source": "modernbert-classifier",
+     "target": "hf-hub",
+     "rel": "deploys",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "braintrust__entity-extraction__feeds",
+     "source": "braintrust",
+     "target": "entity-extraction",
+     "rel": "feeds",
+     "note": "eval datasets, read-only",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "entity-extraction__prompt-versions__produces",
+     "source": "entity-extraction",
+     "target": "prompt-versions",
+     "rel": "produces",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "entity-extraction__experiment-log__produces",
+     "source": "entity-extraction",
+     "target": "experiment-log",
+     "rel": "produces",
+     "note": "archived lineage",
+     "color": "#D9A03C",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "entity-extraction__phoenix__traces",
+     "source": "entity-extraction",
+     "target": "phoenix",
+     "rel": "traces",
+     "note": "",
+     "color": "#8E86E8",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "entity-extraction__github-pages__deploys",
+     "source": "entity-extraction",
+     "target": "github-pages",
+     "rel": "deploys",
+     "note": "the experiment-log site",
+     "color": "#4FC3B4",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "gepa-loop__prompt-versions__produces",
+     "source": "gepa-loop",
+     "target": "prompt-versions",
+     "rel": "produces",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "eval-environment__mailroom-evals-v1__produces",
+     "source": "eval-environment",
+     "target": "mailroom-evals-v1",
+     "rel": "produces",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-evals-v1__gepa-loop__feeds",
+     "source": "mailroom-evals-v1",
+     "target": "gepa-loop",
+     "rel": "feeds",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-evals-v1__llm-mailroom__feeds",
+     "source": "mailroom-evals-v1",
+     "target": "llm-mailroom",
+     "rel": "feeds",
+     "note": "baseline the vendored prompts derive from",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "eval-environment__gepa-loop__serves",
+     "source": "eval-environment",
+     "target": "gepa-loop",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "eval-environment__calibration-suite__serves",
+     "source": "eval-environment",
+     "target": "calibration-suite",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "calibration-suite__experiment-log__produces",
+     "source": "calibration-suite",
+     "target": "experiment-log",
+     "rel": "produces",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "eval-environment__experiment-log__produces",
+     "source": "eval-environment",
+     "target": "experiment-log",
+     "rel": "produces",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "experiment-log__evals-viewer__feeds",
+     "source": "experiment-log",
+     "target": "evals-viewer",
+     "rel": "feeds",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "eval-environment__evals-viewer__serves",
+     "source": "eval-environment",
+     "target": "evals-viewer",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "evals-viewer__eval-environment__renders",
+     "source": "evals-viewer",
+     "target": "eval-environment",
+     "rel": "renders",
+     "note": "vercel.json serves the static snapshot",
+     "color": "#E5808F",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "eval-environment__phoenix__traces",
+     "source": "eval-environment",
+     "target": "phoenix",
+     "rel": "traces",
+     "note": "or Braintrust — never Langfuse, so eval runs stay separate",
+     "color": "#8E86E8",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "evals-viewer__vercel__deploys",
+     "source": "evals-viewer",
+     "target": "vercel",
+     "rel": "deploys",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-issues__mailroom-evals-v1__syncs",
+     "source": "mailroom-issues",
+     "target": "mailroom-evals-v1",
+     "rel": "syncs",
+     "note": "sha256-locked reference copies",
+     "color": "#B9C3CE",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-issues__hub__governs",
+     "source": "mailroom-issues",
+     "target": "hub",
+     "rel": "governs",
+     "note": "cross-repo epics, RFCs and the label taxonomy",
+     "color": "#B9C3CE",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-issues__cost-reports__serves",
+     "source": "mailroom-issues",
+     "target": "cost-reports",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "llm-mailroom__intake__serves",
+     "source": "llm-mailroom",
+     "target": "intake",
+     "rel": "serves",
+     "note": "entrypoint",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "entry-route__intake__feeds",
+     "source": "entry-route",
+     "target": "intake",
+     "rel": "feeds",
+     "note": "normal path: intake → classify",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "entry-route__extract__feeds",
+     "source": "entry-route",
+     "target": "extract",
+     "rel": "feeds",
+     "note": "an approved review-resume re-runs extraction directly",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "bert-intake__classify__feeds",
+     "source": "bert-intake",
+     "target": "classify",
+     "rel": "feeds",
+     "note": "fast_path prior rides into the sorter prompt (intake_prior=)",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "intake__classify__feeds",
+     "source": "intake",
+     "target": "classify",
+     "rel": "feeds",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "classify__retry_classify__feeds",
+     "source": "classify",
+     "target": "retry_classify",
+     "rel": "feeds",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "retry_classify__review_classify__feeds",
+     "source": "retry_classify",
+     "target": "review_classify",
+     "rel": "feeds",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "review_classify__extract__feeds",
+     "source": "review_classify",
+     "target": "extract",
+     "rel": "feeds",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "extract__retry_extract__feeds",
+     "source": "extract",
+     "target": "retry_extract",
+     "rel": "feeds",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "retry_extract__judge_verify__feeds",
+     "source": "retry_extract",
+     "target": "judge_verify",
+     "rel": "feeds",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "judge_verify__arbiter__feeds",
+     "source": "judge_verify",
+     "target": "arbiter",
+     "rel": "feeds",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "arbiter__human_review__feeds",
+     "source": "arbiter",
+     "target": "human_review",
+     "rel": "feeds",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "arbiter__boss_escalation__feeds",
+     "source": "arbiter",
+     "target": "boss_escalation",
+     "rel": "feeds",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "human_review__compile_report__feeds",
+     "source": "human_review",
+     "target": "compile_report",
+     "rel": "feeds",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "boss_escalation__compile_report__feeds",
+     "source": "boss_escalation",
+     "target": "compile_report",
+     "rel": "feeds",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "compile_report__catalog_write__feeds",
+     "source": "compile_report",
+     "target": "catalog_write",
+     "rel": "feeds",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "catalog_write__archive__feeds",
+     "source": "catalog_write",
+     "target": "archive",
+     "rel": "feeds",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "archive__relations-clerk__feeds",
+     "source": "archive",
+     "target": "relations-clerk",
+     "rel": "feeds",
+     "note": "dispatched at every terminal manifest",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "relations-clerk__relations-graph__produces",
+     "source": "relations-clerk",
+     "target": "relations-graph",
+     "rel": "produces",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "gmail-lane__intake__feeds",
+     "source": "gmail-lane",
+     "target": "intake",
+     "rel": "feeds",
+     "note": "multi-document emails (route: pipeline) hand their attachments to the full graph; single-document mail is triaged and archived by the lane itself",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "watcher__watchdog__serves",
+     "source": "watcher",
+     "target": "watchdog",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "watcher__pager__feeds",
+     "source": "watcher",
+     "target": "pager",
+     "rel": "feeds",
+     "note": "heartbeat age drives the watcher_down rule",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "pager__mailroom-reloaded__syncs",
+     "source": "pager",
+     "target": "mailroom-reloaded",
+     "rel": "syncs",
+     "note": "pager_core.py is kept byte-identical apart from its docstring",
+     "color": "#B9C3CE",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "llm-mailroom__api__serves",
+     "source": "llm-mailroom",
+     "target": "api",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "llm-mailroom__watcher__serves",
+     "source": "llm-mailroom",
+     "target": "watcher",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "llm-mailroom__storage-bins__serves",
+     "source": "llm-mailroom",
+     "target": "storage-bins",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "llm-mailroom__audit-log__serves",
+     "source": "llm-mailroom",
+     "target": "audit-log",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "llm-mailroom__catalog__serves",
+     "source": "llm-mailroom",
+     "target": "catalog",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "llm-mailroom__pager__serves",
+     "source": "llm-mailroom",
+     "target": "pager",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "llm-mailroom__provider-router__serves",
+     "source": "llm-mailroom",
+     "target": "provider-router",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "llm-mailroom__taxonomy__depends",
+     "source": "llm-mailroom",
+     "target": "taxonomy",
+     "rel": "depends",
+     "note": "config contract",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "llm-mailroom__tracing__serves",
+     "source": "llm-mailroom",
+     "target": "tracing",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "llm-mailroom__langfuse__traces",
+     "source": "llm-mailroom",
+     "target": "langfuse",
+     "rel": "traces",
+     "note": "one document-pipeline trace per document",
+     "color": "#8E86E8",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "tracing__langfuse__feeds",
+     "source": "tracing",
+     "target": "langfuse",
+     "rel": "feeds",
+     "note": "LANGFUSE SDK v4 floor; spans masked",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "watcher__storage-bins__feeds",
+     "source": "watcher",
+     "target": "storage-bins",
+     "rel": "feeds",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "provider-router__provider-health__feeds",
+     "source": "provider-router",
+     "target": "provider-health",
+     "rel": "feeds",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "provider-health__pager__feeds",
+     "source": "provider-health",
+     "target": "pager",
+     "rel": "feeds",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "provider-router__modal__depends",
+     "source": "provider-router",
+     "target": "modal",
+     "rel": "depends",
+     "note": "",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "provider-router__openrouter__depends",
+     "source": "provider-router",
+     "target": "openrouter",
+     "rel": "depends",
+     "note": "",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "provider-router__vllm__depends",
+     "source": "provider-router",
+     "target": "vllm",
+     "rel": "depends",
+     "note": "",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "provider-router__llamacpp__depends",
+     "source": "provider-router",
+     "target": "llamacpp",
+     "rel": "depends",
+     "note": "",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "provider-router__lmstudio__depends",
+     "source": "provider-router",
+     "target": "lmstudio",
+     "rel": "depends",
+     "note": "",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "provider-router__ollama__depends",
+     "source": "provider-router",
+     "target": "ollama",
+     "rel": "depends",
+     "note": "",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "producer-space__api__serves",
+     "source": "producer-space",
+     "target": "api",
+     "rel": "serves",
+     "note": "hosts the producer when published — currently unpublished",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "observatory__api__feeds",
+     "source": "observatory",
+     "target": "api",
+     "rel": "feeds",
+     "note": "Inbox + REVIEW proxy to MAILROOM_PIPELINE_URL",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-reloaded__phoenix__traces",
+     "source": "mailroom-reloaded",
+     "target": "phoenix",
+     "rel": "traces",
+     "note": "mailroom.document / mailroom.node.<node> spans",
+     "color": "#8E86E8",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-reloaded__mailroom-ml__depends",
+     "source": "mailroom-reloaded",
+     "target": "mailroom-ml",
+     "rel": "depends",
+     "note": "bert extra: mailroom-ml[serve]",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-reloaded__dojo__depends",
+     "source": "mailroom-reloaded",
+     "target": "dojo",
+     "rel": "depends",
+     "note": "parity extra @ v0.21.0",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-reloaded__jev-gate__depends",
+     "source": "mailroom-reloaded",
+     "target": "jev-gate",
+     "rel": "depends",
+     "note": "MAILROOM_JEV_PROVIDER, default off",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-reloaded__reloaded-vllm__deploys",
+     "source": "mailroom-reloaded",
+     "target": "reloaded-vllm",
+     "rel": "deploys",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-reloaded__reloaded-observability__serves",
+     "source": "mailroom-reloaded",
+     "target": "reloaded-observability",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-reloaded__reloaded-ui__serves",
+     "source": "mailroom-reloaded",
+     "target": "reloaded-ui",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-reloaded__docker__deploys",
+     "source": "mailroom-reloaded",
+     "target": "docker",
+     "rel": "deploys",
+     "note": "compose profiles + Docker Hub release",
+     "color": "#4FC3B4",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-reloaded__reloaded-fixtures__depends",
+     "source": "mailroom-reloaded",
+     "target": "reloaded-fixtures",
+     "rel": "depends",
+     "note": "",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "reloaded-vllm__modal__depends",
+     "source": "reloaded-vllm",
+     "target": "modal",
+     "rel": "depends",
+     "note": "",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "reloaded-observability__phoenix__depends",
+     "source": "reloaded-observability",
+     "target": "phoenix",
+     "rel": "depends",
+     "note": "",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "local-mailroom-sandbox__llm-mailroom__depends",
+     "source": "local-mailroom-sandbox",
+     "target": "llm-mailroom",
+     "rel": "depends",
+     "note": "tracked vendor/ snapshot",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "local-mailroom-sandbox__langfuse__traces",
+     "source": "local-mailroom-sandbox",
+     "target": "langfuse",
+     "rel": "traces",
+     "note": "",
+     "color": "#8E86E8",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "local-mailroom-sandbox__sqlite__depends",
+     "source": "local-mailroom-sandbox",
+     "target": "sqlite",
+     "rel": "depends",
+     "note": "",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "local-mailroom-sandbox__ollama__depends",
+     "source": "local-mailroom-sandbox",
+     "target": "ollama",
+     "rel": "depends",
+     "note": "",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "local-mailroom-sandbox__vllm__depends",
+     "source": "local-mailroom-sandbox",
+     "target": "vllm",
+     "rel": "depends",
+     "note": "",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "local-mailroom-sandbox__llamacpp__depends",
+     "source": "local-mailroom-sandbox",
+     "target": "llamacpp",
+     "rel": "depends",
+     "note": "",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "local-mailroom-sandbox__lmstudio__depends",
+     "source": "local-mailroom-sandbox",
+     "target": "lmstudio",
+     "rel": "depends",
+     "note": "",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "local-mailroom-sandbox__modal__depends",
+     "source": "local-mailroom-sandbox",
+     "target": "modal",
+     "rel": "depends",
+     "note": "GPU studies",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "local-mailroom-sandbox__cost-reports__produces",
+     "source": "local-mailroom-sandbox",
+     "target": "cost-reports",
+     "rel": "produces",
+     "note": "",
+     "color": "#D9A03C",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-sandbox__local-mailroom-sandbox__syncs",
+     "source": "mailroom-sandbox",
+     "target": "local-mailroom-sandbox",
+     "rel": "syncs",
+     "note": "organization fork",
+     "color": "#B9C3CE",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "sync-vendor__local-mailroom-sandbox__syncs",
+     "source": "sync-vendor",
+     "target": "local-mailroom-sandbox",
+     "rel": "syncs",
+     "note": "",
+     "color": "#B9C3CE",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "the-mailroom__langfuse__renders",
+     "source": "the-mailroom",
+     "target": "langfuse",
+     "rel": "renders",
+     "note": "sole source of truth",
+     "color": "#E5808F",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "the-mailroom__pixel-console__serves",
+     "source": "the-mailroom",
+     "target": "pixel-console",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "the-mailroom__observatory__serves",
+     "source": "the-mailroom",
+     "target": "observatory",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "the-mailroom__tui__serves",
+     "source": "the-mailroom",
+     "target": "tui",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "the-mailroom__terminal-site__serves",
+     "source": "the-mailroom",
+     "target": "terminal-site",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "the-mailroom__dataset-viewer__serves",
+     "source": "the-mailroom",
+     "target": "dataset-viewer",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "the-mailroom__repo-browser__serves",
+     "source": "the-mailroom",
+     "target": "repo-browser",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "the-mailroom__github-pages__deploys",
+     "source": "the-mailroom",
+     "target": "github-pages",
+     "rel": "deploys",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "pixel-console__api__feeds",
+     "source": "pixel-console",
+     "target": "api",
+     "rel": "feeds",
+     "note": "Inbox + REVIEW proxy to the producer API",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "observatory__phoenix__renders",
+     "source": "observatory",
+     "target": "phoenix",
+     "rel": "renders",
+     "note": "",
+     "color": "#E5808F",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "observatory__hf-hub__deploys",
+     "source": "observatory",
+     "target": "hf-hub",
+     "rel": "deploys",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "dataset-viewer__mailroom-dataset__depends",
+     "source": "dataset-viewer",
+     "target": "mailroom-dataset",
+     "rel": "depends",
+     "note": "",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "repo-browser__hub__depends",
+     "source": "repo-browser",
+     "target": "hub",
+     "rel": "depends",
+     "note": "",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "board-site__hub__depends",
+     "source": "board-site",
+     "target": "hub",
+     "rel": "depends",
+     "note": "lives in board-site/, the hub's deploy root",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "board-site__vercel__deploys",
+     "source": "board-site",
+     "target": "vercel",
+     "rel": "deploys",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "board-site__gh-issues__depends",
+     "source": "board-site",
+     "target": "gh-issues",
+     "rel": "depends",
+     "note": "reads and writes kanban-labelled issues",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "agent-mailroom__llm-mailroom__depends",
+     "source": "agent-mailroom",
+     "target": "llm-mailroom",
+     "rel": "depends",
+     "note": "0.7.1 pin",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "agent-mailroom__dojo__depends",
+     "source": "agent-mailroom",
+     "target": "dojo",
+     "rel": "depends",
+     "note": "v0.19.1 pin",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "agent-mailroom__agent-floor__serves",
+     "source": "agent-mailroom",
+     "target": "agent-floor",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "agent-mailroom__mailroom-dataset__feeds",
+     "source": "agent-mailroom",
+     "target": "mailroom-dataset",
+     "rel": "feeds",
+     "note": "pulls rows onto the same inbox",
+     "color": "#D9A03C",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "graphify-graph__llm-mailroom__documents",
+     "source": "graphify-graph",
+     "target": "llm-mailroom",
+     "rel": "documents",
+     "note": "retired view — AST-level, not architecture-level",
+     "color": "#E5808F",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "mailroom-dev-graph__earlier-monorepos__documents",
+     "source": "mailroom-dev-graph",
+     "target": "earlier-monorepos",
+     "rel": "documents",
+     "note": "",
+     "color": "#E5808F",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "dmr-graph__constellation-docs__renders",
+     "source": "dmr-graph",
+     "target": "constellation-docs",
+     "rel": "renders",
+     "note": "the canonical map this site visualises",
+     "color": "#E5808F",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "dmr-graph__hub__documents",
+     "source": "dmr-graph",
+     "target": "hub",
+     "rel": "documents",
+     "note": "",
+     "color": "#E5808F",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "dmr-graph__llm-mailroom__documents",
+     "source": "dmr-graph",
+     "target": "llm-mailroom",
+     "rel": "documents",
+     "note": "",
+     "color": "#E5808F",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "dmr-graph__dojo__documents",
+     "source": "dmr-graph",
+     "target": "dojo",
+     "rel": "documents",
+     "note": "",
+     "color": "#E5808F",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "dmr-graph__the-mailroom__documents",
+     "source": "dmr-graph",
+     "target": "the-mailroom",
+     "rel": "documents",
+     "note": "",
+     "color": "#E5808F",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "dmr-graph__local-mailroom-sandbox__documents",
+     "source": "dmr-graph",
+     "target": "local-mailroom-sandbox",
+     "rel": "documents",
+     "note": "",
+     "color": "#E5808F",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "dmr-graph__mailroom-reloaded__documents",
+     "source": "dmr-graph",
+     "target": "mailroom-reloaded",
+     "rel": "documents",
+     "note": "",
+     "color": "#E5808F",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "dmr-graph__mailroom-issues__documents",
+     "source": "dmr-graph",
+     "target": "mailroom-issues",
+     "rel": "documents",
+     "note": "",
+     "color": "#E5808F",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "dmr-graph__corpus-eda__documents",
+     "source": "dmr-graph",
+     "target": "corpus-eda",
+     "rel": "documents",
+     "note": "",
+     "color": "#E5808F",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "dmr-graph__enron-eda__documents",
+     "source": "dmr-graph",
+     "target": "enron-eda",
+     "rel": "documents",
+     "note": "",
+     "color": "#E5808F",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "dmr-graph__claims-eda__documents",
+     "source": "dmr-graph",
+     "target": "claims-eda",
+     "rel": "documents",
+     "note": "",
+     "color": "#E5808F",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "dmr-graph__eval-environment__documents",
+     "source": "dmr-graph",
+     "target": "eval-environment",
+     "rel": "documents",
+     "note": "",
+     "color": "#E5808F",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "dmr-graph__mailroom-ml__documents",
+     "source": "dmr-graph",
+     "target": "mailroom-ml",
+     "rel": "documents",
+     "note": "",
+     "color": "#E5808F",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "dmr-graph__graphify-graph__supersedes",
+     "source": "dmr-graph",
+     "target": "graphify-graph",
+     "rel": "supersedes",
+     "note": "",
+     "color": "#7B8494",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "dmr-graph__github-pages__deploys",
+     "source": "dmr-graph",
+     "target": "github-pages",
+     "rel": "deploys",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "sync-packages__hub__serves",
+     "source": "sync-packages",
+     "target": "hub",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "hub__uv-workspace__serves",
+     "source": "hub",
+     "target": "uv-workspace",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "hub__board-tasks__serves",
+     "source": "hub",
+     "target": "board-tasks",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "hub__wiki__serves",
+     "source": "hub",
+     "target": "wiki",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "hub__specialists__serves",
+     "source": "hub",
+     "target": "specialists",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "hub__constellation-docs__serves",
+     "source": "hub",
+     "target": "constellation-docs",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "hub__hub-data__serves",
+     "source": "hub",
+     "target": "hub-data",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "hub__hub-reports__serves",
+     "source": "hub",
+     "target": "hub-reports",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "hub__gh-templates__serves",
+     "source": "hub",
+     "target": "gh-templates",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "hub__gh-workflows__serves",
+     "source": "hub",
+     "target": "gh-workflows",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "hub__board-site__serves",
+     "source": "hub",
+     "target": "board-site",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "hub__changelog__serves",
+     "source": "hub",
+     "target": "changelog",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "hub__llm-mailroom__syncs",
+     "source": "hub",
+     "target": "llm-mailroom",
+     "rel": "syncs",
+     "note": "git subtree mirror",
+     "color": "#B9C3CE",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "hub__dojo__syncs",
+     "source": "hub",
+     "target": "dojo",
+     "rel": "syncs",
+     "note": "git subtree mirror",
+     "color": "#B9C3CE",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "hub__the-mailroom__syncs",
+     "source": "hub",
+     "target": "the-mailroom",
+     "rel": "syncs",
+     "note": "git subtree mirror",
+     "color": "#B9C3CE",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "hub__local-mailroom-sandbox__syncs",
+     "source": "hub",
+     "target": "local-mailroom-sandbox",
+     "rel": "syncs",
+     "note": "git subtree mirror",
+     "color": "#B9C3CE",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "hub__corpus-eda__syncs",
+     "source": "hub",
+     "target": "corpus-eda",
+     "rel": "syncs",
+     "note": "git subtree mirror",
+     "color": "#B9C3CE",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "hub__enron-eda__syncs",
+     "source": "hub",
+     "target": "enron-eda",
+     "rel": "syncs",
+     "note": "git subtree mirror",
+     "color": "#B9C3CE",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "hub__claims-eda__syncs",
+     "source": "hub",
+     "target": "claims-eda",
+     "rel": "syncs",
+     "note": "git subtree mirror",
+     "color": "#B9C3CE",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "hub__tag-v080__serves",
+     "source": "hub",
+     "target": "tag-v080",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "hub__prune-dmr079__serves",
+     "source": "hub",
+     "target": "prune-dmr079",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "hub__dmr-080__serves",
+     "source": "hub",
+     "target": "dmr-080",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "hub__earlier-monorepos__supersedes",
+     "source": "hub",
+     "target": "earlier-monorepos",
+     "rel": "supersedes",
+     "note": "",
+     "color": "#7B8494",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "board-state__board-tasks__depends",
+     "source": "board-state",
+     "target": "board-tasks",
+     "rel": "depends",
+     "note": "",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "board-state__board-site__syncs",
+     "source": "board-state",
+     "target": "board-site",
+     "rel": "syncs",
+     "note": "pull-issues / sync-issues mirror the lanes",
+     "color": "#B9C3CE",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "board-state__gh-issues__syncs",
+     "source": "board-state",
+     "target": "gh-issues",
+     "rel": "syncs",
+     "note": "",
+     "color": "#B9C3CE",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "specialists__board-tasks__governs",
+     "source": "specialists",
+     "target": "board-tasks",
+     "rel": "governs",
+     "note": "claim → in_progress → close with Evidence",
+     "color": "#B9C3CE",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "taxonomy__taxonomy-parity__governs",
+     "source": "taxonomy",
+     "target": "taxonomy-parity",
+     "rel": "governs",
+     "note": "",
+     "color": "#B9C3CE",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "taxonomy-parity__v7-taxonomy__depends",
+     "source": "taxonomy-parity",
+     "target": "v7-taxonomy",
+     "rel": "depends",
+     "note": "",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "wiki__hub__documents",
+     "source": "wiki",
+     "target": "hub",
+     "rel": "documents",
+     "note": "",
+     "color": "#E5808F",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "wiki-sync__wiki__serves",
+     "source": "wiki-sync",
+     "target": "wiki",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "constellation-docs__llm-mailroom__serves",
+     "source": "constellation-docs",
+     "target": "llm-mailroom",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "release-chain__tag-v080__governs",
+     "source": "release-chain",
+     "target": "tag-v080",
+     "rel": "governs",
+     "note": "a version tag must never exist without its changelog section",
+     "color": "#B9C3CE",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "release-chain__hub__governs",
+     "source": "release-chain",
+     "target": "hub",
+     "rel": "governs",
+     "note": "changelog ↔ tags ↔ pyproject version chain",
+     "color": "#B9C3CE",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "release-chain__changelog__governs",
+     "source": "release-chain",
+     "target": "changelog",
+     "rel": "governs",
+     "note": "",
+     "color": "#B9C3CE",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "release-notes__tag-v080__serves",
+     "source": "release-notes",
+     "target": "tag-v080",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "release-notes__changelog__depends",
+     "source": "release-notes",
+     "target": "changelog",
+     "rel": "depends",
+     "note": "",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "gh-workflows__board-state__governs",
+     "source": "gh-workflows",
+     "target": "board-state",
+     "rel": "governs",
+     "note": "blocking board invariants",
+     "color": "#B9C3CE",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "gh-workflows__github-labels__governs",
+     "source": "gh-workflows",
+     "target": "github-labels",
+     "rel": "governs",
+     "note": "label-manifest drift audit",
+     "color": "#B9C3CE",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "gh-workflows__taxonomy-parity__governs",
+     "source": "gh-workflows",
+     "target": "taxonomy-parity",
+     "rel": "governs",
+     "note": "",
+     "color": "#B9C3CE",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "gh-workflows__release-chain__governs",
+     "source": "gh-workflows",
+     "target": "release-chain",
+     "rel": "governs",
+     "note": "tag-push chain check",
+     "color": "#B9C3CE",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "gh-workflows__audit-references__governs",
+     "source": "gh-workflows",
+     "target": "audit-references",
+     "rel": "governs",
+     "note": "",
+     "color": "#B9C3CE",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "deploy-pages__github-pages__deploys",
+     "source": "deploy-pages",
+     "target": "github-pages",
+     "rel": "deploys",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "deploy-pages__corpus-eda__deploys",
+     "source": "deploy-pages",
+     "target": "corpus-eda",
+     "rel": "deploys",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "deploy-pages__enron-eda__deploys",
+     "source": "deploy-pages",
+     "target": "enron-eda",
+     "rel": "deploys",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "deploy-pages__claims-eda__deploys",
+     "source": "deploy-pages",
+     "target": "claims-eda",
+     "rel": "deploys",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "audit-references__hub__serves",
+     "source": "audit-references",
+     "target": "hub",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "github-labels__gh-templates__serves",
+     "source": "github-labels",
+     "target": "gh-templates",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "gen-charts__claims-eda__serves",
+     "source": "gen-charts",
+     "target": "claims-eda",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "gen-charts__enron-eda__serves",
+     "source": "gen-charts",
+     "target": "enron-eda",
+     "rel": "serves",
+     "note": "",
+     "color": "#4FC3B4",
+     "line": "dotted"
+    }
+   },
+   {
+    "data": {
+     "id": "prune-dmr079__tag-v080__depends",
+     "source": "prune-dmr079",
+     "target": "tag-v080",
+     "rel": "depends",
+     "note": "the prune is recorded against the rollback point",
+     "color": "#7FA6C9",
+     "line": "solid"
+    }
+   },
+   {
+    "data": {
+     "id": "prune-dmr079__entity-extraction__prunes",
+     "source": "prune-dmr079",
+     "target": "entity-extraction",
+     "rel": "prunes",
+     "note": "",
+     "color": "#C25A6A",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "prune-dmr079__entity-extraction-experiments__prunes",
+     "source": "prune-dmr079",
+     "target": "entity-extraction-experiments",
+     "rel": "prunes",
+     "note": "organization copy — standalone only",
+     "color": "#C25A6A",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "prune-dmr079__graphify-graph__prunes",
+     "source": "prune-dmr079",
+     "target": "graphify-graph",
+     "rel": "prunes",
+     "note": "",
+     "color": "#C25A6A",
+     "line": "dashed"
+    }
+   },
+   {
+    "data": {
+     "id": "prune-dmr079__agent-mailroom__prunes",
+     "source": "prune-dmr079",
+     "target": "agent-mailroom",
+     "rel": "prunes",
+     "note": "",
+     "color": "#C25A6A",
+     "line": "dashed"
+    }
+   }
+  ]
+ }
+}

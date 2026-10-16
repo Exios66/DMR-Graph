@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DMR-Graph — Mailroom constellation</title>
+<style>
+  :root{
+    --bg:#0B1220; --panel:#111A2B; --panel2:#0E1626; --line:#22304A; --line2:#2E3E5C;
+    --ink:#E7EEF8; --ink2:#9BAAC4; --ink3:#6F7F9C; --focus:#5CC9BC;
+    --z-sources:#F0C274; --z-eval:#A9A4F0; --z-pipeline:#69D6C8; --z-surfaces:#F39BA8;
+    --z-platform:#93BCE0; --z-external:#A9B3C2;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:14px/1.45 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  a{color:var(--focus)}
+  .app{display:grid;grid-template-columns:296px minmax(0,1fr) auto;grid-template-rows:auto minmax(0,1fr) auto;
+    height:100vh;overflow:hidden}
+  header{grid-column:1/-1;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+    padding:12px 18px;background:linear-gradient(180deg,#0E1728,#0B1220);border-bottom:1px solid var(--line)}
+  header h1{margin:0;font-size:17px;letter-spacing:.2px}
+  header .sub{color:var(--ink2);font-size:12.5px}
+  .badges{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+  .badge{font-size:11px;padding:3px 9px;border-radius:999px;border:1px solid var(--line2);
+    color:var(--ink2);background:#0D1727;white-space:nowrap}
+  .badge.hub{border-color:#4FC3B4;color:#8FE3D7}
+  .badge.prune{border-color:#C25A6A;color:#F0A3AF}
+  aside{background:var(--panel);border-right:1px solid var(--line);overflow-y:auto;padding:14px}
+  aside section{margin-bottom:18px}
+  aside h2{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink3);
+    margin:0 0 8px;font-weight:600}
+  input[type=search]{width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--line2);
+    background:#0B1322;color:var(--ink);font-size:13px}
+  input[type=search]:focus{outline:2px solid var(--focus);outline-offset:1px}
+  .row{display:flex;align-items:center;gap:8px;width:100%;background:none;border:0;color:var(--ink);
+    font:inherit;text-align:left;padding:5px 6px;border-radius:7px;cursor:pointer}
+  .row:hover{background:#16223A}
+  .row[aria-pressed=true]{background:#1B2B45;box-shadow:inset 0 0 0 1px var(--line2)}
+  .row .n{margin-left:auto;color:var(--ink3);font-size:11.5px;font-variant-numeric:tabular-nums}
+  .sw{width:11px;height:11px;border-radius:3px;flex:0 0 auto}
+  .ln{width:22px;height:0;border-top:2px solid var(--ink3);flex:0 0 auto}
+  .legend-note{color:var(--ink3);font-size:11.5px;line-height:1.5}
+  #cy{position:relative;min-width:0;overflow:hidden;background:
+      radial-gradient(1200px 600px at 20% -10%,#132038 0%,transparent 60%),var(--bg)}
+  #cy canvas:focus{outline:none}
+  .tools{position:absolute;top:12px;right:14px;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;
+    max-width:70%;z-index:3}
+  .tool{background:#101B2E;border:1px solid var(--line2);color:var(--ink2);border-radius:8px;
+    padding:6px 10px;font:inherit;font-size:12px;cursor:pointer}
+  .tool:hover{color:var(--ink);border-color:#3C5175}
+  .tool[aria-pressed=true]{background:#1B2B45;color:#BFF0E8;border-color:#3E7F76}
+  .hint{position:absolute;left:14px;bottom:12px;color:var(--ink3);font-size:11.5px;z-index:2;
+    background:#0B1220cc;padding:4px 8px;border-radius:6px}
+  .panel{width:344px;background:var(--panel2);border-left:1px solid var(--line);overflow-y:auto;
+    padding:14px 15px 40px}
+  .panel[hidden]{display:none}
+  .panel h2{font-size:15px;margin:2px 0 8px;line-height:1.25}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+  .chip{font-size:10.5px;padding:2px 8px;border-radius:999px;border:1px solid var(--line2);color:var(--ink2)}
+  .chip.retired{border-color:#7B8494;color:#AEB7C4;border-style:dashed}
+  .chip.pending{border-color:#C7A64A;color:#E4CE8B;border-style:dotted}
+  .panel p{margin:0 0 12px;color:#CBD7E8}
+  .kv{color:var(--ink3);font-size:11.5px;margin:-6px 0 12px}
+  .panel h3{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink3);
+    margin:14px 0 7px;font-weight:600}
+  .links{display:flex;flex-direction:column;gap:5px;margin-bottom:6px}
+  .links a{font-size:13px;text-decoration:none;display:inline-flex;gap:6px;align-items:center}
+  .links a:hover{text-decoration:underline}
+  .nb{display:flex;flex-direction:column;gap:2px}
+  .nb button{display:flex;gap:7px;align-items:baseline;background:none;border:0;color:var(--ink);
+    font:inherit;font-size:12.5px;text-align:left;padding:4px 6px;border-radius:6px;cursor:pointer}
+  .nb button:hover{background:#16223A}
+  .nb .rel{color:var(--ink3);font-size:10.5px;min-width:74px;text-transform:lowercase}
+  .nb .arrow{color:var(--ink3)}
+  .stats{color:var(--ink3);font-size:11.5px;line-height:1.7}
+  .stats b{color:var(--ink2);font-weight:600}
+  footer{grid-column:1/-1;border-top:1px solid var(--line);background:#0A111E;color:var(--ink3);
+    font-size:11px;padding:7px 18px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  footer .dot{color:#2C3A55}
+  @media (max-width:1180px){
+    .app{grid-template-columns:260px 1fr}
+    .panel{position:fixed;right:0;top:0;bottom:0;z-index:5;box-shadow:-18px 0 40px #0009}
+  }
+  @media (max-width:820px){
+    .app{grid-template-columns:1fr;grid-template-rows:auto auto 1fr}
+    aside{max-height:34vh;border-right:0;border-bottom:1px solid var(--line)}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>DMR&#8209;Graph</h1>
+    <span class="sub" id="subtitle">Knowledge graph of the Mailroom constellation</span>
+    <div class="badges" id="badges"></div>
+  </header>
+
+  <aside>
+    <section>
+      <h2>Find</h2>
+      <input type="search" id="q" placeholder="Search nodes…" aria-label="Search nodes">
+    </section>
+    <section>
+      <h2>Modules <span class="legend-note">(click to isolate)</span></h2>
+      <div id="zones"></div>
+    </section>
+    <section>
+      <h2>Node kinds</h2>
+      <div id="kinds" class="legend-note"></div>
+    </section>
+    <section>
+      <h2>Relations <span class="legend-note">(click to isolate)</span></h2>
+      <div id="relations"></div>
+    </section>
+    <section>
+      <h2>Graph</h2>
+      <div class="stats" id="stats"></div>
+    </section>
+  </aside>
+
+  <div id="cy" role="application" aria-label="Mailroom constellation graph">
+    <div class="tools">
+      <button class="tool" id="btn-fit">Fit</button>
+      <button class="tool" id="btn-labels" aria-pressed="true">Labels</button>
+      <button class="tool" id="btn-retired" aria-pressed="false">Hide retired</button>
+      <button class="tool" id="btn-layout" aria-pressed="false">Force layout</button>
+      <button class="tool" id="btn-png">PNG</button>
+      <button class="tool" id="btn-reset">Reset</button>
+    </div>
+    <div class="hint">drag to pan · scroll to zoom · click a node for details · Esc clears</div>
+  </div>
+
+  <div class="panel" id="panel" hidden aria-live="polite"></div>
+
+  <footer id="footer"></footer>
+</div>
+
+<script src="vendor/cytoscape.min.js"></script>
+<script>
+"use strict";
+
+const CY_STYLE = [
+  {selector:"node", style:{
+    "background-color":"data(fill)","border-color":"data(border)","border-width":2,
+    "shape":"data(shape)","width":"data(width)","height":"data(height)",
+    "label":"data(label)","color":"#FFFFFF","font-size":11.5,"font-weight":500,
+    "text-wrap":"wrap","text-max-width":148,"text-overflow-wrap":"anywhere",
+    "text-valign":"center","text-halign":"center",
+    "text-outline-color":"#0B1220","text-outline-width":2.4,"text-outline-opacity":0.85,
+    "min-zoomed-font-size":6.5,
+    "transition-property":"opacity","transition-duration":"150ms"
+  }},
+  {selector:"node[isZone]", style:{
+    "background-color":"data(zoneFill)","background-opacity":0.09,
+    "border-color":"data(zoneBorder)","border-opacity":0.5,"border-width":1,
+    "shape":"round-rectangle","label":"data(label)","text-valign":"top","text-halign":"left",
+    "text-margin-x":14,"text-margin-y":12,"font-size":20,"font-weight":600,"color":"#C9D6E8",
+    "text-outline-width":0,"text-opacity":0.9,"padding":28,"events":"no",
+    "compound-sizing-wrt-labels":"exclude","z-compound-depth":"bottom"
+  }},
+  {selector:"node[status='retired']", style:{
+    "opacity":0.5,"border-style":"dashed","border-width":2,"font-style":"italic"
+  }},
+  {selector:"node[status='pending']", style:{
+    "border-style":"dotted","border-width":2.5
+  }},
+  {selector:"edge", style:{
+    "curve-style":"bezier","width":1.5,"line-color":"data(color)","line-style":"data(line)",
+    "target-arrow-shape":"triangle","target-arrow-color":"data(color)","arrow-scale":0.75,
+    "opacity":0.62,"label":"data(rel)","font-size":9,"color":"#9BAAC4",
+    "text-opacity":0,"text-background-color":"#0B1220","text-background-opacity":0.85,
+    "text-background-padding":2,"text-rotation":"autorotate","transition-property":"opacity",
+    "transition-duration":"150ms"
+  }},
+  {selector:"edge.showlabel", style:{"text-opacity":1,"opacity":0.95,"width":2.2,"z-index":10}},
+  {selector:".dim", style:{"opacity":0.06,"text-opacity":0}},
+  {selector:"node.sel", style:{"border-width":4,"border-color":"#FFFFFF","z-index":20,
+    "text-outline-width":3.4}},
+  {selector:"node.neigh", style:{"border-width":3.2,"border-color":"#EAF2FF","z-index":15}},
+  {selector:"node.hiddenlabel", style:{"label":""}},
+  {selector:"edge.hiddenlabel", style:{"text-opacity":0}},
+  {selector:"node.off, edge.off", style:{"display":"none"}}
+];
+
+const state = {zone:null, rel:null, hideRetired:false, q:"", labels:true, force:false, sel:null};
+let cy, graph, zoneById = {};
+
+const $ = id => document.getElementById(id);
+
+function esc(s){return String(s).replace(/[&<>"']/g, c =>
+  ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+
+function nodeLabel(id){const n = graph.elements.nodes.find(n => n.data.id === id);
+  return n ? n.data.label : id;}
+
+/* ── stylesheet extras derived from the data (kinds + relations) ─────────── */
+function dataStyles(){
+  const extra = [];
+  for (const [kind, k] of Object.entries(graph.kinds)){
+    extra.push({selector:`node[kind='${kind}']`, style:{
+      "shape":k.shape,"width":k.width,"height":k.height}});
+  }
+  for (const [rel, r] of Object.entries(graph.relations)){
+    extra.push({selector:`edge[rel='${rel}']`, style:{
+      "line-color":r.color,"line-style":r.line,"target-arrow-color":r.color}});
+  }
+  return extra;
+}
+
+/* ── build ───────────────────────────────────────────────────────────────── */
+function elements(){
+  const parents = graph.zones.map(z => ({data:{
+    id:"zone:"+z.id, isZone:true, label:z.label, zone:z.id,
+    zoneFill:z.fill, zoneBorder:z.border, fill:z.fill, border:z.border
+  }}));
+  const nodes = graph.elements.nodes.map(n => ({data:{...n.data, parent:"zone:"+n.data.zone},
+    position:{...n.position}}));
+  return parents.concat(nodes, graph.elements.edges);
+}
+
+function apply(){
+  if (!cy) return;
+  const q = state.q.trim().toLowerCase();
+  const match = id => {
+    if (!q) return true;
+    const n = graph.elements.nodes.find(n => n.data.id === id);
+    return n && (n.data.label + " " + n.data.id + " " + n.data.desc + " " + n.data.zoneLabel)
+      .toLowerCase().includes(q);
+  };
+  cy.batch(() => {
+    cy.elements("node:childless").forEach(n => {
+      const d = n.data();
+      const off = (state.zone && d.zone !== state.zone) ||
+                  (state.hideRetired && d.status === "retired");
+      const dim = !off && (!match(d.id) || (state.rel && !n.connectedEdges(`[rel='${state.rel}']`).length));
+      n.toggleClass("off", !!off);
+      n.toggleClass("dim", !off && !!dim);
+      n.toggleClass("hiddenlabel", !state.labels);
+    });
+    cy.elements("edge").forEach(e => {
+      const hidden = e.source().hasClass("off") || e.target().hasClass("off");
+      const relFiltered = state.rel && e.data().rel !== state.rel;
+      const dim = !hidden && (relFiltered || e.source().hasClass("dim") ||
+                              e.target().hasClass("dim"));
+      e.toggleClass("off", hidden);
+      e.toggleClass("dim", !hidden && !!dim);
+      e.toggleClass("hiddenlabel", !state.labels);
+    });
+    cy.nodes("[isZone]").forEach(z => {
+      const kids = z.children(":childless");
+      z.toggleClass("off", kids.length > 0 && kids.every(k => k.hasClass("off")));
+    });
+  });
+}
+
+function clearSelection(){
+  state.sel = null;
+  cy.elements().removeClass("sel neigh showlabel");
+  $("panel").hidden = true;
+  cy.resize();
+  if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+}
+
+function select(id, focus){
+  const n = cy.getElementById(id);
+  if (!n || !n.length) return;
+  state.sel = id;
+  cy.elements().removeClass("sel neigh showlabel");
+  n.addClass("sel");
+  n.connectedEdges().forEach(e => {
+    e.addClass("showlabel");
+    e.source().addClass("neigh"); e.target().addClass("neigh");
+  });
+  if (focus){ cy.animate({center:{eles:n}, zoom:Math.max(cy.zoom(), 0.85)}, {duration:280}); }
+  history.replaceState(null, "", "#node=" + encodeURIComponent(id));
+  detail(n.data());
+  apply();
+}
+
+function detail(d){
+  const links = d.links || [];
+  const outs = cy.getElementById(d.id).outgoers("edge").map(e =>
+    ({rel:e.data().rel, note:e.data().note, id:e.data().target}));
+  const ins = cy.getElementById(d.id).incomers("edge").map(e =>
+    ({rel:e.data().rel, note:e.data().note, id:e.data().source}));
+  const nb = (rows, arrow) => rows.map(r => `<button data-goto="${esc(r.id)}">
+      <span class="arrow">${arrow}</span><span class="rel">${esc(r.rel)}</span>
+      <span>${esc(nodeLabel(r.id))}</span></button>` +
+      (r.note ? `<div class="kv" style="margin:-2px 0 4px 24px">${esc(r.note)}</div>` : "")
+    ).join("");
+
+  $("panel").innerHTML = `
+    <h2>${esc(d.label)}</h2>
+    <div class="chips">
+      <span class="chip" style="border-color:${esc(d.border)}">${esc(d.zoneLabel)}</span>
+      <span class="chip">${esc(d.kind)}</span>
+      <span class="chip ${esc(d.status)}">${esc(d.status)}</span>
+      ${d.version ? `<span class="chip">${esc(d.version)}</span>` : ""}
+    </div>
+    <p>${esc(d.desc)}</p>
+    ${links.length ? `<h3>Links</h3><div class="links">` + links.map(l =>
+      `<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)}
+       <span class="kv" style="margin:0">${esc(l.url.replace(/^https?:\/\//, ""))}</span></a>`).join("") + `</div>` : ""}
+    ${outs.length ? `<h3>Outgoing (${outs.length})</h3><div class="nb">${nb(outs, "→")}</div>` : ""}
+    ${ins.length ? `<h3>Incoming (${ins.length})</h3><div class="nb">${nb(ins, "←")}</div>` : ""}
+  `;
+  $("panel").hidden = false;
+  cy.resize();
+  $("panel").querySelectorAll("[data-goto]").forEach(b =>
+    b.addEventListener("click", () => select(b.dataset.goto, true)));
+}
+
+/* ── sidebar ─────────────────────────────────────────────────────────────── */
+function buildSidebar(){
+  const zoneRow = z => `<button class="row" data-zone="${esc(z.id)}" aria-pressed="false">
+      <span class="sw" style="background:${esc(z.fill)};border:1px solid ${esc(z.border)}"></span>
+      <span>${esc(z.label)}</span><span class="n">${z.count}</span></button>`;
+  $("zones").innerHTML = graph.zones.map(zoneRow).join("");
+  $("zones").querySelectorAll("[data-zone]").forEach(b => b.addEventListener("click", () => {
+    state.zone = state.zone === b.dataset.zone ? null : b.dataset.zone;
+    $("zones").querySelectorAll("[data-zone]").forEach(x =>
+      x.setAttribute("aria-pressed", String(x.dataset.zone === state.zone)));
+    apply();
+    if (state.zone){
+      const pane = cy.nodes(`[isZone][zone='${state.zone}']`).union(
+        cy.nodes(`[zone='${state.zone}']`));
+      cy.animate({fit:{eles:pane, padding:70}}, {duration:320});
+    }
+  }));
+
+  $("kinds").innerHTML = Object.entries(graph.kinds)
+    .map(([k, v]) => `<b>${esc(k)}</b> — ${esc(v.shape)}`).join("<br>");
+
+  $("relations").innerHTML = Object.entries(graph.relations).map(([r, v]) =>
+    `<button class="row" data-rel="${esc(r)}" aria-pressed="false" title="${esc(v.meaning)}">
+       <span class="ln" style="border-top-color:${esc(v.color)}"></span>
+       <span>${esc(r)}</span>
+       <span class="n">${graph.analytics.relation_counts[r] || 0}</span></button>`).join("");
+  $("relations").querySelectorAll("[data-rel]").forEach(b => b.addEventListener("click", () => {
+    state.rel = state.rel === b.dataset.rel ? null : b.dataset.rel;
+    $("relations").querySelectorAll("[data-rel]").forEach(x =>
+      x.setAttribute("aria-pressed", String(x.dataset.rel === state.rel)));
+    apply();
+  }));
+
+  const a = graph.analytics;
+  const god = a.god_nodes.map(g => `<button class="row" data-goto="${esc(g.id)}" style="padding:2px 6px">
+      <span>${esc(g.label)}</span><span class="n">${g.degree}</span></button>`).join("");
+  const bridge = a.bridges.map(b => `<button class="row" data-goto="${esc(b.from)}" style="padding:2px 6px">
+      <span>${esc(nodeLabel(b.from))} — ${esc(nodeLabel(b.to))}</span></button>`).join("");
+  $("stats").innerHTML = `
+    <b>${a.zone_counts ? graph.meta.counts.nodes : 0}</b> nodes ·
+    <b>${graph.meta.counts.edges}</b> edges ·
+    <b>${a.components}</b> component${a.components === 1 ? "" : "s"}<br>
+    status: ${Object.entries(a.status_counts).map(([k, v]) => `${v} ${k}`).join(" · ")}<br><br>
+    <b>Most connected</b><br>${god}<br>
+    <b>Bridges</b> <span class="legend-note">(removing one splits the graph)</span><br>${bridge}`;
+  $("stats").querySelectorAll("[data-goto]").forEach(b =>
+    b.addEventListener("click", () => select(b.dataset.goto, true)));
+
+  const m = graph.meta;
+  $("subtitle").textContent = m.subtitle;
+  $("badges").innerHTML = `
+    <span class="badge hub">hub ${esc(m.hub_version)}</span>
+    <span class="badge prune">${esc(m.prune)} · ${m.packages} packages</span>
+    <span class="badge">${graph.meta.counts.nodes} nodes</span>
+    <span class="badge">${graph.meta.counts.edges} edges</span>`;
+  $("footer").innerHTML = `<span>Built from <code>${esc(m.source)}</code> by
+      <code>${esc(m.builder)}</code> · hub ${esc(m.hub_version)} · ${esc(m.prune)}</span>
+    <span class="dot">•</span><span>generated ${esc(m.generated)}</span>
+    <span class="dot">•</span><span>Cytoscape.js + networkx · GitHub Pages, no Actions</span>
+    <span class="dot">•</span><span>retired = dashed &amp; desaturated</span>`;
+}
+
+/* ── controls ────────────────────────────────────────────────────────────── */
+function wireControls(){
+  $("q").addEventListener("input", e => {state.q = e.target.value; apply();});
+  $("btn-fit").addEventListener("click", () => cy.animate({fit:{padding:60}}, {duration:260}));
+  $("btn-labels").addEventListener("click", e => {
+    state.labels = !state.labels;
+    e.currentTarget.setAttribute("aria-pressed", String(state.labels));
+    apply();
+  });
+  $("btn-retired").addEventListener("click", e => {
+    state.hideRetired = !state.hideRetired;
+    e.currentTarget.setAttribute("aria-pressed", String(state.hideRetired));
+    apply();
+  });
+  $("btn-layout").addEventListener("click", e => {
+    state.force = !state.force;
+    e.currentTarget.setAttribute("aria-pressed", String(state.force));
+    if (state.force){
+      cy.layout({name:"cose", animate:true, animationDuration:600, randomize:true,
+        nodeRepulsion:26000, idealEdgeLength:120, nodeOverlap:18, padding:50,
+        compoundGravity:0.6, fit:true}).run();
+    } else {
+      cy.layout({name:"preset", fit:true, padding:60}).run();
+    }
+  });
+  $("btn-png").addEventListener("click", () => {
+    const blob = cy.png({full:true, scale:2, bg:"#0B1220"});
+    const a = document.createElement("a");
+    a.href = blob; a.download = "dmr-graph.png"; a.click();
+  });
+  $("btn-reset").addEventListener("click", () => {
+    state.zone = null; state.rel = null; state.hideRetired = false; state.q = "";
+    $("q").value = "";
+    $("zones").querySelectorAll("[data-zone]").forEach(x => x.setAttribute("aria-pressed", "false"));
+    $("relations").querySelectorAll("[data-rel]").forEach(x => x.setAttribute("aria-pressed", "false"));
+    $("btn-retired").setAttribute("aria-pressed", "false");
+    clearSelection(); apply();
+    cy.animate({fit:{padding:60}}, {duration:260});
+  });
+  document.addEventListener("keydown", e => {if (e.key === "Escape") clearSelection();});
+}
+
+/* ── boot ────────────────────────────────────────────────────────────────── */
+fetch("graph.json").then(r => r.json()).then(g => {
+  graph = g;
+  graph.zones.forEach(z => zoneById[z.id] = z);
+  cy = cytoscape({container:$("cy"), elements:elements(),
+    style:CY_STYLE.concat(dataStyles()),
+    layout:{name:"preset", fit:true, padding:26},
+    minZoom:0.12, maxZoom:3, wheelSensitivity:0.2,
+    boxSelectionEnabled:false, autounselectify:false});
+  cy.on("tap", "node[isZone]", evt => {if (evt.target === evt.currentTarget) clearSelection();});
+  cy.on("tap", "node:childless", evt => select(evt.target.id(), false));
+  cy.on("tap", evt => {if (evt.target === cy) clearSelection();});
+  cy.on("mouseover", "node:childless", evt => {
+    if (!evt.target.hasClass("dim")) evt.target.connectedEdges().addClass("showlabel");
+  });
+  cy.on("mouseout", "node:childless", evt => {
+    if (!evt.target.hasClass("sel")) evt.target.connectedEdges().removeClass("showlabel");
+  });
+  buildSidebar();
+  wireControls();
+  const m = location.hash.match(/node=([^&]+)/);
+  if (m) select(decodeURIComponent(m[1]), true);
+}).catch(err => {
+  document.getElementById("cy").insertAdjacentHTML("beforeend",
+    `<div class="hint">Could not load graph.json — serve the folder over HTTP
+     (python3 -m http.server -d docs) instead of opening the file directly. (${esc(err.message)})</div>`);
+});
+</script>
+</body>
+</html>
