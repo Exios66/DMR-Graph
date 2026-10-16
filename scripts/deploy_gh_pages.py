@@ -46,6 +46,11 @@ def repo_exists(slug: str) -> bool:
     return gh(["repo", "view", slug, "--json", "name"], check=False).returncode == 0
 
 
+def clone_url(slug: str) -> str:
+    """HTTPS clone URL — gh's credential helper supplies the token (no SSH key needed)."""
+    return gh(["api", f"repos/{slug}", "--jq", ".clone_url"]).stdout.strip()
+
+
 def ensure_repo(slug: str, dry_run: bool) -> None:
     if repo_exists(slug):
         print(f"repo exists: {slug}")
@@ -54,8 +59,8 @@ def ensure_repo(slug: str, dry_run: bool) -> None:
         print(f"[dry-run] would create public repo {slug} and push the current branch")
         return
     print(f"creating public repo {slug}")
-    run(["gh", "repo", "create", slug, "--public", "--source", str(ROOT),
-         "--remote", "origin", "--push"])
+    run(["gh", "repo", "create", slug, "--public"], check=True)
+    run(["git", "remote", "add", "origin", clone_url(slug)], cwd=ROOT, check=False)
 
 
 def push_source(slug: str, dry_run: bool) -> None:
@@ -64,7 +69,7 @@ def push_source(slug: str, dry_run: bool) -> None:
         if dry_run:
             print("[dry-run] would add remote origin")
             return
-        run(["git", "remote", "add", "origin", f"git@github.com:{slug}.git"], cwd=ROOT)
+        run(["git", "remote", "add", "origin", clone_url(slug)], cwd=ROOT)
     branch = run(["git", "branch", "--show-current"], cwd=ROOT).stdout.strip() or "main"
     if not run(["git", "status", "--porcelain"], cwd=ROOT).stdout.strip():
         if dry_run:
@@ -87,7 +92,7 @@ def publish_site(slug: str, dry_run: bool) -> None:
         run(["git", "add", "-A"], cwd=work)
         run(["git", "-c", "user.name=dmr-graph", "-c", "user.email=dmr-graph@users.noreply.github.com",
              "commit", "-q", "-m", "Publish DMR-Graph site (docs/) to gh-pages"], cwd=work)
-        run(["git", "push", "--force", f"git@github.com:{slug}.git", "HEAD:gh-pages"], cwd=work)
+        run(["git", "push", "--force", clone_url(slug), "HEAD:gh-pages"], cwd=work)
     print("pushed docs/ → gh-pages")
 
 
