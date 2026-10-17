@@ -5,6 +5,20 @@
   "hub_version": "v0.8.0",
   "prune": "DMR-079 consolidation",
   "packages": 7,
+  "seeds": [
+   "hub",
+   "llm-mailroom",
+   "dojo",
+   "the-mailroom",
+   "local-mailroom-sandbox",
+   "mailroom-reloaded",
+   "mailroom-dataset",
+   "eval-environment",
+   "mailroom-ml",
+   "mailroom-issues",
+   "corpus-eda",
+   "dmr-graph"
+  ],
   "note": "Hub v0.8.0 is the pre-prune rollback point (all ten packages present); DMR-079 then pruned llm-entity-extraction, llm-mailroom-graph and agent-mailroom, leaving the seven core packages mapped here.",
   "relations": {
    "feeds": "data or control flows into the target (stage → stage, dataset → consumer)",
@@ -87,12 +101,12 @@
   },
   "dataset": {
    "shape": "barrel",
-   "width": 158,
+   "width": 184,
    "height": 44
   },
   "model": {
    "shape": "round-diamond",
-   "width": 158,
+   "width": 184,
    "height": 52
   },
   "stage": {
@@ -194,9 +208,8 @@
   }
  },
  "layout": {
-  "x_step": 620,
   "col_step": 268,
-  "y_step": 76,
+  "y_step": 82,
   "y0": 40
  },
  "analytics": {
@@ -209,7 +222,7 @@
    },
    {
     "id": "llm-mailroom",
-    "label": "llm-mailroom (package “mailroom”)",
+    "label": "llm-mailroom",
     "zone": "pipeline",
     "degree": 27
    },
@@ -334,16 +347,14 @@
      "desc": "Maildir 20150507 tarball — 517,390 parseable emails across ~150 custodians.",
      "version": "",
      "shape": "barrel",
-     "width": 158,
+     "width": 184,
      "height": 44,
      "fill": "#B87F26",
      "border": "#F0C274",
      "zoneLabel": "Data & corpora",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 0,
-     "y": 40
     }
    },
    {
@@ -356,22 +367,20 @@
      "desc": "2008–2010 Medicare claims — 11.15M claim events, 116,352 beneficiaries, ~$1.62B paid.",
      "version": "",
      "shape": "barrel",
-     "width": 158,
+     "width": 184,
      "height": 44,
      "fill": "#B87F26",
      "border": "#F0C274",
      "zoneLabel": "Data & corpora",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 0,
-     "y": 116
     }
    },
    {
     "data": {
      "id": "enron-eda",
-     "label": "Enron-Evaluation-Environment",
+     "label": "Enron-Evaluation-\nEnvironment",
      "zone": "sources",
      "kind": "package",
      "status": "active",
@@ -383,6 +392,8 @@
      "fill": "#B87F26",
      "border": "#F0C274",
      "zoneLabel": "Data & corpora",
+     "col": 0,
+     "seed": false,
      "links": [
       {
        "label": "repository",
@@ -393,10 +404,6 @@
        "url": "https://exios66.github.io/Enron-Evaluation-Environment/"
       }
      ]
-    },
-    "position": {
-     "x": 0,
-     "y": 192
     }
    },
    {
@@ -414,6 +421,8 @@
      "fill": "#B87F26",
      "border": "#F0C274",
      "zoneLabel": "Data & corpora",
+     "col": 0,
+     "seed": false,
      "links": [
       {
        "label": "repository",
@@ -424,10 +433,6 @@
        "url": "https://exios66.github.io/claims-data-eda/"
       }
      ]
-    },
-    "position": {
-     "x": 0,
-     "y": 268
     }
    },
    {
@@ -445,6 +450,8 @@
      "fill": "#B87F26",
      "border": "#F0C274",
      "zoneLabel": "Data & corpora",
+     "col": 0,
+     "seed": true,
      "links": [
       {
        "label": "repository",
@@ -455,10 +462,6 @@
        "url": "https://exios66.github.io/Mailroom-Corpus-EDA/"
       }
      ]
-    },
-    "position": {
-     "x": 0,
-     "y": 344
     }
    },
    {
@@ -471,21 +474,19 @@
      "desc": "Frozen v8 baseline (2,000 rows) and parent of the canonical corpus; the archived v7/v8 publisher's source.",
      "version": "frozen v8 · rev eafe1ab4",
      "shape": "barrel",
-     "width": 158,
+     "width": 184,
      "height": 44,
      "fill": "#B87F26",
      "border": "#F0C274",
      "zoneLabel": "Data & corpora",
+     "col": 1,
+     "seed": false,
      "links": [
       {
        "label": "Hugging Face dataset",
        "url": "https://huggingface.co/datasets/Lucius-Morningstar/mailroom-corpus"
       }
      ]
-    },
-    "position": {
-     "x": 268,
-     "y": 40
     }
    },
    {
@@ -498,75 +499,69 @@
      "desc": "Core corpus: 3,302 documents, 5 classes, 55 class×subclass strata (2,979 train / 323 test). Consumers pin a revision, never a live tip.",
      "version": "schema v9 · consumers pin v9.1 (ed7576b6) · Hub tip v9.2",
      "shape": "barrel",
-     "width": 158,
+     "width": 184,
      "height": 44,
      "fill": "#B87F26",
      "border": "#F0C274",
      "zoneLabel": "Data & corpora",
+     "col": 1,
+     "seed": true,
      "links": [
       {
        "label": "Hugging Face dataset",
        "url": "https://huggingface.co/datasets/Lucius-Morningstar/mailroom-dataset"
       }
      ]
-    },
-    "position": {
-     "x": 268,
-     "y": 116
     }
    },
    {
     "data": {
      "id": "enron-correspondence-dedup",
-     "label": "enron-correspondence-dedup",
+     "label": "enron-correspondence-\ndedup",
      "zone": "sources",
      "kind": "dataset",
      "status": "active",
      "desc": "Deduplicated, subclass-labelled correspondence rows contributed to the canonical corpus.",
      "version": "",
      "shape": "barrel",
-     "width": 158,
+     "width": 184,
      "height": 44,
      "fill": "#B87F26",
      "border": "#F0C274",
      "zoneLabel": "Data & corpora",
+     "col": 1,
+     "seed": false,
      "links": [
       {
        "label": "Hugging Face dataset",
        "url": "https://huggingface.co/datasets/Lucius-Morningstar/enron-correspondence-dedup"
       }
      ]
-    },
-    "position": {
-     "x": 268,
-     "y": 192
     }
    },
    {
     "data": {
      "id": "cms-desynpuf-insurance-claims",
-     "label": "cms-desynpuf-insurance-claims",
+     "label": "cms-desynpuf-\ninsurance-claims",
      "zone": "sources",
      "kind": "dataset",
      "status": "active",
      "desc": "EOB-rendered insurance_claim documents contributed to the canonical corpus.",
      "version": "",
      "shape": "barrel",
-     "width": 158,
+     "width": 184,
      "height": 44,
      "fill": "#B87F26",
      "border": "#F0C274",
      "zoneLabel": "Data & corpora",
+     "col": 1,
+     "seed": false,
      "links": [
       {
        "label": "Hugging Face dataset",
        "url": "https://huggingface.co/datasets/Lucius-Morningstar/cms-desynpuf-insurance-claims"
       }
      ]
-    },
-    "position": {
-     "x": 268,
-     "y": 268
     }
    },
    {
@@ -579,48 +574,44 @@
      "desc": "CUAD page-image vision surface (50 rows + 546 PNGs); the text+clause mirror beside it is the corpus feeder.",
      "version": "",
      "shape": "barrel",
-     "width": 158,
+     "width": 184,
      "height": 44,
      "fill": "#B87F26",
      "border": "#F0C274",
      "zoneLabel": "Data & corpora",
+     "col": 1,
+     "seed": false,
      "links": [
       {
        "label": "Hugging Face dataset",
        "url": "https://huggingface.co/datasets/Lucius-Morningstar/mailroom-cuad-contracts"
       }
      ]
-    },
-    "position": {
-     "x": 268,
-     "y": 344
     }
    },
    {
     "data": {
      "id": "cuad-contracts-full",
-     "label": "mailroom-cuad-contracts-full",
+     "label": "mailroom-cuad-\ncontracts-full",
      "zone": "sources",
      "kind": "dataset",
      "status": "active",
      "desc": "Byte-verified CUAD text+clause mirror (510 rows) — the real contract feeder (509 rows) and a registry ingest of llm-mailroom.",
      "version": "",
      "shape": "barrel",
-     "width": 158,
+     "width": 184,
      "height": 44,
      "fill": "#B87F26",
      "border": "#F0C274",
      "zoneLabel": "Data & corpora",
+     "col": 1,
+     "seed": false,
      "links": [
       {
        "label": "Hugging Face dataset",
        "url": "https://huggingface.co/datasets/Lucius-Morningstar/mailroom-cuad-contracts-full"
       }
      ]
-    },
-    "position": {
-     "x": 268,
-     "y": 420
     }
    },
    {
@@ -633,21 +624,19 @@
      "desc": "LegalBench mirror used by the extraction prompt experiments.",
      "version": "",
      "shape": "barrel",
-     "width": 158,
+     "width": 184,
      "height": 44,
      "fill": "#B87F26",
      "border": "#F0C274",
      "zoneLabel": "Data & corpora",
+     "col": 1,
+     "seed": false,
      "links": [
       {
        "label": "Hugging Face dataset",
        "url": "https://huggingface.co/datasets/Lucius-Morningstar/legalbench-full"
       }
      ]
-    },
-    "position": {
-     "x": 268,
-     "y": 496
     }
    },
    {
@@ -660,48 +649,44 @@
      "desc": "48-stratum pilot slice of docclass-merged v5 (138 rows): pipeline pilot examples and the visualizer's pilot dataset.",
      "version": "",
      "shape": "barrel",
-     "width": 158,
+     "width": 184,
      "height": 44,
      "fill": "#B87F26",
      "border": "#F0C274",
      "zoneLabel": "Data & corpora",
+     "col": 1,
+     "seed": false,
      "links": [
       {
        "label": "Hugging Face dataset",
        "url": "https://huggingface.co/datasets/Lucius-Morningstar/docclass-pilot"
       }
      ]
-    },
-    "position": {
-     "x": 268,
-     "y": 572
     }
    },
    {
     "data": {
      "id": "modernbert-training",
-     "label": "mailroom-modernbert-training",
+     "label": "mailroom-modernbert-\ntraining",
      "zone": "sources",
      "kind": "dataset",
      "status": "active",
      "desc": "Leak-free, clerk-normalized training set for the ModernBERT ingest classifier.",
      "version": "rev 5b72a345",
      "shape": "barrel",
-     "width": 158,
+     "width": 184,
      "height": 44,
      "fill": "#B87F26",
      "border": "#F0C274",
      "zoneLabel": "Data & corpora",
+     "col": 1,
+     "seed": false,
      "links": [
       {
        "label": "Hugging Face dataset",
        "url": "https://huggingface.co/datasets/Lucius-Morningstar/mailroom-modernbert-training"
       }
      ]
-    },
-    "position": {
-     "x": 268,
-     "y": 648
     }
    },
    {
@@ -714,48 +699,44 @@
      "desc": "sorter_handoff gold labels — the staging payload for the intended sorter_handoff config (publishes no data files yet).",
      "version": "",
      "shape": "barrel",
-     "width": 158,
+     "width": 184,
      "height": 44,
      "fill": "#B87F26",
      "border": "#F0C274",
      "zoneLabel": "Data & corpora",
+     "col": 1,
+     "seed": false,
      "links": [
       {
        "label": "Hugging Face dataset",
        "url": "https://huggingface.co/datasets/Lucius-Morningstar/mailroom-sorter-handoff"
       }
      ]
-    },
-    "position": {
-     "x": 268,
-     "y": 724
     }
    },
    {
     "data": {
      "id": "reloaded-fixtures",
-     "label": "mailroom-reloaded-fixtures",
+     "label": "mailroom-reloaded-\nfixtures",
      "zone": "sources",
      "kind": "dataset",
      "status": "active",
      "desc": "Fixture adaptation (v9.2 mirror, 3,302 rows) for the mailroom-reloaded pipeline.",
      "version": "",
      "shape": "barrel",
-     "width": 158,
+     "width": 184,
      "height": 44,
      "fill": "#B87F26",
      "border": "#F0C274",
      "zoneLabel": "Data & corpora",
+     "col": 1,
+     "seed": false,
      "links": [
       {
        "label": "Hugging Face dataset",
        "url": "https://huggingface.co/datasets/Lucius-Morningstar/mailroom-reloaded-fixtures"
       }
      ]
-    },
-    "position": {
-     "x": 268,
-     "y": 800
     }
    },
    {
@@ -768,21 +749,19 @@
      "desc": "200 synthetic property-claim documents contributing to the insurance_claim class.",
      "version": "",
      "shape": "barrel",
-     "width": 158,
+     "width": 184,
      "height": 44,
      "fill": "#B87F26",
      "border": "#F0C274",
      "zoneLabel": "Data & corpora",
+     "col": 2,
+     "seed": false,
      "links": [
       {
        "label": "Hugging Face dataset",
        "url": "https://huggingface.co/datasets/gratex/GNOTHEIA-synthetic-insurance-dataset"
       }
      ]
-    },
-    "position": {
-     "x": 536,
-     "y": 40
     }
    },
    {
@@ -795,21 +774,19 @@
      "desc": "BDR auto-insurance claim corpus — 150 rows in v8, 300 auto rows in v9.",
      "version": "",
      "shape": "barrel",
-     "width": 158,
+     "width": 184,
      "height": 44,
      "fill": "#B87F26",
      "border": "#F0C274",
      "zoneLabel": "Data & corpora",
+     "col": 2,
+     "seed": false,
      "links": [
       {
        "label": "Hugging Face dataset",
        "url": "https://huggingface.co/datasets/bdr-ai-org/insurance-motor-claims-decision-v1"
       }
      ]
-    },
-    "position": {
-     "x": 536,
-     "y": 116
     }
    },
    {
@@ -822,21 +799,19 @@
      "desc": "150 narrative auto-claim rows added to the corpus in v9.",
      "version": "",
      "shape": "barrel",
-     "width": 158,
+     "width": 184,
      "height": 44,
      "fill": "#B87F26",
      "border": "#F0C274",
      "zoneLabel": "Data & corpora",
+     "col": 2,
+     "seed": false,
      "links": [
       {
        "label": "Hugging Face dataset",
        "url": "https://huggingface.co/datasets/feihuangfh/INSURBIAS"
       }
      ]
-    },
-    "position": {
-     "x": 536,
-     "y": 192
     }
    },
    {
@@ -849,21 +824,19 @@
      "desc": "152 merger_agreement rows (Zenodo 7500064) — the merger specialist's checklist source corpus.",
      "version": "",
      "shape": "barrel",
-     "width": 158,
+     "width": 184,
      "height": 44,
      "fill": "#B87F26",
      "border": "#F0C274",
      "zoneLabel": "Data & corpora",
+     "col": 2,
+     "seed": false,
      "links": [
       {
        "label": "live site",
        "url": "https://zenodo.org/records/7500064"
       }
      ]
-    },
-    "position": {
-     "x": 536,
-     "y": 268
     }
    },
    {
@@ -881,16 +854,14 @@
      "fill": "#5A52C7",
      "border": "#A9A4F0",
      "zoneLabel": "Evaluation & prompts",
+     "col": 0,
+     "seed": true,
      "links": [
       {
        "label": "repository",
        "url": "https://github.com/Exios66/llm-dojo-scoring"
       }
      ]
-    },
-    "position": {
-     "x": 620,
-     "y": 40
     }
    },
    {
@@ -908,16 +879,14 @@
      "fill": "#5A52C7",
      "border": "#A9A4F0",
      "zoneLabel": "Evaluation & prompts",
+     "col": 0,
+     "seed": true,
      "links": [
       {
        "label": "repository",
        "url": "https://github.com/LLM-Mailroom-Services/eval-environment"
       }
      ]
-    },
-    "position": {
-     "x": 620,
-     "y": 116
     }
    },
    {
@@ -935,43 +904,39 @@
      "fill": "#5A52C7",
      "border": "#A9A4F0",
      "zoneLabel": "Evaluation & prompts",
+     "col": 0,
+     "seed": true,
      "links": [
       {
        "label": "repository",
        "url": "https://github.com/LLM-Mailroom-Services/mailroom-ml"
       }
      ]
-    },
-    "position": {
-     "x": 620,
-     "y": 192
     }
    },
    {
     "data": {
      "id": "modernbert-classifier",
-     "label": "mailroom-modernbert-classifier",
+     "label": "mailroom-modernbert-\nclassifier",
      "zone": "eval",
      "kind": "model",
      "status": "active",
      "desc": "The published ModernBERT bundle mailroom-ml serves: five document classes plus per-class subclass heads, calibrated, exported to ONNX.",
      "version": "",
      "shape": "round-diamond",
-     "width": 158,
+     "width": 184,
      "height": 52,
      "fill": "#5A52C7",
      "border": "#A9A4F0",
      "zoneLabel": "Evaluation & prompts",
+     "col": 0,
+     "seed": false,
      "links": [
       {
        "label": "Hugging Face model",
        "url": "https://huggingface.co/Lucius-Morningstar/mailroom-modernbert-classifier"
       }
      ]
-    },
-    "position": {
-     "x": 620,
-     "y": 268
     }
    },
    {
@@ -989,16 +954,14 @@
      "fill": "#5A52C7",
      "border": "#A9A4F0",
      "zoneLabel": "Evaluation & prompts",
+     "col": 0,
+     "seed": false,
      "links": [
       {
        "label": "repository",
        "url": "https://github.com/Exios66/atticus-investigation"
       }
      ]
-    },
-    "position": {
-     "x": 620,
-     "y": 344
     }
    },
    {
@@ -1016,6 +979,8 @@
      "fill": "#5A52C7",
      "border": "#A9A4F0",
      "zoneLabel": "Evaluation & prompts",
+     "col": 0,
+     "seed": false,
      "links": [
       {
        "label": "repository",
@@ -1026,16 +991,12 @@
        "url": "https://exios66.github.io/llm-entity-extraction/"
       }
      ]
-    },
-    "position": {
-     "x": 620,
-     "y": 420
     }
    },
    {
     "data": {
      "id": "entity-extraction-experiments",
-     "label": "Entity-Extraction-Experiments",
+     "label": "Entity-Extraction-\nExperiments",
      "zone": "eval",
      "kind": "package",
      "status": "retired",
@@ -1047,16 +1008,14 @@
      "fill": "#5A52C7",
      "border": "#A9A4F0",
      "zoneLabel": "Evaluation & prompts",
+     "col": 0,
+     "seed": false,
      "links": [
       {
        "label": "repository",
        "url": "https://github.com/LLM-Mailroom-Services/Entity-Extraction-Experiments"
       }
      ]
-    },
-    "position": {
-     "x": 620,
-     "y": 496
     }
    },
    {
@@ -1074,16 +1033,14 @@
      "fill": "#5A52C7",
      "border": "#A9A4F0",
      "zoneLabel": "Evaluation & prompts",
+     "col": 1,
+     "seed": false,
      "links": [
       {
        "label": "live site",
        "url": "https://eval-environment.vercel.app"
       }
      ]
-    },
-    "position": {
-     "x": 888,
-     "y": 40
     }
    },
    {
@@ -1101,11 +1058,9 @@
      "fill": "#5A52C7",
      "border": "#A9A4F0",
      "zoneLabel": "Evaluation & prompts",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 888,
-     "y": 116
     }
    },
    {
@@ -1123,11 +1078,9 @@
      "fill": "#5A52C7",
      "border": "#A9A4F0",
      "zoneLabel": "Evaluation & prompts",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 888,
-     "y": 192
     }
    },
    {
@@ -1145,11 +1098,9 @@
      "fill": "#5A52C7",
      "border": "#A9A4F0",
      "zoneLabel": "Evaluation & prompts",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 888,
-     "y": 268
     }
    },
    {
@@ -1167,11 +1118,9 @@
      "fill": "#5A52C7",
      "border": "#A9A4F0",
      "zoneLabel": "Evaluation & prompts",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 888,
-     "y": 344
     }
    },
    {
@@ -1189,21 +1138,19 @@
      "fill": "#5A52C7",
      "border": "#A9A4F0",
      "zoneLabel": "Evaluation & prompts",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 888,
-     "y": 420
     }
    },
    {
     "data": {
      "id": "llm-mailroom",
-     "label": "llm-mailroom (package “mailroom”)",
+     "label": "llm-mailroom",
      "zone": "pipeline",
      "kind": "package",
      "status": "active",
-     "desc": "The 13-node LangGraph pipeline and FastAPI producer — the centre of the constellation.",
+     "desc": "The 13-node LangGraph pipeline and FastAPI producer (pyproject package “mailroom”) — the centre of the constellation.",
      "version": "0.8.0",
      "shape": "round-rectangle",
      "width": 168,
@@ -1211,16 +1158,14 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 0,
+     "seed": true,
      "links": [
       {
        "label": "repository",
        "url": "https://github.com/Exios66/llm-mailroom"
       }
      ]
-    },
-    "position": {
-     "x": 1240,
-     "y": 40
     }
    },
    {
@@ -1238,11 +1183,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1240,
-     "y": 116
     }
    },
    {
@@ -1260,11 +1203,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1240,
-     "y": 192
     }
    },
    {
@@ -1282,11 +1223,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1240,
-     "y": 268
     }
    },
    {
@@ -1304,11 +1243,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1240,
-     "y": 344
     }
    },
    {
@@ -1326,11 +1263,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1240,
-     "y": 420
     }
    },
    {
@@ -1348,11 +1283,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1240,
-     "y": 496
     }
    },
    {
@@ -1370,11 +1303,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1240,
-     "y": 572
     }
    },
    {
@@ -1392,11 +1323,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1240,
-     "y": 648
     }
    },
    {
@@ -1414,11 +1343,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1240,
-     "y": 724
     }
    },
    {
@@ -1436,11 +1363,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1240,
-     "y": 800
     }
    },
    {
@@ -1458,11 +1383,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1240,
-     "y": 876
     }
    },
    {
@@ -1480,11 +1403,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1240,
-     "y": 952
     }
    },
    {
@@ -1502,11 +1423,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1240,
-     "y": 1028
     }
    },
    {
@@ -1524,11 +1443,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1508,
-     "y": 40
     }
    },
    {
@@ -1546,11 +1463,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1508,
-     "y": 116
     }
    },
    {
@@ -1568,11 +1483,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1508,
-     "y": 192
     }
    },
    {
@@ -1590,11 +1503,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1508,
-     "y": 268
     }
    },
    {
@@ -1612,11 +1523,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1508,
-     "y": 344
     }
    },
    {
@@ -1634,11 +1543,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1508,
-     "y": 420
     }
    },
    {
@@ -1656,11 +1563,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1508,
-     "y": 496
     }
    },
    {
@@ -1678,11 +1583,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1508,
-     "y": 572
     }
    },
    {
@@ -1700,16 +1603,14 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 2,
+     "seed": true,
      "links": [
       {
        "label": "repository",
        "url": "https://github.com/Exios66/mailroom-reloaded"
       }
      ]
-    },
-    "position": {
-     "x": 1776,
-     "y": 40
     }
    },
    {
@@ -1727,16 +1628,14 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 2,
+     "seed": true,
      "links": [
       {
        "label": "repository",
        "url": "https://github.com/Exios66/local-mailroom-sandbox"
       }
      ]
-    },
-    "position": {
-     "x": 1776,
-     "y": 116
     }
    },
    {
@@ -1754,16 +1653,14 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 2,
+     "seed": false,
      "links": [
       {
        "label": "repository",
        "url": "https://github.com/LLM-Mailroom-Services/mailroom-sandbox"
       }
      ]
-    },
-    "position": {
-     "x": 1776,
-     "y": 192
     }
    },
    {
@@ -1781,11 +1678,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 2,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1776,
-     "y": 268
     }
    },
    {
@@ -1803,11 +1698,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 2,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1776,
-     "y": 344
     }
    },
    {
@@ -1825,11 +1718,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 2,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1776,
-     "y": 420
     }
    },
    {
@@ -1847,11 +1738,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 2,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1776,
-     "y": 496
     }
    },
    {
@@ -1869,11 +1758,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 2,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1776,
-     "y": 572
     }
    },
    {
@@ -1891,11 +1778,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 2,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1776,
-     "y": 648
     }
    },
    {
@@ -1913,11 +1798,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 2,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1776,
-     "y": 724
     }
    },
    {
@@ -1935,11 +1818,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 2,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1776,
-     "y": 800
     }
    },
    {
@@ -1957,11 +1838,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 2,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1776,
-     "y": 876
     }
    },
    {
@@ -1979,11 +1858,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 2,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1776,
-     "y": 952
     }
    },
    {
@@ -2001,11 +1878,9 @@
      "fill": "#0F8C7E",
      "border": "#69D6C8",
      "zoneLabel": "Pipeline & runtime",
+     "col": 2,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1776,
-     "y": 1028
     }
    },
    {
@@ -2023,6 +1898,8 @@
      "fill": "#C2465A",
      "border": "#F39BA8",
      "zoneLabel": "Surfaces",
+     "col": 0,
+     "seed": true,
      "links": [
       {
        "label": "repository",
@@ -2033,10 +1910,6 @@
        "url": "https://exios66.github.io/The-Mailroom/"
       }
      ]
-    },
-    "position": {
-     "x": 1860,
-     "y": 40
     }
    },
    {
@@ -2054,11 +1927,9 @@
      "fill": "#C2465A",
      "border": "#F39BA8",
      "zoneLabel": "Surfaces",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1860,
-     "y": 116
     }
    },
    {
@@ -2076,16 +1947,14 @@
      "fill": "#C2465A",
      "border": "#F39BA8",
      "zoneLabel": "Surfaces",
+     "col": 0,
+     "seed": false,
      "links": [
       {
        "label": "Hugging Face Space",
        "url": "https://huggingface.co/spaces/Lucius-Morningstar/mailroom-observatory"
       }
      ]
-    },
-    "position": {
-     "x": 1860,
-     "y": 192
     }
    },
    {
@@ -2103,11 +1972,9 @@
      "fill": "#C2465A",
      "border": "#F39BA8",
      "zoneLabel": "Surfaces",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1860,
-     "y": 268
     }
    },
    {
@@ -2125,11 +1992,9 @@
      "fill": "#C2465A",
      "border": "#F39BA8",
      "zoneLabel": "Surfaces",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1860,
-     "y": 344
     }
    },
    {
@@ -2147,11 +2012,9 @@
      "fill": "#C2465A",
      "border": "#F39BA8",
      "zoneLabel": "Surfaces",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1860,
-     "y": 420
     }
    },
    {
@@ -2169,11 +2032,9 @@
      "fill": "#C2465A",
      "border": "#F39BA8",
      "zoneLabel": "Surfaces",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 1860,
-     "y": 496
     }
    },
    {
@@ -2191,16 +2052,14 @@
      "fill": "#C2465A",
      "border": "#F39BA8",
      "zoneLabel": "Surfaces",
+     "col": 0,
+     "seed": false,
      "links": [
       {
        "label": "live site",
        "url": "https://digital-mailroom-theta.vercel.app"
       }
      ]
-    },
-    "position": {
-     "x": 1860,
-     "y": 572
     }
    },
    {
@@ -2218,11 +2077,9 @@
      "fill": "#C2465A",
      "border": "#F39BA8",
      "zoneLabel": "Surfaces",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 2128,
-     "y": 40
     }
    },
    {
@@ -2240,11 +2097,9 @@
      "fill": "#C2465A",
      "border": "#F39BA8",
      "zoneLabel": "Surfaces",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 2128,
-     "y": 116
     }
    },
    {
@@ -2262,6 +2117,8 @@
      "fill": "#C2465A",
      "border": "#F39BA8",
      "zoneLabel": "Surfaces",
+     "col": 1,
+     "seed": false,
      "links": [
       {
        "label": "repository",
@@ -2272,10 +2129,6 @@
        "url": "https://exios66.github.io/llm-mailroom-graph/"
       }
      ]
-    },
-    "position": {
-     "x": 2128,
-     "y": 192
     }
    },
    {
@@ -2293,6 +2146,8 @@
      "fill": "#C2465A",
      "border": "#F39BA8",
      "zoneLabel": "Surfaces",
+     "col": 1,
+     "seed": false,
      "links": [
       {
        "label": "repository",
@@ -2303,10 +2158,6 @@
        "url": "https://exios66.github.io/mailroom-dev-graph/"
       }
      ]
-    },
-    "position": {
-     "x": 2128,
-     "y": 268
     }
    },
    {
@@ -2324,6 +2175,8 @@
      "fill": "#C2465A",
      "border": "#F39BA8",
      "zoneLabel": "Surfaces",
+     "col": 1,
+     "seed": true,
      "links": [
       {
        "label": "repository",
@@ -2334,10 +2187,6 @@
        "url": "https://exios66.github.io/DMR-Graph/"
       }
      ]
-    },
-    "position": {
-     "x": 2128,
-     "y": 344
     }
    },
    {
@@ -2355,16 +2204,14 @@
      "fill": "#C2465A",
      "border": "#F39BA8",
      "zoneLabel": "Surfaces",
+     "col": 1,
+     "seed": false,
      "links": [
       {
        "label": "repository",
        "url": "https://github.com/Exios66/agent-mailroom"
       }
      ]
-    },
-    "position": {
-     "x": 2128,
-     "y": 420
     }
    },
    {
@@ -2382,11 +2229,9 @@
      "fill": "#C2465A",
      "border": "#F39BA8",
      "zoneLabel": "Surfaces",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 2128,
-     "y": 496
     }
    },
    {
@@ -2404,16 +2249,14 @@
      "fill": "#3E6E9E",
      "border": "#93BCE0",
      "zoneLabel": "Hub, governance & release",
+     "col": 0,
+     "seed": true,
      "links": [
       {
        "label": "repository",
        "url": "https://github.com/LLM-Mailroom-Services/Digital-Mailroom"
       }
      ]
-    },
-    "position": {
-     "x": 2480,
-     "y": 40
     }
    },
    {
@@ -2431,11 +2274,9 @@
      "fill": "#3E6E9E",
      "border": "#93BCE0",
      "zoneLabel": "Hub, governance & release",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 2480,
-     "y": 116
     }
    },
    {
@@ -2453,11 +2294,9 @@
      "fill": "#3E6E9E",
      "border": "#93BCE0",
      "zoneLabel": "Hub, governance & release",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 2480,
-     "y": 192
     }
    },
    {
@@ -2475,11 +2314,9 @@
      "fill": "#3E6E9E",
      "border": "#93BCE0",
      "zoneLabel": "Hub, governance & release",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 2480,
-     "y": 268
     }
    },
    {
@@ -2497,11 +2334,9 @@
      "fill": "#3E6E9E",
      "border": "#93BCE0",
      "zoneLabel": "Hub, governance & release",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 2480,
-     "y": 344
     }
    },
    {
@@ -2519,11 +2354,9 @@
      "fill": "#3E6E9E",
      "border": "#93BCE0",
      "zoneLabel": "Hub, governance & release",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 2480,
-     "y": 420
     }
    },
    {
@@ -2541,11 +2374,9 @@
      "fill": "#3E6E9E",
      "border": "#93BCE0",
      "zoneLabel": "Hub, governance & release",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 2480,
-     "y": 496
     }
    },
    {
@@ -2563,11 +2394,9 @@
      "fill": "#3E6E9E",
      "border": "#93BCE0",
      "zoneLabel": "Hub, governance & release",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 2480,
-     "y": 572
     }
    },
    {
@@ -2585,11 +2414,9 @@
      "fill": "#3E6E9E",
      "border": "#93BCE0",
      "zoneLabel": "Hub, governance & release",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 2480,
-     "y": 648
     }
    },
    {
@@ -2607,6 +2434,8 @@
      "fill": "#3E6E9E",
      "border": "#93BCE0",
      "zoneLabel": "Hub, governance & release",
+     "col": 0,
+     "seed": true,
      "links": [
       {
        "label": "repository",
@@ -2617,10 +2446,6 @@
        "url": "https://llm-mailroom-services.github.io/mailroom-issues/"
       }
      ]
-    },
-    "position": {
-     "x": 2480,
-     "y": 724
     }
    },
    {
@@ -2638,11 +2463,9 @@
      "fill": "#3E6E9E",
      "border": "#93BCE0",
      "zoneLabel": "Hub, governance & release",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 2480,
-     "y": 800
     }
    },
    {
@@ -2660,11 +2483,9 @@
      "fill": "#3E6E9E",
      "border": "#93BCE0",
      "zoneLabel": "Hub, governance & release",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 2480,
-     "y": 876
     }
    },
    {
@@ -2682,11 +2503,9 @@
      "fill": "#3E6E9E",
      "border": "#93BCE0",
      "zoneLabel": "Hub, governance & release",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 2748,
-     "y": 40
     }
    },
    {
@@ -2704,11 +2523,9 @@
      "fill": "#3E6E9E",
      "border": "#93BCE0",
      "zoneLabel": "Hub, governance & release",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 2748,
-     "y": 116
     }
    },
    {
@@ -2726,11 +2543,9 @@
      "fill": "#3E6E9E",
      "border": "#93BCE0",
      "zoneLabel": "Hub, governance & release",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 2748,
-     "y": 192
     }
    },
    {
@@ -2748,11 +2563,9 @@
      "fill": "#3E6E9E",
      "border": "#93BCE0",
      "zoneLabel": "Hub, governance & release",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 2748,
-     "y": 268
     }
    },
    {
@@ -2770,11 +2583,9 @@
      "fill": "#3E6E9E",
      "border": "#93BCE0",
      "zoneLabel": "Hub, governance & release",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 2748,
-     "y": 344
     }
    },
    {
@@ -2792,11 +2603,9 @@
      "fill": "#3E6E9E",
      "border": "#93BCE0",
      "zoneLabel": "Hub, governance & release",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 2748,
-     "y": 420
     }
    },
    {
@@ -2814,11 +2623,9 @@
      "fill": "#3E6E9E",
      "border": "#93BCE0",
      "zoneLabel": "Hub, governance & release",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 2748,
-     "y": 496
     }
    },
    {
@@ -2836,11 +2643,9 @@
      "fill": "#3E6E9E",
      "border": "#93BCE0",
      "zoneLabel": "Hub, governance & release",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 2748,
-     "y": 572
     }
    },
    {
@@ -2858,17 +2663,15 @@
      "fill": "#3E6E9E",
      "border": "#93BCE0",
      "zoneLabel": "Hub, governance & release",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 2748,
-     "y": 648
     }
    },
    {
     "data": {
      "id": "gen-charts",
-     "label": "gen_interactive_charts.py",
+     "label": "gen_interactive_\ncharts.py",
      "zone": "platform",
      "kind": "script",
      "status": "active",
@@ -2880,11 +2683,9 @@
      "fill": "#3E6E9E",
      "border": "#93BCE0",
      "zoneLabel": "Hub, governance & release",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 2748,
-     "y": 724
     }
    },
    {
@@ -2902,11 +2703,9 @@
      "fill": "#3E6E9E",
      "border": "#93BCE0",
      "zoneLabel": "Hub, governance & release",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 2748,
-     "y": 800
     }
    },
    {
@@ -2924,11 +2723,9 @@
      "fill": "#3E6E9E",
      "border": "#93BCE0",
      "zoneLabel": "Hub, governance & release",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 2748,
-     "y": 876
     }
    },
    {
@@ -2946,11 +2743,9 @@
      "fill": "#3E6E9E",
      "border": "#93BCE0",
      "zoneLabel": "Hub, governance & release",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 2748,
-     "y": 952
     }
    },
    {
@@ -2968,11 +2763,9 @@
      "fill": "#3E6E9E",
      "border": "#93BCE0",
      "zoneLabel": "Hub, governance & release",
+     "col": 2,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 3016,
-     "y": 40
     }
    },
    {
@@ -2990,11 +2783,9 @@
      "fill": "#3E6E9E",
      "border": "#93BCE0",
      "zoneLabel": "Hub, governance & release",
+     "col": 2,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 3016,
-     "y": 116
     }
    },
    {
@@ -3012,11 +2803,9 @@
      "fill": "#3E6E9E",
      "border": "#93BCE0",
      "zoneLabel": "Hub, governance & release",
+     "col": 2,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 3016,
-     "y": 192
     }
    },
    {
@@ -3034,11 +2823,9 @@
      "fill": "#3E6E9E",
      "border": "#93BCE0",
      "zoneLabel": "Hub, governance & release",
+     "col": 2,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 3016,
-     "y": 268
     }
    },
    {
@@ -3056,16 +2843,14 @@
      "fill": "#5A6473",
      "border": "#A9B3C2",
      "zoneLabel": "External platforms",
+     "col": 0,
+     "seed": false,
      "links": [
       {
        "label": "live site",
        "url": "https://huggingface.co/Lucius-Morningstar"
       }
      ]
-    },
-    "position": {
-     "x": 3100,
-     "y": 40
     }
    },
    {
@@ -3083,11 +2868,9 @@
      "fill": "#5A6473",
      "border": "#A9B3C2",
      "zoneLabel": "External platforms",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 3100,
-     "y": 116
     }
    },
    {
@@ -3105,11 +2888,9 @@
      "fill": "#5A6473",
      "border": "#A9B3C2",
      "zoneLabel": "External platforms",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 3100,
-     "y": 192
     }
    },
    {
@@ -3127,11 +2908,9 @@
      "fill": "#5A6473",
      "border": "#A9B3C2",
      "zoneLabel": "External platforms",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 3100,
-     "y": 268
     }
    },
    {
@@ -3149,11 +2928,9 @@
      "fill": "#5A6473",
      "border": "#A9B3C2",
      "zoneLabel": "External platforms",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 3100,
-     "y": 344
     }
    },
    {
@@ -3171,11 +2948,9 @@
      "fill": "#5A6473",
      "border": "#A9B3C2",
      "zoneLabel": "External platforms",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 3100,
-     "y": 420
     }
    },
    {
@@ -3193,11 +2968,9 @@
      "fill": "#5A6473",
      "border": "#A9B3C2",
      "zoneLabel": "External platforms",
+     "col": 0,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 3100,
-     "y": 496
     }
    },
    {
@@ -3215,11 +2988,9 @@
      "fill": "#5A6473",
      "border": "#A9B3C2",
      "zoneLabel": "External platforms",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 3368,
-     "y": 40
     }
    },
    {
@@ -3237,11 +3008,9 @@
      "fill": "#5A6473",
      "border": "#A9B3C2",
      "zoneLabel": "External platforms",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 3368,
-     "y": 116
     }
    },
    {
@@ -3259,11 +3028,9 @@
      "fill": "#5A6473",
      "border": "#A9B3C2",
      "zoneLabel": "External platforms",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 3368,
-     "y": 192
     }
    },
    {
@@ -3281,11 +3048,9 @@
      "fill": "#5A6473",
      "border": "#A9B3C2",
      "zoneLabel": "External platforms",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 3368,
-     "y": 268
     }
    },
    {
@@ -3303,11 +3068,9 @@
      "fill": "#5A6473",
      "border": "#A9B3C2",
      "zoneLabel": "External platforms",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 3368,
-     "y": 344
     }
    },
    {
@@ -3325,11 +3088,9 @@
      "fill": "#5A6473",
      "border": "#A9B3C2",
      "zoneLabel": "External platforms",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 3368,
-     "y": 420
     }
    },
    {
@@ -3347,11 +3108,9 @@
      "fill": "#5A6473",
      "border": "#A9B3C2",
      "zoneLabel": "External platforms",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 3368,
-     "y": 496
     }
    },
    {
@@ -3369,11 +3128,9 @@
      "fill": "#5A6473",
      "border": "#A9B3C2",
      "zoneLabel": "External platforms",
+     "col": 1,
+     "seed": false,
      "links": []
-    },
-    "position": {
-     "x": 3368,
-     "y": 572
     }
    }
   ],

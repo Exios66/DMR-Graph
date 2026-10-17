@@ -19,6 +19,11 @@ meta:
   hub_version: v0.8.0
   prune: DMR-079 consolidation
   packages: 7
+  # The page loads with only these nodes visible; everything else is revealed
+  # by exploring (double-click a node, click a module, or search).
+  seeds: [hub, llm-mailroom, dojo, the-mailroom, local-mailroom-sandbox,
+          mailroom-reloaded, mailroom-dataset, eval-environment, mailroom-ml,
+          mailroom-issues, corpus-eda, dmr-graph]
   note: >-
     Hub v0.8.0 is the pre-prune rollback point (all ten packages present);
     DMR-079 then pruned llm-entity-extraction, llm-mailroom-graph and
@@ -73,9 +78,10 @@ zones:
     border: "#A9B3C2"
 
 layout:
-  x_step: 620
+  # Client-side layout constants (the page packs the *revealed* subgraph:
+  # zones are columns sized to their content, so modules never overlap).
   col_step: 268
-  y_step: 76
+  y_step: 82
   y0: 40
 
 nodes:
@@ -93,7 +99,7 @@ nodes:
     status: active
     desc: "2008–2010 Medicare claims — 11.15M claim events, 116,352 beneficiaries, ~$1.62B paid."
   - id: enron-eda
-    label: Enron-Evaluation-Environment
+    label: "Enron-Evaluation-\nEnvironment"
     zone: sources
     kind: package
     status: active
@@ -138,7 +144,7 @@ nodes:
     hf_dataset: Lucius-Morningstar/mailroom-dataset
     desc: "Core corpus: 3,302 documents, 5 classes, 55 class×subclass strata (2,979 train / 323 test). Consumers pin a revision, never a live tip."
   - id: enron-correspondence-dedup
-    label: enron-correspondence-dedup
+    label: "enron-correspondence-\ndedup"
     zone: sources
     kind: dataset
     status: active
@@ -146,7 +152,7 @@ nodes:
     hf_dataset: Lucius-Morningstar/enron-correspondence-dedup
     desc: "Deduplicated, subclass-labelled correspondence rows contributed to the canonical corpus."
   - id: cms-desynpuf-insurance-claims
-    label: cms-desynpuf-insurance-claims
+    label: "cms-desynpuf-\ninsurance-claims"
     zone: sources
     kind: dataset
     status: active
@@ -162,7 +168,7 @@ nodes:
     hf_dataset: Lucius-Morningstar/mailroom-cuad-contracts
     desc: "CUAD page-image vision surface (50 rows + 546 PNGs); the text+clause mirror beside it is the corpus feeder."
   - id: cuad-contracts-full
-    label: mailroom-cuad-contracts-full
+    label: "mailroom-cuad-\ncontracts-full"
     zone: sources
     kind: dataset
     status: active
@@ -186,7 +192,7 @@ nodes:
     hf_dataset: Lucius-Morningstar/docclass-pilot
     desc: "48-stratum pilot slice of docclass-merged v5 (138 rows): pipeline pilot examples and the visualizer's pilot dataset."
   - id: modernbert-training
-    label: mailroom-modernbert-training
+    label: "mailroom-modernbert-\ntraining"
     zone: sources
     kind: dataset
     status: active
@@ -203,7 +209,7 @@ nodes:
     hf_dataset: Lucius-Morningstar/mailroom-sorter-handoff
     desc: "sorter_handoff gold labels — the staging payload for the intended sorter_handoff config (publishes no data files yet)."
   - id: reloaded-fixtures
-    label: mailroom-reloaded-fixtures
+    label: "mailroom-reloaded-\nfixtures"
     zone: sources
     kind: dataset
     status: active
@@ -270,7 +276,7 @@ nodes:
     repo: LLM-Mailroom-Services/mailroom-ml
     desc: "ModernBERT ingest fast-path classifier: training, per-head calibration, ONNX-on-CPU serving. A standalone contractor repo, not a governed member."
   - id: modernbert-classifier
-    label: mailroom-modernbert-classifier
+    label: "mailroom-modernbert-\nclassifier"
     zone: eval
     kind: model
     status: active
@@ -293,7 +299,7 @@ nodes:
     url: https://exios66.github.io/llm-entity-extraction/
     desc: "Prompt-experiment loop and source of the vendored sorter/contracts prompts. Pruned in DMR-079 — standalone only, no longer synced."
   - id: entity-extraction-experiments
-    label: Entity-Extraction-Experiments
+    label: "Entity-Extraction-\nExperiments"
     zone: eval
     kind: package
     status: retired
@@ -345,13 +351,13 @@ nodes:
 
   # ── pipeline & runtime ──────────────────────────────────────────────────────
   - id: llm-mailroom
-    label: llm-mailroom (package “mailroom”)
+    label: llm-mailroom
     zone: pipeline
     kind: package
     status: active
     version: "0.8.0"
     repo: Exios66/llm-mailroom
-    desc: "The 13-node LangGraph pipeline and FastAPI producer — the centre of the constellation."
+    desc: "The 13-node LangGraph pipeline and FastAPI producer (pyproject package “mailroom”) — the centre of the constellation."
   - id: intake
     label: intake
     zone: pipeline
@@ -843,7 +849,7 @@ nodes:
     col: 1
     desc: "Sync/audit of the GitHub label set from .github/labels.json (the manifest is source of truth)."
   - id: gen-charts
-    label: gen_interactive_charts.py
+    label: "gen_interactive_\ncharts.py"
     zone: platform
     kind: script
     status: active

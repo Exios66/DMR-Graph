@@ -62,18 +62,21 @@ snapshots, imports) · `traces` · `renders` · `serves` · `governs` · `syncs`
 upload) · `deploys` · `supersedes` · `prunes` · `documents` (this graph's own coverage).
 Edge labels appear on hover and on selection; the sidebar isolates a relation.
 
-**Interactions.** Drag to pan, scroll to zoom, click a node for its description, version,
-links and neighbourhood. The left sidebar filters by module, relation and search, hides
-retired nodes, and lists the most connected nodes and the graph's bridges. `Force layout`
-switches to a physics view; `PNG` exports the whole map; deep links look like
-`#node=mailroom-dataset`.
+**Interactions.** The map **starts folded** — only a small set of hub nodes is visible, and
+you expand it as you explore: **double-click a node** to reveal its neighbours, click a
+**module** row in the sidebar to reveal (or collapse) a whole zone, or **search** — matches
+reveal themselves. `Expand all` shows everything at once. Drag to pan, scroll to zoom, click
+a node for its description, version, links and neighbourhood (hidden neighbours are marked and
+revealed on click). The sidebar also isolates relations and hides retired nodes; `PNG` exports
+the current view; deep links look like `#node=mailroom-dataset`, and `?expand=all` shows the
+whole map.
 
 ## Repository layout
 
 ```
 dmr-graph/
 ├── graph/constellation.yaml      # the authored graph: zones, nodes, typed edges, sources
-├── scripts/build_graph.py        # validate → link slugs → deterministic layout → networkx analytics → docs/graph.json
+├── scripts/build_graph.py        # validate → link slugs → networkx analytics → docs/graph.json
 ├── scripts/deploy_gh_pages.py    # local Pages publish (orphan gh-pages push), no GitHub Actions
 ├── docs/                         # the published site
 │   ├── index.html                # the explorer (data-driven styles; reads graph.json)
@@ -89,10 +92,10 @@ uv run python scripts/build_graph.py           # writes docs/graph.json
 uv run python scripts/build_graph.py --check   # validate only (fails on bad ids, unknown zones/kinds/relations, orphans)
 ```
 
-The layout is deterministic: zones are columns, `col` selects a sub-column, and each
-node's position is derived from its authored order — the map never re-arranges itself
-between rebuilds. Analytics (god nodes, bridges, components, counts) are computed by
-networkx at build time and shown in the sidebar.
+The builder emits structure, not positions: the page packs the **revealed** subgraph into
+zone columns client-side (zones are sized to their content, `col` selects a sub-column, and
+`y_step` the row pitch), so modules never overlap whatever is unfolded. Analytics (god nodes,
+bridges, components, counts) are computed by networkx at build time and shown in the sidebar.
 
 ## Deploy
 

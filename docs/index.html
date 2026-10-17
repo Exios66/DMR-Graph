@@ -51,6 +51,7 @@
     padding:6px 10px;font:inherit;font-size:12px;cursor:pointer}
   .tool:hover{color:var(--ink);border-color:#3C5175}
   .tool[aria-pressed=true]{background:#1B2B45;color:#BFF0E8;border-color:#3E7F76}
+  .panel .tool.expand{width:100%;margin-top:12px}
   .hint{position:absolute;left:14px;bottom:12px;color:var(--ink3);font-size:11.5px;z-index:2;
     background:#0B1220cc;padding:4px 8px;border-radius:6px}
   .panel{width:344px;background:var(--panel2);border-left:1px solid var(--line);overflow-y:auto;
@@ -74,6 +75,7 @@
   .nb button:hover{background:#16223A}
   .nb .rel{color:var(--ink3);font-size:10.5px;min-width:74px;text-transform:lowercase}
   .nb .arrow{color:var(--ink3)}
+  .nb .n{margin-left:auto;color:var(--ink3);font-size:10.5px}
   .stats{color:var(--ink3);font-size:11.5px;line-height:1.7}
   .stats b{color:var(--ink2);font-weight:600}
   footer{grid-column:1/-1;border-top:1px solid var(--line);background:#0A111E;color:var(--ink3);
@@ -100,10 +102,10 @@
   <aside>
     <section>
       <h2>Find</h2>
-      <input type="search" id="q" placeholder="Search nodes…" aria-label="Search nodes">
+      <input type="search" id="q" placeholder="Search nodes — reveals matches…" aria-label="Search nodes">
     </section>
     <section>
-      <h2>Modules <span class="legend-note">(click to isolate)</span></h2>
+      <h2>Modules <span class="legend-note">(click to reveal / collapse)</span></h2>
       <div id="zones"></div>
     </section>
     <section>
@@ -122,14 +124,15 @@
 
   <div id="cy" role="application" aria-label="Mailroom constellation graph">
     <div class="tools">
+      <button class="tool" id="btn-expand-all">Expand all</button>
       <button class="tool" id="btn-fit">Fit</button>
       <button class="tool" id="btn-labels" aria-pressed="true">Labels</button>
       <button class="tool" id="btn-retired" aria-pressed="false">Hide retired</button>
-      <button class="tool" id="btn-layout" aria-pressed="false">Force layout</button>
       <button class="tool" id="btn-png">PNG</button>
       <button class="tool" id="btn-reset">Reset</button>
     </div>
-    <div class="hint">drag to pan · scroll to zoom · click a node for details · Esc clears</div>
+    <div class="hint"><b>the map starts folded</b> — double-click a node or click a module
+      to expand · click a node for details · Esc clears</div>
   </div>
 
   <div class="panel" id="panel" hidden aria-live="polite"></div>
@@ -146,10 +149,10 @@ const CY_STYLE = [
     "background-color":"data(fill)","border-color":"data(border)","border-width":2,
     "shape":"data(shape)","width":"data(width)","height":"data(height)",
     "label":"data(label)","color":"#FFFFFF","font-size":11.5,"font-weight":500,
-    "text-wrap":"wrap","text-max-width":148,"text-overflow-wrap":"anywhere",
+    "text-wrap":"wrap","text-max-width":164,"text-overflow-wrap":"break-word",
     "text-valign":"center","text-halign":"center",
     "text-outline-color":"#0B1220","text-outline-width":2.4,"text-outline-opacity":0.85,
-    "min-zoomed-font-size":6.5,
+    "min-zoomed-font-size":5,
     "transition-property":"opacity","transition-duration":"150ms"
   }},
   {selector:"node[isZone]", style:{
@@ -184,23 +187,39 @@ const CY_STYLE = [
   {selector:"node.off, edge.off", style:{"display":"none"}}
 ];
 
-const state = {zone:null, rel:null, hideRetired:false, q:"", labels:true, force:false, sel:null};
-let cy, graph, zoneById = {};
+const state = {rel:null, hideRetired:false, q:"", labels:true,
+               sel:null, revealed:new Set()};
+let cy, graph, nodeById = new Map();
 
 const $ = id => document.getElementById(id);
 
 function esc(s){return String(s).replace(/[&<>"']/g, c =>
   ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 
-function nodeLabel(id){const n = graph.elements.nodes.find(n => n.data.id === id);
-  return n ? n.data.label : id;}
+function nodeLabel(id){const d = nodeById.get(id); return d ? d.label : id;}
+
+function isSeed(id){const d = nodeById.get(id); return !!(d && d.seed);}
+
+function matches(d, q){
+  return (d.label + " " + d.id + " " + d.desc + " " + d.zoneLabel).toLowerCase().includes(q);
+}
+
+function neighborsOf(id){
+  const out = [];
+  for (const e of graph.elements.edges){
+    if (e.data.source === id) out.push(e.data.target);
+    else if (e.data.target === id) out.push(e.data.source);
+  }
+  return out;
+}
 
 /* ── stylesheet extras derived from the data (kinds + relations) ─────────── */
 function dataStyles(){
   const extra = [];
   for (const [kind, k] of Object.entries(graph.kinds)){
     extra.push({selector:`node[kind='${kind}']`, style:{
-      "shape":k.shape,"width":k.width,"height":k.height}});
+      "shape":k.shape,"width":k.width,"height":k.height,
+      "text-max-width":k.width - 8}});
   }
   for (const [rel, r] of Object.entries(graph.relations)){
     extra.push({selector:`edge[rel='${rel}']`, style:{
@@ -209,32 +228,119 @@ function dataStyles(){
   return extra;
 }
 
-/* ── build ───────────────────────────────────────────────────────────────── */
-function elements(){
-  const parents = graph.zones.map(z => ({data:{
+/* ── progressive reveal ──────────────────────────────────────────────────── */
+/* Only `seed` nodes load; the rest of the 128-node graph is revealed by
+   exploring. Rebuilds swap the visible subgraph while keeping the camera. */
+
+/* Responsive preset layout: pack each revealed zone into its own columns and
+   place zones left to right with a pitch derived from their widest revealed
+   column — modules can never overlap, whatever is visible. */
+function layoutRevealed(){
+  const cfg = graph.layout;
+  const cols = new Map();                       // zone -> Map(col -> [node])
+  for (const n of graph.elements.nodes){
+    if (!state.revealed.has(n.data.id)) continue;
+    const z = n.data.zone, c = n.data.col || 0;
+    if (!cols.has(z)) cols.set(z, new Map());
+    const m = cols.get(z);
+    if (!m.has(c)) m.set(c, []);
+    m.get(c).push(n);
+  }
+  const pos = new Map();
+  let x = 40;
+  for (const z of graph.zones){
+    const m = cols.get(z.id);
+    if (!m) continue;
+    const maxCol = Math.max(...m.keys());
+    for (const [c, arr] of [...m].sort((a, b) => a[0] - b[0])){
+      arr.forEach((n, i) =>
+        pos.set(n.data.id, {x: x + c * cfg.col_step, y: cfg.y0 + i * cfg.y_step}));
+    }
+    // advance by this zone's revealed width (widest node + 2×28 padding) + gap,
+    // so a folded map is compact and an expanded one never overlaps its neighbour
+    x += maxCol * cfg.col_step + 240 + 100;
+  }
+  return pos;
+}
+
+function currentElements(pos){
+  const nodes = graph.elements.nodes.filter(n => state.revealed.has(n.data.id));
+  const ids = new Set(nodes.map(n => n.data.id));
+  const edges = graph.elements.edges.filter(e =>
+    ids.has(e.data.source) && ids.has(e.data.target));
+  const zones = graph.zones.filter(z => nodes.some(n => n.data.zone === z.id)).map(z => ({data:{
     id:"zone:"+z.id, isZone:true, label:z.label, zone:z.id,
-    zoneFill:z.fill, zoneBorder:z.border, fill:z.fill, border:z.border
-  }}));
-  const nodes = graph.elements.nodes.map(n => ({data:{...n.data, parent:"zone:"+n.data.zone},
-    position:{...n.position}}));
-  return parents.concat(nodes, graph.elements.edges);
+    zoneFill:z.fill, zoneBorder:z.border, fill:z.fill, border:z.border}}));
+  return zones.concat(nodes.map(n => ({data:{...n.data, parent:"zone:"+n.data.zone},
+    position: pos.get(n.data.id)})), edges);
+}
+
+function rebuild(){
+  const c = {x: cy.width() / 2, y: cy.height() / 2};
+  const z = cy.zoom() || 1;
+  const mp = {x: (c.x - cy.pan().x) / z, y: (c.y - cy.pan().y) / z};   // model-space centre
+  const pos = layoutRevealed();
+  cy.elements().remove();
+  cy.add(currentElements(pos));
+  cy.zoom(z);
+  cy.pan({x: c.x - mp.x * z, y: c.y - mp.y * z});
+  const shown = $("shown");
+  if (shown) shown.textContent = state.revealed.size;
+  if (state.sel && cy.getElementById(state.sel).nonempty()) select(state.sel, false);
+  else {
+    if (state.sel) clearSelection();     // the selected node was collapsed away
+    else apply();
+  }
+}
+
+function expand(id){
+  neighborsOf(id).filter(x => !state.revealed.has(x)).forEach(x => state.revealed.add(x));
+  rebuild();
+  select(id, false);
+  const n = cy.getElementById(id);
+  if (n.nonempty()) cy.animate({fit:{eles:n.closedNeighborhood(), padding:90}}, {duration:300});
+}
+
+function gotoNode(id){
+  if (!nodeById.has(id)) return;
+  if (!state.revealed.has(id)){ state.revealed.add(id); rebuild(); }
+  select(id, true);
+}
+
+function toggleZone(zid){
+  const ids = graph.elements.nodes.filter(n => n.data.zone === zid).map(n => n.data.id);
+  const all = ids.every(id => state.revealed.has(id));
+  if (all) ids.forEach(id => {if (!isSeed(id)) state.revealed.delete(id);});
+  else ids.forEach(id => state.revealed.add(id));
+  rebuild();
+  const pane = cy.nodes(`[zone='${zid}']`);
+  if (pane.length) cy.animate({fit:{eles:pane, padding:80}}, {duration:300});
+  else fitRevealed(0.4);
+  return !all;
+}
+
+/* Fit the revealed nodes, but never zoom out past minZoom — instead centre on
+   the map and let the user pan. */
+function fitRevealed(minZoom, focusId){
+  const eles = cy.nodes();                       // incl. zone parents (they pad 28px)
+  if (!eles.length) return;
+  const bb = eles.boundingBox();
+  const w = Math.max($("cy").clientWidth - 60, 200);
+  const h = Math.max($("cy").clientHeight - 60, 200);
+  cy.zoom(Math.max(minZoom, Math.min(w / bb.w, h / bb.h, 2)));
+  const focus = focusId ? cy.getElementById(focusId) : eles;
+  cy.center(focus.nonempty() ? focus : eles);
 }
 
 function apply(){
   if (!cy) return;
   const q = state.q.trim().toLowerCase();
-  const match = id => {
-    if (!q) return true;
-    const n = graph.elements.nodes.find(n => n.data.id === id);
-    return n && (n.data.label + " " + n.data.id + " " + n.data.desc + " " + n.data.zoneLabel)
-      .toLowerCase().includes(q);
-  };
   cy.batch(() => {
-    cy.elements("node:childless").forEach(n => {
+    cy.nodes(":childless").forEach(n => {
       const d = n.data();
-      const off = (state.zone && d.zone !== state.zone) ||
-                  (state.hideRetired && d.status === "retired");
-      const dim = !off && (!match(d.id) || (state.rel && !n.connectedEdges(`[rel='${state.rel}']`).length));
+      const off = state.hideRetired && d.status === "retired";
+      const dim = !off && ((q && !matches(d, q)) ||
+        (state.rel && !n.connectedEdges(`[rel='${state.rel}']`).length));
       n.toggleClass("off", !!off);
       n.toggleClass("dim", !off && !!dim);
       n.toggleClass("hiddenlabel", !state.labels);
@@ -279,15 +385,20 @@ function select(id, focus){
   apply();
 }
 
+/* The detail panel indexes the whole graph, not just the visible subgraph —
+   neighbours still hidden carry a marker and are revealed on click. */
 function detail(d){
-  const links = d.links || [];
-  const outs = cy.getElementById(d.id).outgoers("edge").map(e =>
-    ({rel:e.data().rel, note:e.data().note, id:e.data().target}));
-  const ins = cy.getElementById(d.id).incomers("edge").map(e =>
-    ({rel:e.data().rel, note:e.data().note, id:e.data().source}));
-  const nb = (rows, arrow) => rows.map(r => `<button data-goto="${esc(r.id)}">
-      <span class="arrow">${arrow}</span><span class="rel">${esc(r.rel)}</span>
-      <span>${esc(nodeLabel(r.id))}</span></button>` +
+  const outs = graph.elements.edges.filter(e => e.data.source === d.id)
+    .map(e => ({rel:e.data.rel, note:e.data.note, id:e.data.target}));
+  const ins = graph.elements.edges.filter(e => e.data.target === d.id)
+    .map(e => ({rel:e.data.rel, note:e.data.note, id:e.data.source}));
+  const hiddenNb = new Set(outs.concat(ins)
+    .filter(r => !state.revealed.has(r.id)).map(r => r.id)).size;
+  const nb = (rows, arrow) => rows.map(r =>
+      `<button data-goto="${esc(r.id)}">
+        <span class="arrow">${arrow}</span><span class="rel">${esc(r.rel)}</span>
+        <span>${esc(nodeLabel(r.id))}</span>
+        ${state.revealed.has(r.id) ? "" : '<span class="n">hidden</span>'}</button>` +
       (r.note ? `<div class="kv" style="margin:-2px 0 4px 24px">${esc(r.note)}</div>` : "")
     ).join("");
 
@@ -300,16 +411,27 @@ function detail(d){
       ${d.version ? `<span class="chip">${esc(d.version)}</span>` : ""}
     </div>
     <p>${esc(d.desc)}</p>
-    ${links.length ? `<h3>Links</h3><div class="links">` + links.map(l =>
-      `<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)}
-       <span class="kv" style="margin:0">${esc(l.url.replace(/^https?:\/\//, ""))}</span></a>`).join("") + `</div>` : ""}
+    ${linksBlock(d)}
     ${outs.length ? `<h3>Outgoing (${outs.length})</h3><div class="nb">${nb(outs, "→")}</div>` : ""}
     ${ins.length ? `<h3>Incoming (${ins.length})</h3><div class="nb">${nb(ins, "←")}</div>` : ""}
+    ${hiddenNb ? `<button class="tool expand" data-expand>Expand ${hiddenNb} hidden
+        neighbour${hiddenNb === 1 ? "" : "s"}</button>` : ""}
   `;
   $("panel").hidden = false;
   cy.resize();
   $("panel").querySelectorAll("[data-goto]").forEach(b =>
-    b.addEventListener("click", () => select(b.dataset.goto, true)));
+    b.addEventListener("click", () => gotoNode(b.dataset.goto)));
+  const ex = $("panel").querySelector("[data-expand]");
+  if (ex) ex.addEventListener("click", () => expand(d.id));
+}
+
+function linksBlock(d){
+  const links = d.links || [];
+  if (!links.length) return "";
+  return `<h3>Links</h3><div class="links">` + links.map(l =>
+    `<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)}
+     <span class="kv" style="margin:0">${esc(l.url.replace(/^https?:\/\//, ""))}</span></a>`).join("") +
+    `</div>`;
 }
 
 /* ── sidebar ─────────────────────────────────────────────────────────────── */
@@ -319,15 +441,7 @@ function buildSidebar(){
       <span>${esc(z.label)}</span><span class="n">${z.count}</span></button>`;
   $("zones").innerHTML = graph.zones.map(zoneRow).join("");
   $("zones").querySelectorAll("[data-zone]").forEach(b => b.addEventListener("click", () => {
-    state.zone = state.zone === b.dataset.zone ? null : b.dataset.zone;
-    $("zones").querySelectorAll("[data-zone]").forEach(x =>
-      x.setAttribute("aria-pressed", String(x.dataset.zone === state.zone)));
-    apply();
-    if (state.zone){
-      const pane = cy.nodes(`[isZone][zone='${state.zone}']`).union(
-        cy.nodes(`[zone='${state.zone}']`));
-      cy.animate({fit:{eles:pane, padding:70}}, {duration:320});
-    }
+    b.setAttribute("aria-pressed", String(toggleZone(b.dataset.zone)));
   }));
 
   $("kinds").innerHTML = Object.entries(graph.kinds)
@@ -351,14 +465,15 @@ function buildSidebar(){
   const bridge = a.bridges.map(b => `<button class="row" data-goto="${esc(b.from)}" style="padding:2px 6px">
       <span>${esc(nodeLabel(b.from))} — ${esc(nodeLabel(b.to))}</span></button>`).join("");
   $("stats").innerHTML = `
-    <b>${a.zone_counts ? graph.meta.counts.nodes : 0}</b> nodes ·
-    <b>${graph.meta.counts.edges}</b> edges ·
+    <b>${graph.meta.counts.nodes}</b> nodes · <b>${graph.meta.counts.edges}</b> edges ·
     <b>${a.components}</b> component${a.components === 1 ? "" : "s"}<br>
+    <b><span id="shown">${state.revealed.size}</span>/${graph.meta.counts.nodes}</b> nodes shown ·
+    ${state.revealed.size} seeded<br>
     status: ${Object.entries(a.status_counts).map(([k, v]) => `${v} ${k}`).join(" · ")}<br><br>
     <b>Most connected</b><br>${god}<br>
     <b>Bridges</b> <span class="legend-note">(removing one splits the graph)</span><br>${bridge}`;
   $("stats").querySelectorAll("[data-goto]").forEach(b =>
-    b.addEventListener("click", () => select(b.dataset.goto, true)));
+    b.addEventListener("click", () => gotoNode(b.dataset.goto)));
 
   const m = graph.meta;
   $("subtitle").textContent = m.subtitle;
@@ -375,21 +490,21 @@ function buildSidebar(){
 }
 
 /* ── controls ────────────────────────────────────────────────────────────── */
-function setCompound(on){
-  cy.batch(() => {
-    if (!on){
-      cy.nodes("[isZone]").forEach(z => z.children().forEach(c => c.move({parent:null})));
-      cy.nodes("[isZone]").style("display", "none");
-    } else {
-      cy.nodes("[isZone]").style("display", "element");
-      cy.nodes("node:childless").forEach(n => n.move({parent: "zone:" + n.data("zone")}));
-    }
-  });
-}
-
 function wireControls(){
-  $("q").addEventListener("input", e => {state.q = e.target.value; apply();});
-  $("btn-fit").addEventListener("click", () => cy.animate({fit:{padding:60}}, {duration:260}));
+  $("q").addEventListener("input", e => {
+    state.q = e.target.value;
+    const q = state.q.trim().toLowerCase();
+    if (!q){ apply(); return; }
+    let added = false;
+    for (const n of graph.elements.nodes){
+      if (!state.revealed.has(n.data.id) && matches(n.data, q)){
+        state.revealed.add(n.data.id); added = true;
+      }
+    }
+    if (added){ rebuild(); fitRevealed(0.4); } else apply();
+  });
+  $("btn-fit").addEventListener("click", () =>
+    cy.animate({fit:{eles:cy.nodes(), padding:60}}, {duration:260}));
   $("btn-labels").addEventListener("click", e => {
     state.labels = !state.labels;
     e.currentTarget.setAttribute("aria-pressed", String(state.labels));
@@ -400,33 +515,25 @@ function wireControls(){
     e.currentTarget.setAttribute("aria-pressed", String(state.hideRetired));
     apply();
   });
-  $("btn-layout").addEventListener("click", e => {
-    state.force = !state.force;
-    e.currentTarget.setAttribute("aria-pressed", String(state.force));
-    if (state.force){
-      setCompound(false);
-      cy.layout({name:"cose", animate:true, animationDuration:800, randomize:true,
-        nodeRepulsion:90000, idealEdgeLength:110, edgeElasticity:80, gravity:0.35,
-        nestingFactor:1, nodeOverlap:20, numIter:1500, initialTemp:400,
-        coolingFactor:0.96, minTemp:2, fit:true, padding:30}).run();
-    } else {
-      setCompound(true);
-      cy.layout({name:"preset", fit:true, padding:26}).run();
-    }
-  });
   $("btn-png").addEventListener("click", () => {
     const blob = cy.png({full:true, scale:2, bg:"#0B1220"});
     const a = document.createElement("a");
     a.href = blob; a.download = "dmr-graph.png"; a.click();
   });
+  $("btn-expand-all").addEventListener("click", () => {
+    graph.elements.nodes.forEach(n => state.revealed.add(n.data.id));
+    rebuild();
+    cy.animate({fit:{padding:60}}, {duration:260});
+  });
   $("btn-reset").addEventListener("click", () => {
-    state.zone = null; state.rel = null; state.hideRetired = false; state.q = "";
+    state.rel = null; state.hideRetired = false; state.q = "";
+    state.revealed = new Set([...nodeById.values()].filter(d => d.seed).map(d => d.id));
     $("q").value = "";
-    $("zones").querySelectorAll("[data-zone]").forEach(x => x.setAttribute("aria-pressed", "false"));
     $("relations").querySelectorAll("[data-rel]").forEach(x => x.setAttribute("aria-pressed", "false"));
     $("btn-retired").setAttribute("aria-pressed", "false");
-    clearSelection(); apply();
-    cy.animate({fit:{padding:60}}, {duration:260});
+    clearSelection();
+    rebuild();
+    fitRevealed(0.45);
   });
   document.addEventListener("keydown", e => {if (e.key === "Escape") clearSelection();});
 }
@@ -434,28 +541,46 @@ function wireControls(){
 /* ── boot ────────────────────────────────────────────────────────────────── */
 fetch("graph.json").then(r => r.json()).then(g => {
   graph = g;
-  graph.zones.forEach(z => zoneById[z.id] = z);
-  cy = cytoscape({container:$("cy"), elements:elements(),
+  nodeById = new Map(graph.elements.nodes.map(n => [n.data.id, n.data]));
+  state.revealed = new Set([...nodeById.values()].filter(d => d.seed).map(d => d.id));
+  cy = cytoscape({container:$("cy"), elements:[],
     style:CY_STYLE.concat(dataStyles()),
-    layout:{name:"preset", fit:true, padding:26},
-    minZoom:0.12, maxZoom:3, wheelSensitivity:0.2,
+    layout:{name:"preset", fit:false},
+    minZoom:0.08, maxZoom:3, wheelSensitivity:0.2,
     boxSelectionEnabled:false, autounselectify:false});
-  cy.on("tap", "node[isZone]", evt => {if (evt.target === evt.currentTarget) clearSelection();});
-  cy.on("tap", "node:childless", evt => select(evt.target.id(), false));
   cy.on("tap", evt => {if (evt.target === cy) clearSelection();});
+  let lastTap = {id:null, t:0};
+  cy.on("tap", "node:childless", evt => {
+    const id = evt.target.id(), now = Date.now();
+    if (lastTap.id === id && now - lastTap.t < 350){
+      lastTap = {id:null, t:0};
+      expand(id);
+    } else {
+      lastTap = {id, t:now};
+      select(id, false);
+    }
+  });
   cy.on("mouseover", "node:childless", evt => {
     if (!evt.target.hasClass("dim")) evt.target.connectedEdges().addClass("showlabel");
   });
   cy.on("mouseout", "node:childless", evt => {
     if (!evt.target.hasClass("sel")) evt.target.connectedEdges().removeClass("showlabel");
   });
+  rebuild();
   buildSidebar();
   wireControls();
-  if (new URLSearchParams(location.search).get("layout") === "force"){
-    $("btn-layout").click();
+  fitRevealed(0.45);
+  if (new URLSearchParams(location.search).get("expand") === "all"){
+    $("btn-expand-all").click();
   }
   const m = location.hash.match(/node=([^&]+)/);
-  if (m) select(decodeURIComponent(m[1]), true);
+  if (m && nodeById.has(decodeURIComponent(m[1]))){
+    const id = decodeURIComponent(m[1]);
+    state.revealed.add(id);
+    neighborsOf(id).forEach(x => state.revealed.add(x));
+    rebuild();
+    select(id, true);
+  }
 }).catch(err => {
   document.getElementById("cy").insertAdjacentHTML("beforeend",
     `<div class="hint">Could not load graph.json — serve the folder over HTTP

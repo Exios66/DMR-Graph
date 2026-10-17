@@ -5,10 +5,9 @@ What it does, in order:
   1. validates the authored graph (unique ids, known zones/kinds/statuses/relations,
      every edge endpoint exists, no self-loops, no orphans);
   2. turns repository / dataset / Space slugs into links (no URL is typed twice);
-  3. computes a deterministic zone-and-column layout (preset positions — the graph
-     never re-arranges itself between rebuilds);
-  4. computes analytics with networkx: degree (god nodes), bridges, components;
-  5. writes docs/graph.json, which the page styles itself from.
+  3. computes analytics with networkx: degree (god nodes), bridges, components;
+  4. writes docs/graph.json, which the page styles itself from. Layout is done
+     client-side over the *revealed* subgraph, so modules always pack tightly.
 
     uv run python scripts/build_graph.py            # build
     uv run python scripts/build_graph.py --check    # validate only (CI-safe)
@@ -34,8 +33,8 @@ STATUSES = {"active", "pending", "retired"}
 # kind → shape + box. Shape names are Cytoscape.js node shapes.
 KINDS: dict[str, dict] = {
     "package": {"shape": "round-rectangle", "width": 168, "height": 46},
-    "dataset": {"shape": "barrel", "width": 158, "height": 44},
-    "model": {"shape": "round-diamond", "width": 158, "height": 52},
+    "dataset": {"shape": "barrel", "width": 184, "height": 44},
+    "model": {"shape": "round-diamond", "width": 184, "height": 52},
     "stage": {"shape": "ellipse", "width": 132, "height": 44},
     "aux": {"shape": "rhomboid", "width": 142, "height": 44},
     "service": {"shape": "hexagon", "width": 142, "height": 44},
@@ -81,6 +80,10 @@ def validate(data: dict) -> list[str]:
             warnings.append(f"node {n['id']}: description is long ({len(n['desc'])} chars)")
 
     ids = {n["id"] for n in nodes}
+    seeds = set(data["meta"].get("seeds") or [])
+    unknown = seeds - ids
+    if unknown:
+        raise GraphError(f"meta.seeds names unknown nodes: {sorted(unknown)}")
     seen: set[tuple[str, str, str]] = set()
     for e in data["edges"]:
         src, dst, rel = e[0], e[1], e[2]
@@ -127,21 +130,6 @@ def links_for(node: dict) -> list[dict]:
     if node.get("url"):
         links.append({"label": "live site", "url": node["url"]})
     return links
-
-
-def layout(data: dict) -> None:
-    """Deterministic preset positions: zones are columns, `col` are sub-columns."""
-    cfg = data["layout"]
-    zone_x = {z["id"]: i * cfg["x_step"] for i, z in enumerate(data["zones"])}
-    counter: dict[tuple[str, int], int] = {}
-    for node in data["nodes"]:
-        key = (node["zone"], node.get("col", 0))
-        idx = counter.get(key, 0)
-        counter[key] = idx + 1
-        node["position"] = {
-            "x": zone_x[node["zone"]] + node.get("col", 0) * cfg["col_step"],
-            "y": cfg["y0"] + idx * cfg["y_step"],
-        }
 
 
 def analytics(data: dict) -> dict:
@@ -193,8 +181,8 @@ def analytics(data: dict) -> dict:
 def build() -> dict:
     data = load()
     warnings = validate(data)
-    layout(data)
     stats = analytics(data)
+    seeds = set(data["meta"].get("seeds") or [])
 
     zones = [
         {
@@ -228,9 +216,10 @@ def build() -> dict:
                     "fill": zone["fill"],
                     "border": zone["border"],
                     "zoneLabel": zone["label"],
+                    "col": n.get("col", 0),
+                    "seed": n["id"] in seeds,
                     "links": links_for(n),
                 },
-                "position": n["position"],
             }
         )
 
